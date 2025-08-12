@@ -93,7 +93,8 @@
                         <span>Đăng nhập</span>
                         <i class="fas fa-arrow-right"></i>
                     </button>
-
+                    <div class="divider">
+                    </div>
                     <div class="social-login">
                         <a href="{{ route('google.login') }}"
                             class="btn btn-outline-danger d-inline-flex align-items-center">

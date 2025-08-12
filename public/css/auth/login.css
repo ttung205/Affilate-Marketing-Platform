@@ -319,27 +319,14 @@ body {
 
 /* Divider */
 .divider {
-    text-align: center;
-    margin: 24px 0;
-    position: relative;
+    border-top: 1px solid #717377;
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px auto;
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e5e7eb;
-}
-
-.divider span {
-    background: white;
-    padding: 0 16px;
-    color: #9ca3af;
-    font-size: 0.875rem;
-}
 
 /* Social Login */
 .social-login {
@@ -348,14 +335,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 12px;
-    padding: 16px;
+    padding: 13px;
 }
 
 .social-login a {
     text-decoration: none;
-    color: #fff;
+    color: #000;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -365,14 +352,17 @@ body {
     gap: 12px;
 }   
 
-
+.social-login:hover {
+    background-color: rgb(238, 235, 235);
+    cursor: pointer;
+}
 /* Auth Switch */
 .auth-switch {
     text-align: center;
 }
 
 .auth-switch p {
-    color: #fff;
+    color: #6b7280;
     font-size: 0.875rem;
 }
 

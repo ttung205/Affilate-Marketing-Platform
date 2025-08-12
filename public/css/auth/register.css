@@ -43,14 +43,14 @@ body {
     border-radius: 20px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     overflow: hidden;
-    min-height: 700px;
+    min-height: 600px;
 }
 
 /* Left Side - Branding */
 .auth-branding {
     background: linear-gradient(135deg, rgb(40, 110, 240) 0%, #1e40af 100%);
     color: white;
-    padding: 60px 40px;
+    padding: 40px 30px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -78,60 +78,54 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
+    text-align: center;
 }
 
 .brand-logo {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    font-size: 2.5rem;
-    backdrop-filter: blur(10px);
+    font-size: 2rem;
 }
 
 .brand-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     margin-bottom: 10px;
-    letter-spacing: -0.5px;
 }
 
 .brand-subtitle {
-    font-size: 1.2rem;
+    font-size: 1rem;
     opacity: 0.9;
-    margin-bottom: 40px;
-    font-weight: 400;
+    margin-bottom: 30px;
 }
 
 .brand-features {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .feature-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 1.2rem;
+    gap: 10px;
+    font-size: 1rem;
     opacity: 0.9;
 }
 
 .feature-item i {
     color: #4ade80;
-    font-size: 1.1rem;
 }
 
 /* Right Side - Form */
 .auth-form-container {
-    padding: 60px 50px;
+    padding: 40px 40px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -139,19 +133,19 @@ body {
 
 .form-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .form-header h2 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #1f2937;
     margin-bottom: 8px;
 }
 
 .form-header p {
-    color: #fff;
-    font-size: 1rem;
+    color: #6b7280;
+    font-size: 0.9rem;
 }
 
 /* Form Elements */
@@ -160,15 +154,15 @@ body {
 }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .form-label {
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    color: #fff;
-    margin-bottom: 8px;
+    color: #374151;
+    margin-bottom: 6px;
 }
 
 .input-wrapper {
@@ -181,17 +175,17 @@ body {
     position: absolute;
     left: 16px;
     color: #9ca3af;
-    font-size: 1.1rem;
+    font-size: 1rem;
     z-index: 2;
 }
 
 .form-input,
 .form-select {
     width: 100%;
-    padding: 16px 16px 16px 48px;
+    padding: 14px 16px 14px 48px;
     border: 2px solid #e5e7eb;
-    border-radius: 12px;
-    font-size: 1rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
     transition: all 0.3s ease;
     background: #f9fafb;
     appearance: none;
@@ -200,9 +194,9 @@ body {
 .form-input:focus,
 .form-select:focus {
     outline: none;
-    border-color: rgb(40, 110, 240);
+    border-color: #3b82f6;
     background: white;
-    box-shadow: 0 0 0 4px rgba(40, 110, 240, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .form-input.error,
@@ -337,7 +331,7 @@ body {
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(40, 110, 240, 0.3);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn:active {
@@ -346,27 +340,14 @@ body {
 
 /* Divider */
 .divider {
-    text-align: center;
-    margin: 24px 0;
-    position: relative;
+    border-top: 1px solid #717377;
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 24px auto;
 }
 
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e5e7eb;
-}
-
-.divider span {
-    background: white;
-    padding: 0 16px;
-    color: #9ca3af;
-    font-size: 0.875rem;
-}
 
 /* Social Login */
 .social-login {
@@ -375,14 +356,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #fff;
+    border: 1px solid #000;
     border-radius: 12px;
-    padding: 16px;
+    padding: 13px;
+}
+.social-login:hover {
+    background-color: rgb(238, 235, 235);
+    cursor: pointer;
 }
 
 .social-login a {
     text-decoration: none;
-    color: #fff;
+    color: #000;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
