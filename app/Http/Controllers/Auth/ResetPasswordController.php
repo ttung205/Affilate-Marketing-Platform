@@ -44,9 +44,11 @@ class ResetPasswordController extends Controller
         // Validate input
         $request->validate([
             'token' => 'required',
-            'email' => 'required|email',
+            'reset_email' => 'required|email',
             'password' => 'required|min:8|confirmed',
         ], [
+            'reset_email.required' => 'Vui lòng nhập email',
+            'reset_email.email' => 'Email không đúng định dạng',
             'password.required' => 'Vui lòng nhập mật khẩu mới',
             'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp'
@@ -56,28 +58,28 @@ class ResetPasswordController extends Controller
             // Kiểm tra token
             $resetData = DB::table('password_reset_tokens')
                 ->where('token', $request->token)
-                ->where('email', $request->email)
+                ->where('email', $request->reset_email)
                 ->first();
 
             if (!$resetData) {
-                return back()->withErrors(['email' => 'Token không hợp lệ.']);
+                return back()->withErrors(['reset_email' => 'Token không hợp lệ.']);
             }
 
             // Update password cho user
-            User::where('email', $request->email)->update([
+            User::where('email', $request->reset_email)->update([
                 'password' => Hash::make($request->password)
             ]);
 
             // Xóa token đã sử dụng
             DB::table('password_reset_tokens')
-                ->where('email', $request->email)
+                ->where('email', $request->reset_email)
                 ->delete();
 
             return redirect()->route('login')
                 ->with('status', 'Mật khẩu đã được đặt lại thành công! Vui lòng đăng nhập.');
 
         } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Có lỗi xảy ra, vui lòng thử lại sau.']);
+            return back()->withErrors(['reset_email' => 'Có lỗi xảy ra, vui lòng thử lại sau.']);
         }
     }
 }

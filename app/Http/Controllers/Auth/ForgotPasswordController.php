@@ -27,34 +27,34 @@ class ForgotPasswordController extends Controller
     {
         // Validate email
         $request->validate([
-            'email' => 'required|email|exists:users,email'
+            'reset_email' => 'required|email|exists:users,email'
         ], [
-            'email.required' => 'Vui lòng nhập email',
-            'email.email' => 'Email không đúng định dạng',
-            'email.exists' => 'Email không tồn tại trong hệ thống'
+            'reset_email.required' => 'Vui lòng nhập email',
+            'reset_email.email' => 'Email không đúng định dạng',
+            'reset_email.exists' => 'Email không tồn tại trong hệ thống'
         ]);
 
         try {
             // Tạo token ngẫu nhiên
             $token = Str::random(64);
-            
+
             // Lưu token vào database
             DB::table('password_reset_tokens')->updateOrInsert(
-                ['email' => $request->email],
+                ['email' => $request->reset_email],
                 [
-                    'email' => $request->email,
+                    'email' => $request->reset_email,
                     'token' => $token,
                     'created_at' => Carbon::now()
                 ]
             );
 
-            // Gửi email 
-             Mail::to($request->email)->send(new ResetPasswordMail($token));
+            // Gửi email
+            Mail::to($request->reset_email)->send(new ResetPasswordMail($token));
 
             return back()->with('status', 'Chúng tôi đã gửi link đặt lại mật khẩu vào email của bạn!');
-            
+
         } catch (\Exception $e) {
-            return back()->withErrors(['email' => 'Có lỗi xảy ra, vui lòng thử lại sau.']);
+            return back()->withErrors(['reset_email' => 'Có lỗi xảy ra, vui lòng thử lại sau.']);
         }
     }
 }

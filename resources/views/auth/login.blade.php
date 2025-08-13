@@ -57,7 +57,7 @@
                             <i class="fas fa-envelope input-icon"></i>
                             <input type="email" id="email" name="email"
                                 class="form-input @error('email') error @enderror" placeholder="Nhập email của bạn"
-                                value="{{ old('email') }}" required autocomplete="email">
+                                required autocomplete="email">
                         </div>
                         @error('email')
                             <span class="error-message">{{ $message }}</span>
