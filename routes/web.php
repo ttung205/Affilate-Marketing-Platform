@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GoogleRegistrationController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 Route::get('/', function () {
     return view('home');
@@ -39,3 +41,9 @@ Route::get('/shop', function(){
 Route::get('/publisher', function(){
     return view('publisher.dashboard');
 })->middleware('auth', 'role:publisher')->name('publisher.dashboard');
+
+Route::get('/forgot-password', [ForgotPasswordController::class,'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class,'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPasswordController::class,'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class,'reset'])->name('password.update');
+

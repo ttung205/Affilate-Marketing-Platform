@@ -44,8 +44,7 @@
             <div class="hero-content">
                 <div class="hero-text scroll-animate-left" data-animation="slide-left">
                     <h1 class="hero-title text-reveal">
-                        <span>Nền tảng Affiliate Marketing</span>
-                        <span class="highlight">hàng đầu</span>
+                        <span>Nền tảng Affiliate Marketing hàng đầu</span>
                     </h1>
                     <p class="hero-description scroll-animate-fade">
                         Kết nối Publisher với Shop, tối ưu hóa doanh thu và xây dựng cộng đồng kinh doanh bền vững. 

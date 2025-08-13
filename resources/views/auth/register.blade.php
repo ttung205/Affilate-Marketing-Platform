@@ -138,6 +138,9 @@
                         <i class="fas fa-arrow-right"></i>
                     </button>
                     <div class="divider">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Hoặc</span>
+                        <div class="divider-line"></div>
                     </div>
                     <div class="social-login">
                         <a href="{{ route('google.login') }}"

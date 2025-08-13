@@ -86,7 +86,7 @@
                             <span class="checkmark"></span>
                             <span class="checkbox-label">Ghi nhớ đăng nhập</span>
                         </label>
-                        <a href="#" class="forgot-link">Quên mật khẩu?</a>
+                        <a href="{{ route('password.request') }}" class="forgot-link">Quên mật khẩu?</a>
                     </div>
 
                     <button type="submit" class="submit-btn">
@@ -94,6 +94,9 @@
                         <i class="fas fa-arrow-right"></i>
                     </button>
                     <div class="divider">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Hoặc</span>
+                        <div class="divider-line"></div>
                     </div>
                     <div class="social-login">
                         <a href="{{ route('google.login') }}"
