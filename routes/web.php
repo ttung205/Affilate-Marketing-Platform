@@ -7,6 +7,7 @@ use App\Http\Controllers\GoogleRegistrationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\DashboardController;
 
 Route::get('/', function () {
     return view('home');
@@ -48,12 +49,15 @@ Route::post('/forgot-password', [ForgotPasswordController::class,'sendResetLinkE
 Route::get('/reset-password/{token}', [ResetPasswordController::class,'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class,'reset'])->name('password.update');
 
-// Admin routes - chỉ làm dashboard trước
+// Admin routes
 Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Product management routes - CRUD đầy đủ
+    Route::resource('products', ProductController::class);
+    Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     
     // Các route khác sẽ thêm sau
     // Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     // Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 });

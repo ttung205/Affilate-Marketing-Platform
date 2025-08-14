@@ -14,23 +14,28 @@
     <!-- Dashboard CSS chung -->
     <link rel="stylesheet" href="{{ asset('css/dashboard/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
     
     @stack('styles')
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
         @include('components.dashboard.sidebar')
         
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
             @include('components.dashboard.header')
             
-            <!-- Content -->
-            @yield('content')
+            <!-- Alert System -->
+            @include('components.alerts')
+            
+            <main class="content-area">
+                @yield('content')
+            </main>
         </div>
     </div>
+    
+    <!-- Alert System JavaScript -->
+    <script src="{{ asset('js/components/alerts.js') }}"></script>
     
     @stack('scripts')
 </body>

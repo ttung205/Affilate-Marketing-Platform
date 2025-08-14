@@ -13,9 +13,9 @@
             <h2>Quản lý sản phẩm</h2>
             <p>Quản lý tất cả sản phẩm trong hệ thống</p>
         </div>
-        <button class="product-add-btn">
+        <a href="{{ route('admin.products.create') }}" class="product-add-btn">
             <i class="fas fa-plus"></i> Thêm sản phẩm
-        </button>
+        </a>
     </div>
     
     <div class="product-management-card">
@@ -56,7 +56,7 @@
                         <td>
                             <span class="product-badge product-badge-info">{{ $product->category }}</span>
                         </td>
-                        <td>{{ number_format($product->price) }}₫</td>
+                        <td class="product-price">{{ $product->formatted_price }}</td>
                         <td>{{ $product->stock }}</td>
                         <td>{{ $product->commission_rate }}%</td>
                         <td>
@@ -68,12 +68,25 @@
                         </td>
                         <td>
                             <div class="product-action-buttons">
-                                <button class="product-btn-edit">
+                                <a href="{{ route('admin.products.edit', $product) }}" class="product-btn-edit" title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="product-btn-delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                </a>
+                                
+                                <form action="{{ route('admin.products.toggle-status', $product) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="product-btn-toggle" title="{{ $product->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}">
+                                        <i class="fas fa-{{ $product->is_active ? 'eye-slash' : 'eye' }}"></i>
+                                    </button>
+                                </form>
+                                
+                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="d-inline delete-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="product-btn-delete" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -83,4 +96,17 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+// Xác nhận xóa sản phẩm
+document.querySelectorAll('.delete-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+@endpush
 @endsection

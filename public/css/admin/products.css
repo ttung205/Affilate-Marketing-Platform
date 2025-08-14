@@ -44,6 +44,7 @@ body{
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none;
 }
 
 .product-add-btn:hover {

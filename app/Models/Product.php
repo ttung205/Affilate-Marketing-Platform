@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'name',
         'description',
@@ -19,20 +20,23 @@ class Product extends Model
         'affiliate_link',
         'commission_rate'
     ];
+
     protected $casts = [
-        'price' => 'decimal:2',
-        'commission_rate' => 'decimal:2',
+        'price' => 'integer', // Lưu dưới dạng integer
         'is_active' => 'boolean',
+        'commission_rate' => 'decimal:2'
     ];
-    // Scope để lấy sản phẩm active
-    public function scopeActive($query)
+
+    // Accessor để format giá tiền khi hiển thị
+    public function getFormattedPriceAttribute()
     {
-        return $query->where('is_active', true);
+        return number_format($this->price, 0, ',', '.') . ' VND';
     }
 
-    // Scope để lấy sản phẩm theo category
-    public function scopeByCategory($query, $category)
+    // Mutator để xử lý giá tiền khi lưu
+    public function setPriceAttribute($value)
     {
-        return $query->where('category', $category);
+        // Loại bỏ tất cả ký tự không phải số
+        $this->attributes['price'] = (int) preg_replace('/[^0-9]/', '', $value);
     }
 }
