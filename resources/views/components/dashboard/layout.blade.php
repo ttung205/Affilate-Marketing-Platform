@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/categories.css') }}">
     
     @stack('styles')
 </head>

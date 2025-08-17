@@ -34,10 +34,17 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="category" class="form-label">Danh mục *</label>
-                    <input type="text" id="category" name="category" value="{{ old('category', $product->category) }}" class="form-input" required>
-                    @error('category')
-                        <span class="form-error">{{ $message }}</span>
+                    <label for="category_id" class="form-label">Danh mục</label>
+                    <select id="category_id" name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                        <option value="">Chọn danh mục (không bắt buộc)</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -45,18 +52,32 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="price" class="form-label">Giá sản phẩm *</label>
-                    <input type="text" id="price" name="price" value="{{ old('price', $product->price) }}" class="form-input" placeholder="VD: 225205000" required>
-                    <small class="form-help">Nhập số tự nhiên, không cần dấu phẩy hoặc chấm</small>
+                    <input type="number" 
+                           id="price" 
+                           name="price" 
+                           value="{{ old('price', $product->price) }}" 
+                           class="form-input @error('price') is-invalid @enderror" 
+                           placeholder="VD: 225205000"
+                           min="0"
+                           required>
+                    <div class="form-help">Nhập số tự nhiên, không cần dấu phẩy hoặc chấm</div>
                     @error('price')
-                        <span class="form-error">{{ $message }}</span>
+                        <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
                 
                 <div class="form-group">
                     <label for="stock" class="form-label">Số lượng tồn kho *</label>
-                    <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" class="form-input" min="0" required>
+                    <input type="number" 
+                           id="stock" 
+                           name="stock" 
+                           value="{{ old('stock', $product->stock) }}" 
+                           class="form-input @error('stock') is-invalid @enderror" 
+                           placeholder="0"
+                           min="0"
+                           required>
                     @error('stock')
-                        <span class="form-error">{{ $message }}</span>
+                        <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -64,9 +85,17 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="commission_rate" class="form-label">Tỷ lệ hoa hồng (%) *</label>
-                    <input type="number" id="commission_rate" name="commission_rate" value="{{ old('commission_rate', $product->commission_rate) }}" class="form-input" min="0" max="100" step="0.01" required>
+                    <input type="number" 
+                           id="commission_rate" 
+                           name="commission_rate" 
+                           value="{{ old('commission_rate', $product->commission_rate) }}" 
+                           class="form-input @error('commission_rate') is-invalid @enderror" 
+                           min="0" 
+                           max="100" 
+                           step="0.01" 
+                           required>
                     @error('commission_rate')
-                        <span class="form-error">{{ $message }}</span>
+                        <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
                 
@@ -80,30 +109,41 @@
                     @endif
                     <input type="file" id="image" name="image" class="form-file" accept="image/*">
                     @error('image')
-                        <span class="form-error">{{ $message }}</span>
+                        <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
             
             <div class="form-group full-width">
                 <label for="description" class="form-label">Mô tả sản phẩm</label>
-                <textarea id="description" name="description" class="form-textarea" rows="4">{{ old('description', $product->description) }}</textarea>
+                <textarea id="description" 
+                          name="description" 
+                          class="form-textarea" 
+                          rows="4">{{ old('description', $product->description) }}</textarea>
                 @error('description')
-                    <span class="form-error">{{ $message }}</span>
+                    <div class="form-error">{{ $message }}</div>
                 @enderror
             </div>
             
             <div class="form-group full-width">
                 <label for="affiliate_link" class="form-label">Link affiliate</label>
-                <input type="url" id="affiliate_link" name="affiliate_link" value="{{ old('affiliate_link', $product->affiliate_link) }}" class="form-input" placeholder="https://example.com/product">
+                <input type="url" 
+                       id="affiliate_link" 
+                       name="affiliate_link" 
+                       value="{{ old('affiliate_link', $product->affiliate_link) }}" 
+                       class="form-input" 
+                       placeholder="https://example.com/product">
                 @error('affiliate_link')
-                    <span class="form-error">{{ $message }}</span>
+                    <div class="form-error">{{ $message }}</div>
                 @enderror
             </div>
             
             <div class="form-group full-width">
                 <label class="form-checkbox-label">
-                    <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
+                    <input type="checkbox" 
+                           name="is_active" 
+                           value="1" 
+                           {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
                     <span class="checkmark"></span>
                     Kích hoạt sản phẩm
                 </label>

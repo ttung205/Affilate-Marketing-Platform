@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Category;
 class ProductController extends Controller
 {
     public function index()
@@ -17,7 +17,8 @@ class ProductController extends Controller
 
     public function create()
     {
-        return view('admin.products.create');
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        return view('admin.products.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -27,30 +28,26 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category' => 'required|string|max:100',
+            'category_id' => 'nullable|exists:categories,id', // Thêm validation cho category_id
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'affiliate_link' => 'nullable|url',
-            'commission_rate' => 'required|numeric|min:0|max:100'
+            'commission_rate' => 'nullable|numeric|min:0|max:100'
         ]);
 
-        // Xử lý giá tiền - loại bỏ dấu phẩy, chấm và chuyển thành integer
-        $price = (int) str_replace([',', '.', ' '], '', $request->price);
-        
         $product = Product::create([
             'name' => $request->name,
             'description' => $request->description,
-            'price' => $price,
+            'price' => $request->price,
             'image' => $request->image ? $this->uploadImage($request->image) : null,
-            'category' => $request->category,
+            'category_id' => $request->category_id, // Thêm category_id
             'stock' => $request->stock,
             'is_active' => $request->is_active ?? true,
             'affiliate_link' => $request->affiliate_link,
             'commission_rate' => $request->commission_rate
         ]);
 
-        return redirect()->route('admin.products.index')
-        ->with('success', '🎉 Sản phẩm "' . $product->name . '" đã được tạo thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được tạo thành công!');
     }
 
     public function show(Product $product)
@@ -60,7 +57,8 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
@@ -70,30 +68,26 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category' => 'required|string|max:100',
+            'category_id' => 'nullable|exists:categories,id', // Thêm validation cho category_id
             'stock' => 'required|integer|min:0',
             'is_active' => 'boolean',
             'affiliate_link' => 'nullable|url',
-            'commission_rate' => 'required|numeric|min:0|max:100'
+            'commission_rate' => 'nullable|numeric|min:0|max:100'
         ]);
-
-        // Xử lý giá tiền - loại bỏ dấu phẩy, chấm và chuyển thành integer
-        $price = (int) str_replace([',', '.', ' '], '', $request->price);
 
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
-            'price' => $price,
+            'price' => $request->price,
             'image' => $request->image ? $this->uploadImage($request->image) : $product->image,
-            'category' => $request->category,
+            'category_id' => $request->category_id, // Thêm category_id
             'stock' => $request->stock,
             'is_active' => $request->is_active ?? true,
             'affiliate_link' => $request->affiliate_link,
             'commission_rate' => $request->commission_rate
         ]);
 
-        return redirect()->route('admin.products.index')
-        ->with('success', '✅ Sản phẩm "' . $product->name . '" đã được cập nhật thành công!');
+        return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
 
     public function destroy(Product $product)

@@ -57,7 +57,6 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::resource('products', ProductController::class);
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
     
-    // Các route khác sẽ thêm sau
-    // Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    // Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    // Category management routes - CRUD đầy đủ
+    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
 });

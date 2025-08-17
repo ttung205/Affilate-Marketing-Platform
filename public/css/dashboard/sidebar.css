@@ -114,3 +114,67 @@
     background: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* CSS cho submenu */
+.sidebar-menu-item {
+    position: relative;
+}
+
+.sidebar-menu-link.has-submenu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.submenu-arrow {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+.sidebar-menu-item.submenu-open .submenu-arrow {
+    transform: rotate(180deg);
+}
+
+.sidebar-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 15px;
+    border-radius: 8px;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu {
+    max-height: 300px; /* Đủ cao để chứa submenu */
+}
+
+.sidebar-submenu li {
+    margin: 0;
+}
+
+.sidebar-submenu a {
+    padding: 10px 15px;
+    font-size: 13px;
+    border-radius: 6px;
+    margin: 2px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-submenu a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.sidebar-submenu a.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+/* Hover effect cho menu chính */
+.sidebar-menu-link.has-submenu:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

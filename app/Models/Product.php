@@ -14,7 +14,7 @@ class Product extends Model
         'description',
         'price',
         'image',
-        'category',
+        'category_id',
         'stock',
         'is_active',
         'affiliate_link',
@@ -38,5 +38,9 @@ class Product extends Model
     {
         // Loại bỏ tất cả ký tự không phải số
         $this->attributes['price'] = (int) preg_replace('/[^0-9]/', '', $value);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }

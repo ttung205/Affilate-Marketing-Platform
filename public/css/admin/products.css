@@ -121,31 +121,111 @@ body{
     padding: 25px;
 }
 
+/* Commission Rate Badge */
+.commission-rate-badge {
+    background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    min-width: 60px;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+    min-width: 100px;
+}
+
+.status-badge.active {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.status-badge.inactive {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+}
+
+/* Product Management Table */
 .product-management-table {
     width: 100%;
     border-collapse: collapse;
-    border-radius: 15px;
-    overflow: hidden;
-}
-
-.product-management-table th,
-.product-management-table td {
-    padding: 18px;
-    text-align: left;
-    border-bottom: 1px solid #e9ecef;
+    background: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .product-management-table th {
-    background: rgb(241, 241, 241);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 16px 12px;
+    text-align: left;
     font-weight: 600;
     color: #495057;
+    border-bottom: 2px solid #dee2e6;
     font-size: 14px;
-    font-weight: 600;
+    white-space: nowrap;
 }
 
-.product-management-table tr:hover {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    transition: all 0.3s ease;
+.product-management-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #495057;
+}
+
+.product-management-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Responsive Table */
+@media (max-width: 1200px) {
+    .product-management-table {
+        font-size: 13px;
+    }
+    
+    .product-management-table th,
+    .product-management-table td {
+        padding: 12px 8px;
+    }
+    
+    .commission-rate-badge,
+    .status-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+        min-width: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-management-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .product-management-table th,
+    .product-management-table td {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+    
+    .product-name {
+        font-size: 13px;
+    }
+    
+    .product-description {
+        font-size: 11px;
+    }
 }
 
 .product-table-image {
@@ -218,4 +298,39 @@ body{
 .product-btn-delete:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+}
+
+/* Category Badge */
+.category-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.no-category {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* Stock Count */
+.stock-count {
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.stock-count.in-stock {
+    background: #d4edda;
+    color: #155724;
+}
+
+.stock-count.out-of-stock {
+    background: #f8d7da;
+    color: #721c24;
 }

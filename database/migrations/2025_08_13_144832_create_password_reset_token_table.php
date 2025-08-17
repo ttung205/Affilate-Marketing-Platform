@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary(); //email user
-            $table->string('token');   // token reset password
-            $table->timestamp('created_at')->nullable(); // thời gian tạo token
-            $table->index('token'); // index cho token để tìm kiếm nhanh hơn
-        });
+        if (!Schema::hasTable('password_reset_tokens')) {
+            Schema::create('password_reset_tokens', function (Blueprint $table) {
+                $table->string('email')->primary(); //email user
+                $table->string('token');   // token reset password
+                $table->timestamp('created_at')->nullable(); // thời gian tạo token
+                $table->index('token'); // index cho token để tìm kiếm nhanh hơn
+            });
+        }
     }
 
     /**
