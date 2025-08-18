@@ -165,7 +165,7 @@ body{
 }
 
 .product-management-table th {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background-color: whitesmoke;
     padding: 16px 12px;
     text-align: left;
     font-weight: 600;

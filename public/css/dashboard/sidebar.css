@@ -137,12 +137,14 @@
 }
 
 .sidebar-submenu {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) ;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease;
-    background: rgba(255, 255, 255, 0.1);
-    margin: 0 15px;
     border-radius: 8px;
+    list-style: none;
+    padding-left: 10px !important;
+    width: 100% !important;
 }
 
 .sidebar-menu-item.submenu-open .sidebar-submenu {
@@ -155,7 +157,7 @@
 
 .sidebar-submenu a {
     padding: 10px 15px;
-    font-size: 13px;
+    font-size: 15px;
     border-radius: 6px;
     margin: 2px 8px;
     display: flex;

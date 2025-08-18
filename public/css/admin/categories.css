@@ -1,4 +1,9 @@
 /* Category Management Styles */
+body {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+}
 .category-management-content {
     padding: 20px;
     max-width: 1200px;
@@ -44,23 +49,30 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     border: 1px solid #e9ecef;
+    padding: 0 20px 20px 20px;
 }
 
-.category-management-card-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 20px 24px;
+.category-card-header {
+    padding: 20px 0px;
     border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
 }
-
-.category-management-card-header h3 {
-    margin: 0;
+.category-total-count{
+    color: red;
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.category-card-header .category-card-header-left h3 {
+    margin-block: 0 !important;
     font-size: 18px;
     font-weight: 600;
     color: #495057;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.category-management-card-body {
+.category-card-body {
     padding: 24px;
 }
 
@@ -79,7 +91,7 @@
 }
 
 .category-table th {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background-color: whitesmoke;
     padding: 16px 12px;
     text-align: left;
     font-weight: 600;
@@ -454,6 +466,26 @@
     margin-top: 32px;
     display: flex;
     justify-content: center;
+}
+
+.category-btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none;
+}
+
+.category-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
 }
 
 /* Responsive */
