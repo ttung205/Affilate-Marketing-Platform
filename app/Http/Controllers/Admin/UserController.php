@@ -155,55 +155,7 @@ class UserController extends Controller
             ->with('success', "Người dùng đã được {$status} thành công.");
     }
 
-    /**
-     * Show shop users management
-     */
-    public function shopUsers(Request $request)
-    {
-        $query = User::where('role', 'shop');
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active' ? 1 : 0);
-        }
-
-        $shopUsers = $query->orderBy('created_at', 'desc')->paginate(15);
-        $stats = $this->getShopStats();
-
-        return view('admin.users.shop', compact('shopUsers', 'stats'));
-    }
-
-    /**
-     * Show publisher users management
-     */
-    public function publisherUsers(Request $request)
-    {
-        $query = User::where('role', 'publisher');
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active' ? 1 : 0);
-        }
-
-        $publisherUsers = $query->orderBy('created_at', 'desc')->paginate(15);
-        $stats = $this->getPublisherStats();
-
-        return view('admin.users.publishers', compact('publisherUsers', 'stats'));
-    }
 
     /**
      * Get user statistics
@@ -223,31 +175,5 @@ class UserController extends Controller
         ];
     }
 
-    /**
-     * Get shop statistics
-     */
-    private function getShopStats()
-    {
-        return [
-            'total' => User::where('role', 'shop')->count(),
-            'active' => User::where('role', 'shop')->where('is_active', 1)->count(),
-            'inactive' => User::where('role', 'shop')->where('is_active', 0)->count(),
-            'this_month' => User::where('role', 'shop')->whereMonth('created_at', now()->month)->count(),
-            'last_month' => User::where('role', 'shop')->whereMonth('created_at', now()->subMonth()->month)->count(),
-        ];
-    }
 
-    /**
-     * Get publisher statistics
-     */
-    private function getPublisherStats()
-    {
-        return [
-            'total' => User::where('role', 'publisher')->count(),
-            'active' => User::where('role', 'publisher')->where('is_active', 1)->count(),
-            'inactive' => User::where('role', 'publisher')->where('is_active', 0)->count(),
-            'this_month' => User::where('role', 'publisher')->whereMonth('created_at', now()->month)->count(),
-            'last_month' => User::where('role', 'publisher')->whereMonth('created_at', now()->subMonth()->month)->count(),
-        ];
-    }
 }

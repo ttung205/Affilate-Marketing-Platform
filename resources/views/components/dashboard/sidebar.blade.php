@@ -61,18 +61,7 @@
                         Thêm người dùng
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.users.shop') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.shop') }}">
-                        <i class="fas fa-store"></i>
-                        Quản lý Shop
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.users.publishers') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.publishers') }}">
-                        <i class="fas fa-bullhorn"></i>
-                        Quản lý Publisher
-                    </a>
-                </li>
+
             </ul>
         </li>
         

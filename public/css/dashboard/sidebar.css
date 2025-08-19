@@ -45,7 +45,7 @@
     padding: 12px 20px;
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     font-weight: 500;
     font-size: 1rem;
 }
@@ -55,7 +55,6 @@
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border-left: 4px solid white;
-    transform: translateX(5px);
 }
 
 .sidebar-menu i {
@@ -168,7 +167,6 @@
 
 .sidebar-submenu a:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: translateX(5px);
 }
 
 .sidebar-submenu a.active {

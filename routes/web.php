@@ -64,6 +64,4 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     // User management routes - CRUD đầy đủ
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
-    Route::get('/users/shop', [App\Http\Controllers\Admin\UserController::class, 'shopUsers'])->name('users.shop');
-    Route::get('/users/publishers', [App\Http\Controllers\Admin\UserController::class, 'publisherUsers'])->name('users.publishers');
 });

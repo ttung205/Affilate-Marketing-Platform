@@ -92,7 +92,6 @@
                         <option value="admin" {{ request('role') === 'admin' ? 'selected' : '' }}>Admin</option>
                         <option value="shop" {{ request('role') === 'shop' ? 'selected' : '' }}>Shop</option>
                         <option value="publisher" {{ request('role') === 'publisher' ? 'selected' : '' }}>Publisher</option>
-                        <option value="user" {{ request('role') === 'user' ? 'selected' : '' }}>User</option>
                     </select>
                 </div>
                 <div class="user-filter-group">
