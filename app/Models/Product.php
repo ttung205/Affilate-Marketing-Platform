@@ -23,7 +23,7 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'price' => 'integer', // Lưu dưới dạng integer
+        'price' => 'decimal:2', // Lưu dưới dạng decimal với 2 chữ số thập phân
         'is_active' => 'boolean',
         'commission_rate' => 'decimal:2'
     ];
@@ -31,14 +31,15 @@ class Product extends Model
     // Accessor để format giá tiền khi hiển thị
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 0, ',', '.') . ' VND';
+        return number_format($this->price, 2, ',', '.') . ' VND';
     }
 
     // Mutator để xử lý giá tiền khi lưu
     public function setPriceAttribute($value)
     {
-        // Loại bỏ tất cả ký tự không phải số
-        $this->attributes['price'] = (int) preg_replace('/[^0-9]/', '', $value);
+        // Loại bỏ tất cả ký tự không phải số và dấu chấm thập phân
+        $cleanValue = preg_replace('/[^0-9.]/', '', $value);
+        $this->attributes['price'] = (float) $cleanValue;
     }
     public function category()
     {

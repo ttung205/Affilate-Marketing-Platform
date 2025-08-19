@@ -230,17 +230,29 @@
                     {{ $users->links() }}
                 </div>
             @else
-                <div class="user-empty-state">
-                    <div class="user-empty-state-icon">
-                        <i class="fas fa-users"></i>
+                @if(request()->hasAny(['search', 'role', 'status']))
+                    <!-- No search results -->
+                    <div class="user-no-results-state">
+                        <div class="user-no-results-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Không tìm thấy kết quả</h3>
+                        <p>Không có người dùng nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
                     </div>
-                    <h3>Chưa có người dùng nào</h3>
-                    <p>Bắt đầu tạo người dùng đầu tiên để quản lý hệ thống</p>
-                    <a href="{{ route('admin.users.create') }}" class="user-btn user-btn-primary">
-                        <i class="fas fa-plus"></i>
-                        Tạo người dùng đầu tiên
-                    </a>
-                </div>
+                @else
+                    <!-- Empty state - no items at all -->
+                    <div class="user-empty-state">
+                        <div class="user-empty-state-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Chưa có người dùng nào</h3>
+                        <p>Bắt đầu tạo người dùng đầu tiên để quản lý hệ thống</p>
+                        <a href="{{ route('admin.users.create') }}" class="user-btn user-btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Tạo người dùng đầu tiên
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
     </div>

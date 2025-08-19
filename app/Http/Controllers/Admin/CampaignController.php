@@ -15,38 +15,47 @@ class CampaignController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Campaign::query();
+        $query = Campaign::with(['affiliateLinks']);
+
+        // Search by name or description
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
 
         // Filter by status
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $query->where('status', $request->get('status'));
         }
 
         // Filter by date range
-        if ($request->filled('start_date')) {
-            $query->where('start_date', '>=', $request->start_date);
-        }
-
-        if ($request->filled('end_date')) {
-            $query->where('end_date', '<=', $request->end_date);
-        }
-
-        // Search by name
-        if ($request->filled('search')) {
-            $query->where('name', 'like', "%{$request->search}%");
+        if ($request->filled('date_range')) {
+            $dateRange = $request->get('date_range');
+            $now = now();
+            
+            switch ($dateRange) {
+                case 'this_week':
+                    $query->whereBetween('start_date', [$now->startOfWeek(), $now->endOfWeek()]);
+                    break;
+                case 'this_month':
+                    $query->whereBetween('start_date', [$now->startOfMonth(), $now->endOfMonth()]);
+                    break;
+                case 'this_quarter':
+                    $query->whereBetween('start_date', [$now->startOfQuarter(), $now->endOfQuarter()]);
+                    break;
+                case 'this_year':
+                    $query->whereBetween('start_date', [$now->startOfYear(), $now->endOfYear()]);
+                    break;
+            }
         }
 
         $campaigns = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Get statistics
-        $stats = [
-            'total' => Campaign::count(),
-            'active' => Campaign::where('status', 'active')->count(),
-            'inactive' => Campaign::where('status', 'inactive')->count(),
-            'draft' => Campaign::where('status', 'draft')->count(),
-            'total_budget' => Campaign::sum('budget'),
-            'total_conversions' => Campaign::withCount('affiliateLinks')->get()->sum('affiliate_links_count'),
-        ];
+        // Calculate statistics
+        $stats = $this->getStatistics();
 
         return view('admin.campaigns.index', compact('campaigns', 'stats'));
     }
@@ -69,7 +78,7 @@ class CampaignController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:active,inactive,draft',
+            'status' => 'required|in:active,paused,completed,draft',
             'budget' => 'nullable|numeric|min:0',
             'target_conversions' => 'nullable|integer|min:0',
         ]);
@@ -136,7 +145,7 @@ class CampaignController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:active,inactive,draft',
+            'status' => 'required|in:active,paused,completed,draft',
             'budget' => 'nullable|numeric|min:0',
             'target_conversions' => 'nullable|integer|min:0',
         ]);
@@ -179,5 +188,51 @@ class CampaignController extends Controller
 
         return redirect()->route('admin.campaigns.index')
             ->with('success', 'Campaign đã được xóa thành công.');
+    }
+
+    /**
+     * Toggle campaign status
+     */
+    public function toggleStatus(Request $request, Campaign $campaign)
+    {
+        $newStatus = $request->input('status');
+        if (!in_array($newStatus, ['active', 'paused', 'completed', 'draft'])) {
+            return redirect()->route('admin.campaigns.index')
+                ->with('error', 'Trạng thái không hợp lệ.');
+        }
+
+        $campaign->update(['status' => $newStatus]);
+
+        $statusText = match($newStatus) {
+            'active' => 'kích hoạt',
+            'paused' => 'tạm dừng',
+            'completed' => 'hoàn thành',
+            'draft' => 'chuyển về nháp',
+            default => 'cập nhật'
+        };
+
+        return redirect()->route('admin.campaigns.index')
+            ->with('success', "Campaign đã được {$statusText} thành công.");
+    }
+
+    /**
+     * Get campaign statistics
+     */
+    private function getStatistics()
+    {
+        return [
+            'total' => Campaign::count(),
+            'active' => Campaign::where('status', 'active')->count(),
+            'paused' => Campaign::where('status', 'paused')->count(),
+            'completed' => Campaign::where('status', 'completed')->count(),
+            'draft' => Campaign::where('status', 'draft')->count(),
+            'total_budget' => Campaign::sum('budget'),
+            'total_clicks' => Campaign::join('affiliate_links', 'campaigns.id', '=', 'affiliate_links.campaign_id')
+                ->join('clicks', 'affiliate_links.id', '=', 'clicks.affiliate_link_id')
+                ->count(),
+            'total_conversions' => Campaign::join('affiliate_links', 'campaigns.id', '=', 'affiliate_links.campaign_id')
+                ->join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
+                ->count(),
+        ];
     }
 }

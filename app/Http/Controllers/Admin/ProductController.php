@@ -9,10 +9,34 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::orderBy('created_at', 'desc')->paginate(15);
-        return view('admin.products.index', compact('products'));
+        $query = Product::with('category');
+
+        // Search by name or description
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->get('category'));
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $status = $request->get('status') === 'active' ? true : false;
+            $query->where('is_active', $status);
+        }
+
+        $products = $query->orderBy('created_at', 'desc')->paginate(15);
+        $categories = Category::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()
@@ -114,18 +138,7 @@ class ProductController extends Controller
         ->with('success', "Sản phẩm '" . $product->name . "' đã được {$status}!");
     }
 
-    public function search(Request $request)
-    {
-        $query = $request->get('query');
-        
-        $products = Product::where('name', 'like', "%{$query}%")
-            ->orWhere('category', 'like', "%{$query}%")
-            ->orWhere('description', 'like', "%{$query}%")
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
 
-        return view('admin.products.index', compact('products', 'query'));
-    }
 
     private function uploadImage($image)
     {

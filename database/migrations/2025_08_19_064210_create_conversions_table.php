@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('tracking_code');
             $table->string('order_id');
-            $table->decimal('amount', 10, 2);
-            $table->decimal('commission', 10, 2);
+            $table->decimal('amount', 15, 2);
+            $table->decimal('commission', 15, 2);
             $table->timestamp('converted_at');
             $table->timestamps();
             

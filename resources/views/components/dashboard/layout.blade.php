@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/admin/users.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/affiliate-links.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/campaigns.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/campaigns.css') }}">
     
     @stack('styles')
 </head>

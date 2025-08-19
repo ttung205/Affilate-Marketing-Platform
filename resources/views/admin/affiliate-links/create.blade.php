@@ -8,13 +8,7 @@
     <div class="affiliate-header">
         <div class="affiliate-header-left">
             <h1 class="affiliate-title">Tạo Affiliate Link</h1>
-            <nav class="affiliate-breadcrumb">
-                <a href="{{ route('admin.dashboard') }}">Admin</a>
-                <span class="breadcrumb-separator">/</span>
-                <a href="{{ route('admin.affiliate-links.index') }}">Quản lý Affiliate</a>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current">Tạo Affiliate Link</span>
-            </nav>
+            <p class="affiliate-description">Tạo affiliate link mới</p>
         </div>
         <div class="affiliate-header-right">
             <a href="{{ route('admin.affiliate-links.index') }}" class="affiliate-btn affiliate-btn-secondary">

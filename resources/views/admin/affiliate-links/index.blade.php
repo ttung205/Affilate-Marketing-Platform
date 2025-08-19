@@ -8,13 +8,7 @@
     <div class="affiliate-header">
         <div class="affiliate-header-left">
             <h1 class="affiliate-title">Quản lý Affiliate Links</h1>
-            <nav class="affiliate-breadcrumb">
-                <a href="{{ route('admin.dashboard') }}">Admin</a>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current">Quản lý Affiliate</span>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current">Affiliate Links</span>
-            </nav>
+            <p class="affiliate-description">Quản lý tất cả affiliate links trong hệ thống</p>
         </div>
         <div class="affiliate-header-right">
             <a href="{{ route('admin.affiliate-links.create') }}" class="affiliate-btn affiliate-btn-primary">
@@ -137,6 +131,18 @@
                         </select>
                     </div>
                     
+                    <div class="filter-group">
+                        <label for="campaign" class="filter-label">Campaign</label>
+                        <select class="filter-select" id="campaign" name="campaign">
+                            <option value="">Tất cả</option>
+                            @foreach($campaigns ?? [] as $campaign)
+                                <option value="{{ $campaign->id }}" {{ request('campaign') == $campaign->id ? 'selected' : '' }}>
+                                    {{ $campaign->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
                     <div class="filter-actions">
                         <button type="submit" class="affiliate-btn affiliate-btn-primary">
                             <i class="fas fa-search"></i>
@@ -249,9 +255,6 @@
                                     <td class="table-date">{{ ($link->created_at ?? now())->format('d/m/Y H:i') }}</td>
                                     <td class="table-actions">
                                         <div class="action-buttons">
-                                            <a href="{{ route('admin.affiliate-links.show', $link) }}" class="action-btn action-view" title="Xem chi tiết">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
                                             <a href="{{ route('admin.affiliate-links.edit', $link) }}" class="action-btn action-edit" title="Chỉnh sửa">
                                                 <i class="fas fa-edit"></i>
                                             </a>
@@ -290,17 +293,31 @@
                     {{ $affiliateLinks->appends(request()->query())->links() }}
                 </div>
             @else
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-link"></i>
+                @if(request()->hasAny(['search', 'status', 'publisher', 'product', 'campaign']))
+                    <!-- No search results -->
+                    <div class="no-results-state">
+                        <div class="no-results-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="no-results-title">Không tìm thấy kết quả</h3>
+                        <p class="no-results-description">
+                            Không có affiliate link nào phù hợp với tiêu chí tìm kiếm của bạn.
+                        </p>
                     </div>
-                    <h3 class="empty-title">Chưa có affiliate link nào</h3>
-                    <p class="empty-description">Bắt đầu tạo affiliate link đầu tiên để quản lý chiến dịch tiếp thị.</p>
-                    <a href="{{ route('admin.affiliate-links.create') }}" class="affiliate-btn affiliate-btn-primary">
-                        <i class="fas fa-plus"></i>
-                        <span>Tạo Affiliate Link</span>
-                    </a>
-                </div>
+                @else
+                    <!-- Empty state - no items at all -->
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h3 class="empty-title">Chưa có affiliate link nào</h3>
+                        <p class="empty-description">Bắt đầu tạo affiliate link đầu tiên để quản lý chiến dịch tiếp thị.</p>
+                        <a href="{{ route('admin.affiliate-links.create') }}" class="affiliate-btn affiliate-btn-primary">
+                            <i class="fas fa-plus"></i>
+                            <span>Tạo Affiliate Link</span>
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
     </div>

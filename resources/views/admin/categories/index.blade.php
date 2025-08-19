@@ -100,17 +100,29 @@
                     {{ $categories->links() }}
                 </div>
             @else
-                <div class="category-empty-state">
-                    <div class="category-empty-state-icon">
-                        <i class="fas fa-tags"></i>
+                @if(request()->hasAny(['search', 'status']))
+                    <!-- No search results -->
+                    <div class="category-no-results-state">
+                        <div class="category-no-results-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Không tìm thấy kết quả</h3>
+                        <p>Không có danh mục nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
                     </div>
-                    <h3>Chưa có danh mục nào</h3>
-                    <p>Bắt đầu tạo danh mục đầu tiên để quản lý sản phẩm tốt hơn</p>
-                    <a href="{{ route('admin.categories.create') }}" class="category-btn category-btn-primary">
-                        <i class="fas fa-plus"></i>
-                        Tạo danh mục đầu tiên
-                    </a>
-                </div>
+                @else
+                    <!-- Empty state - no items at all -->
+                    <div class="category-empty-state">
+                        <div class="category-empty-state-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <h3>Chưa có danh mục nào</h3>
+                        <p>Bắt đầu tạo danh mục đầu tiên để quản lý sản phẩm tốt hơn</p>
+                        <a href="{{ route('admin.categories.create') }}" class="category-btn category-btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Tạo danh mục đầu tiên
+                        </a>
+                    </div>
+                @endif
             @endif
         </div>
     </div>

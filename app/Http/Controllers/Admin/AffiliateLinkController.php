@@ -32,8 +32,8 @@ class AffiliateLinkController extends Controller
         }
 
         // Filter by campaign
-        if ($request->filled('campaign_id')) {
-            $query->where('campaign_id', $request->campaign_id);
+        if ($request->filled('campaign')) {
+            $query->where('campaign_id', $request->campaign);
         }
 
         // Filter by status
@@ -51,7 +51,10 @@ class AffiliateLinkController extends Controller
         // Get statistics - Optimized with single query
         $stats = $this->getStatistics();
 
-        return view('admin.affiliate-links.index', compact('affiliateLinks', 'stats'));
+        // Get form data for filters
+        $formData = $this->getFormData();
+
+        return view('admin.affiliate-links.index', array_merge(compact('affiliateLinks', 'stats'), $formData));
     }
 
     /**
@@ -260,7 +263,7 @@ class AffiliateLinkController extends Controller
         return [
             'publishers' => User::whereIn('role', ['shop', 'publisher'])->get(),
             'products' => Product::where('is_active', true)->get(),
-            'campaigns' => Campaign::where('status', 'active')->get(),
+            'campaigns' => Campaign::all(),
         ];
     }
 

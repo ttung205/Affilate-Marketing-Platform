@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->string('image')->nullable();
-            $table->string('category')->nullable();
-            $table->integer('stock')->default(0);
-            $table->boolean('is_active')->default(true);
-            $table->string('affiliate_link')->nullable(); // Link affiliate
-            $table->decimal('commission_rate', 5, 2)->default(0.00); // Tỷ lệ hoa hồng (%)
+                    $table->decimal('price', 15, 2);
+        $table->string('image')->nullable();
+        $table->string('category')->nullable();
+        $table->integer('stock')->default(0);
+        $table->boolean('is_active')->default(true);
+        $table->string('affiliate_link')->nullable(); // Link affiliate
+        $table->decimal('commission_rate', 10, 2)->default(0.00); // Tỷ lệ hoa hồng (%)
             $table->string('affiliate_id')->nullable(); // ID affiliate
             $table->string('affiliate_name')->nullable(); // Tên affiliate
             $table->string('affiliate_email')->nullable(); // Email affiliate

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('publisher_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->onDelete('set null');
+            $table->foreignId('campaign_id')->nullable();
             $table->string('original_url');
             $table->string('tracking_code')->unique();
             $table->decimal('commission_rate', 5, 2)->default(15.00); // 15.00%

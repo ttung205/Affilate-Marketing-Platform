@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('start_date');
             $table->date('end_date');
-            $table->enum('status', ['active', 'inactive', 'draft'])->default('draft');
-            $table->decimal('budget', 10, 2)->nullable();
+            $table->enum('status', ['active', 'paused', 'completed', 'draft'])->default('draft');
+            $table->decimal('budget', 15, 2)->nullable();
             $table->integer('target_conversions')->nullable();
             $table->timestamps();
             

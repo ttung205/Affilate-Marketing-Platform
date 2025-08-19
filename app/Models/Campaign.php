@@ -39,6 +39,16 @@ class Campaign extends Model
                $this->end_date >= now();
     }
 
+    public function getConversionRateAttribute(): float
+    {
+        $totalClicks = $this->getTotalClicksAttribute();
+        if ($totalClicks === 0) {
+            return 0.0;
+        }
+        
+        return round(($this->getTotalConversionsAttribute() / $totalClicks) * 100, 2);
+    }
+
     public function getTotalClicksAttribute(): int
     {
         return $this->affiliateLinks()
