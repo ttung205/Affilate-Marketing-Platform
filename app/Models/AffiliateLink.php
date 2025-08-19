@@ -14,6 +14,7 @@ class AffiliateLink extends Model
         'campaign_id',
         'original_url',
         'tracking_code',
+        'short_code',
         'commission_rate',
         'status',
     ];

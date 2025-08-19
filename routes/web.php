@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AffiliateLinkController;
 use App\Http\Controllers\Admin\CampaignController;
+use App\Http\Controllers\TrackingController;
 
 Route::get('/', function () {
     return view('home');
@@ -34,6 +35,10 @@ Route::get('/dashboard', function () {
 })->middleware('auth')->name('dashboard');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Affiliate tracking routes
+Route::get('/track/{trackingCode}', [TrackingController::class, 'trackByCode'])->name('tracking.track');
+Route::get('/ref/{shortCode}', [TrackingController::class, 'trackByShortCode'])->name('tracking.short');
 
 Route::get('/admin', function(){
     return view('admin.dashboard');

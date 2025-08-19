@@ -172,11 +172,10 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Tracking Code</th>
                                 <th>Publisher</th>
                                 <th>Sản phẩm</th>
                                 <th>Campaign</th>
-                                <th>URL</th>
+                                <th>URLs & Tracking</th>
                                 <th>Commission</th>
                                 <th>Trạng thái</th>
                                 <th>Thống kê</th>
@@ -187,13 +186,7 @@
                         <tbody>
                             @foreach($affiliateLinks ?? [] as $link)
                                 <tr>
-                                    <td class="table-id">{{ $link->id }}</td>
-                                    <td class="table-tracking">
-                                        <code class="tracking-code">{{ $link->tracking_code }}</code>
-                                        <button class="copy-btn" onclick="copyToClipboard('{{ $link->tracking_code }}')" title="Copy tracking code">
-                                            <i class="fas fa-copy"></i>
-                                        </button>
-                                    </td>
+                                                                         <td class="table-id">{{ $link->id }}</td>
                                                                          <td class="table-publisher">
                                          <div class="user-info">
                                              <div class="user-details">
@@ -218,12 +211,56 @@
                                         @endif
                                     </td>
                                     <td class="table-url">
-                                        <a href="{{ $link->original_url ?? '#' }}" target="_blank" class="url-link">
-                                            {{ $link->original_url ?? 'N/A' }}
-                                        </a>
+                                        @if($link->short_code)
+                                            <div class="url-links">
+                                                <div class="url-item">
+                                                    <label class="url-label">Short URL:</label>
+                                                    <a href="{{ route('tracking.short', $link->short_code) }}" target="_blank" class="url-link">
+                                                        {{ route('tracking.short', $link->short_code) }}
+                                                    </a>
+                                                    <button class="copy-btn" onclick="copyToClipboard('{{ route('tracking.short', $link->short_code) }}')" title="Copy short URL">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="url-item">
+                                                    <label class="url-label">Tracking:</label>
+                                                    <code class="tracking-code">{{ $link->tracking_code }}</code>
+                                                    <button class="copy-btn" onclick="copyToClipboard('{{ $link->tracking_code }}')" title="Copy tracking code">
+                                                        <i class="fas fa-copy"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="url-info">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-link"></i>
+                                                        URL gốc: {{ Str::limit($link->original_url, 50) }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <span class="text-muted">Chưa có short code</span>
+                                        @endif
                                     </td>
                                     <td class="table-commission">
-                                        <span class="commission-badge">{{ $link->commission_rate ?? 0 }}%</span>
+                                        <div class="commission-info">
+                                            <span class="commission-badge {{ $link->product && $link->product->commission_rate != $link->commission_rate ? 'commission-different' : '' }}">
+                                                {{ $link->commission_rate ?? 0 }}%
+                                            </span>
+                                            @if($link->product && $link->product->commission_rate != $link->commission_rate)
+                                                <div class="commission-note" title="Commission rate của sản phẩm: {{ $link->product->commission_rate ?? 0 }}%">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-info-circle"></i>
+                                                        Khác với sản phẩm
+                                                    </small>
+                                                </div>
+                                            @elseif($link->product)
+                                                <div class="commission-note">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        Từ sản phẩm
+                                                    </small>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="table-status">
                                         @if(($link->status ?? '') === 'active')

@@ -58,7 +58,9 @@
                         <select name="product_id" id="product_id" class="form-select" required>
                             <option value="">Chọn sản phẩm</option>
                             @foreach($products ?? [] as $product)
-                                <option value="{{ $product->id }}" {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                                <option value="{{ $product->id }}" 
+                                        data-commission="{{ $product->commission_rate ?? 0 }}"
+                                        {{ old('product_id') == $product->id ? 'selected' : '' }}>
                                     {{ $product->name }} - {{ $product->category->name ?? 'N/A' }}
                                 </option>
                             @endforeach
@@ -92,6 +94,10 @@
                         <input type="number" name="commission_rate" id="commission_rate" 
                                class="form-input" min="0" max="100" step="0.01" 
                                value="{{ old('commission_rate', 10) }}" required>
+                        <div id="product-commission-info" class="form-help" style="display: none;">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="product-commission-text">Commission rate của sản phẩm: <strong id="product-commission-value">0%</strong></span>
+                        </div>
                         @error('commission_rate')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -128,12 +134,22 @@
                     <div class="form-group form-group-full">
                         <label class="form-label">Tracking Code Preview</label>
                         <div class="tracking-preview">
-                            <code class="tracking-code-display" id="trackingPreview">Chọn Publisher và Product để xem preview</code>
-                            <button type="button" class="copy-btn" onclick="copyToClipboard(document.getElementById('trackingPreview').textContent)" title="Copy tracking code">
-                                <i class="fas fa-copy"></i>
-                            </button>
+                            <div class="code-preview-item">
+                                <label class="code-label">Tracking Code:</label>
+                                <code class="tracking-code-display" id="trackingPreview">Chọn Publisher và Product để xem preview</code>
+                                <button type="button" class="copy-btn" onclick="copyToClipboard(document.getElementById('trackingPreview').textContent)" title="Copy tracking code">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <div class="code-preview-item">
+                                <label class="code-label">Short Code:</label>
+                                <code class="short-code-display" id="shortCodePreview">Chọn Publisher và Product để xem preview</code>
+                                <button type="button" class="copy-btn" onclick="copyToClipboard(document.getElementById('shortCodePreview').textContent)" title="Copy short code">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
                         </div>
-                        <small class="form-help">Tracking code sẽ được tạo tự động khi lưu</small>
+                        <small class="form-help">Tracking code và Short code sẽ được tạo tự động khi lưu</small>
                     </div>
                 </div>
 
@@ -155,20 +171,63 @@
 
 <script>
 document.getElementById('publisher_id').addEventListener('change', updatePreview);
-document.getElementById('product_id').addEventListener('change', updatePreview);
+document.getElementById('product_id').addEventListener('change', updatePreviewAndCommission);
+
+// Khởi tạo commission rate khi trang được load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('product_id').value) {
+        updateCommissionRate();
+    }
+});
 
 function updatePreview() {
     const publisherSelect = document.getElementById('publisher_id');
     const productSelect = document.getElementById('product_id');
-    const preview = document.getElementById('trackingPreview');
+    const trackingPreview = document.getElementById('trackingPreview');
+    const shortCodePreview = document.getElementById('shortCodePreview');
     
     if (publisherSelect.value && productSelect.value) {
         const publisher = publisherSelect.options[publisherSelect.selectedIndex].text.split(' (')[0];
         const product = productSelect.options[productSelect.selectedIndex].text.split(' - ')[0];
         
-        preview.textContent = `AFF_${publisher.substring(0, 3).toUpperCase()}_${product.substring(0, 3).toUpperCase()}_${Date.now().toString(36)}`;
+        // Generate tracking code preview
+        trackingPreview.textContent = `AFF_${publisher.substring(0, 3).toUpperCase()}_${product.substring(0, 3).toUpperCase()}_${Date.now().toString(36)}`;
+        
+        // Generate short code preview (6 random characters)
+        shortCodePreview.textContent = Math.random().toString(36).substring(2, 8).toUpperCase();
     } else {
-        preview.textContent = 'Chọn Publisher và Product để xem preview';
+        trackingPreview.textContent = 'Chọn Publisher và Product để xem preview';
+        shortCodePreview.textContent = 'Chọn Publisher và Product để xem preview';
+    }
+}
+
+function updatePreviewAndCommission() {
+    updatePreview();
+    updateCommissionRate();
+}
+
+function updateCommissionRate() {
+    const productSelect = document.getElementById('product_id');
+    const commissionInput = document.getElementById('commission_rate');
+    const productCommissionInfo = document.getElementById('product-commission-info');
+    const productCommissionValue = document.getElementById('product-commission-value');
+    
+    if (productSelect.value) {
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const productCommission = parseFloat(selectedOption.getAttribute('data-commission')) || 0;
+        
+        // Tự động điền commission rate của sản phẩm
+        commissionInput.value = productCommission;
+        
+        // Hiển thị thông tin commission rate của sản phẩm
+        productCommissionValue.textContent = productCommission + '%';
+        productCommissionInfo.style.display = 'block';
+        
+        // Thêm class để styling
+        productCommissionInfo.className = 'form-help commission-info';
+    } else {
+        // Ẩn thông tin khi không có sản phẩm nào được chọn
+        productCommissionInfo.style.display = 'none';
     }
 }
 

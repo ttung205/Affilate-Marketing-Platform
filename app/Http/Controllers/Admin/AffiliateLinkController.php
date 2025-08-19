@@ -86,6 +86,9 @@ class AffiliateLinkController extends Controller
             Product::find($request->product_id)
         );
 
+        // Generate unique short code
+        $shortCode = $this->generateShortCode();
+
         try {
             $affiliateLink = AffiliateLink::create([
                 'publisher_id' => $request->publisher_id,
@@ -93,6 +96,7 @@ class AffiliateLinkController extends Controller
                 'campaign_id' => $request->campaign_id,
                 'original_url' => $request->original_url,
                 'tracking_code' => $trackingCode,
+                'short_code' => $shortCode,
                 'commission_rate' => $request->commission_rate,
                 'status' => $request->status,
             ]);
@@ -253,6 +257,21 @@ class AffiliateLinkController extends Controller
         }
         
         return $trackingCode;
+    }
+
+    /**
+     * Generate unique short code
+     */
+    private function generateShortCode(): string
+    {
+        $shortCode = strtoupper(Str::random(6));
+        
+        // Ensure uniqueness
+        while (AffiliateLink::where('short_code', $shortCode)->exists()) {
+            $shortCode = strtoupper(Str::random(6));
+        }
+        
+        return $shortCode;
     }
 
     /**
