@@ -336,12 +336,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     const form = document.getElementById('toggleStatusForm');
                     form.action = `/admin/affiliate-links/${id}/toggle-status`;
                     
+                    // Clear any existing status inputs
+                    const existingInputs = form.querySelectorAll('input[name="status"]');
+                    existingInputs.forEach(input => input.remove());
+                    
                     const statusInput = document.createElement('input');
                     statusInput.type = 'hidden';
                     statusInput.name = 'status';
                     statusInput.value = status;
                     form.appendChild(statusInput);
                     
+                    console.log('Submitting form:', form.action, 'with status:', status);
                     form.submit();
                 }
             });

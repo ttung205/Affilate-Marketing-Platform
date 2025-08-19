@@ -190,6 +190,31 @@ class AffiliateLinkController extends Controller
     }
 
     /**
+     * Toggle affiliate link status
+     */
+    public function toggleStatus(Request $request, AffiliateLink $affiliateLink)
+    {
+        $newStatus = $request->input('status');
+        
+        if (!in_array($newStatus, ['active', 'inactive', 'pending'])) {
+            return redirect()->route('admin.affiliate-links.index')
+                ->with('error', 'Trạng thái không hợp lệ.');
+        }
+
+        $affiliateLink->update(['status' => $newStatus]);
+
+        $statusText = match($newStatus) {
+            'active' => 'kích hoạt',
+            'inactive' => 'vô hiệu hóa',
+            'pending' => 'chờ duyệt',
+            default => 'cập nhật'
+        };
+
+        return redirect()->route('admin.affiliate-links.index')
+            ->with('success', "Affiliate link đã được {$statusText} thành công.");
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(AffiliateLink $affiliateLink)
