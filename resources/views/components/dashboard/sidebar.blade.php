@@ -41,15 +41,43 @@
                 </li>
             </ul>
         </li>
-        <!-- Tạm thời comment các menu chưa có route -->
-        {{-- <li class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.users.index') }}">
+        <!-- Quản lý người dùng với submenu -->
+        <li class="sidebar-menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
                 <i class="fas fa-users"></i>
-                Quản lý người dùng
+                <span>Quản lý Người dùng</span>
+                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
+            <ul class="sidebar-submenu">
+                <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.index') }}">
+                        <i class="fas fa-list"></i>
+                        Tất cả người dùng
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.create') }}">
+                        <i class="fas fa-plus"></i>
+                        Thêm người dùng
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.users.shop') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.shop') }}">
+                        <i class="fas fa-store"></i>
+                        Quản lý Shop
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.users.publishers') ? 'active' : '' }}">
+                    <a href="{{ route('admin.users.publishers') }}">
+                        <i class="fas fa-bullhorn"></i>
+                        Quản lý Publisher
+                    </a>
+                </li>
+            </ul>
         </li>
         
-        <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+        <!-- Tạm thời comment các menu chưa có route -->
+        {{-- <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
             <a href="{{ route('admin.orders.index') }}">
                 <i class="fas fa-shopping-cart"></i>
                 Quản lý đơn hàng

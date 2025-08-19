@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('home');
@@ -59,4 +60,10 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     
     // Category management routes - CRUD đầy đủ
     Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
+    
+    // User management routes - CRUD đầy đủ
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::get('/users/shop', [App\Http\Controllers\Admin\UserController::class, 'shopUsers'])->name('users.shop');
+    Route::get('/users/publishers', [App\Http\Controllers\Admin\UserController::class, 'publisherUsers'])->name('users.publishers');
 });

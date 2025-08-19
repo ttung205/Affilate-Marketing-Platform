@@ -1,0 +1,162 @@
+/* Confirm Popup Styles */
+.confirm-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.confirm-popup-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.confirm-popup {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 90%;
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.confirm-popup-overlay.show .confirm-popup {
+    transform: scale(1);
+}
+
+.confirm-popup-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+}
+
+.confirm-popup-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+    color: white;
+}
+
+.confirm-popup-icon.warning {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+}
+
+.confirm-popup-icon.danger {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+}
+
+.confirm-popup-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.confirm-popup-body {
+    padding: 20px 24px;
+    text-align: center;
+}
+
+.confirm-popup-message {
+    margin: 0 0 16px 0;
+    color: #4a5568;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.confirm-popup-details {
+    background: #f7fafc;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.confirm-popup-details strong {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.confirm-popup-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 0 24px 24px;
+}
+
+.confirm-popup-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.confirm-popup-btn-cancel {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.confirm-popup-btn-cancel:hover {
+    background: #cbd5e0;
+    transform: translateY(-1px);
+}
+
+.confirm-popup-btn-confirm {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: white;
+}
+
+.confirm-popup-btn-confirm.warning {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+}
+
+.confirm-popup-btn-confirm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.confirm-popup-btn-confirm.warning:hover {
+    box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .confirm-popup {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .confirm-popup-actions {
+        flex-direction: column;
+    }
+    
+    .confirm-popup-btn {
+        width: 100%;
+    }
+}

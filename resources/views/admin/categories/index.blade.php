@@ -81,18 +81,12 @@
                                            title="Chỉnh sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('admin.categories.destroy', $category) }}" 
-                                              method="POST" 
-                                              class="d-inline category-delete-form"
-                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" 
-                                                    class="category-btn category-btn-sm category-btn-outline-danger" 
-                                                    title="Xóa">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" 
+                                                class="category-btn category-btn-sm category-btn-outline-danger" 
+                                                title="Xóa"
+                                                onclick="showDeleteCategoryConfirm('{{ $category->id }}', '{{ $category->name }}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -121,4 +115,27 @@
         </div>
     </div>
 </div>
+
+<!-- Hidden Form for Delete Action -->
+<form id="delete-category-form" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
+
+<script>
+function showDeleteCategoryConfirm(categoryId, categoryName) {
+    showConfirmPopup({
+        title: 'Xóa danh mục',
+        message: 'Bạn có chắc chắn muốn xóa danh mục này? Hành động này không thể hoàn tác.',
+        details: `Danh mục: ${categoryName}`,
+        type: 'danger',
+        confirmText: 'Xóa',
+        onConfirm: () => {
+            const form = document.getElementById('delete-category-form');
+            form.action = `{{ route('admin.categories.index') }}/${categoryId}`;
+            form.submit();
+        }
+    });
+}
+</script>
 @endsection

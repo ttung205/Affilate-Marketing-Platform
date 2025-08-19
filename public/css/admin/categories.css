@@ -187,10 +187,11 @@ body {
 .category-action-buttons {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .category-btn-sm {
-    padding: 8px 12px;
+    padding: 6px 12px;
     font-size: 12px;
     border-radius: 6px;
     text-decoration: none;
@@ -204,24 +205,28 @@ body {
 
 .category-btn-outline-primary {
     background: transparent;
-    color: #007bff;
-    border: 1px solid #007bff;
+    color: #3182ce;
+    border: 2px solid #3182ce;
 }
 
 .category-btn-outline-primary:hover {
-    background: #007bff;
+    background: #3182ce;
     color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
 }
 
 .category-btn-outline-danger {
     background: transparent;
-    color: #dc3545;
-    border: 1px solid #dc3545;
+    color: #e53e3e;
+    border: 2px solid #e53e3e;
 }
 
 .category-btn-outline-danger:hover {
-    background: #dc3545;
+    background: #e53e3e;
     color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
 }
 
 /* Form Styles */

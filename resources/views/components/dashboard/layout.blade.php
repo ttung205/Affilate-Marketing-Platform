@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/categories.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/products.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/users.css') }}">
     
     @stack('styles')
 </head>
@@ -37,6 +40,8 @@
     
     <!-- Alert System JavaScript -->
     <script src="{{ asset('js/components/alerts.js') }}"></script>
+    <!-- Confirm Popup JavaScript -->
+    <script src="{{ asset('js/components/confirm-popup.js') }}"></script>
     
     @stack('scripts')
 </body>

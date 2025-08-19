@@ -263,41 +263,64 @@ body{
 
 .product-action-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .product-btn-edit,
-.product-btn-delete {
-    padding: 8px 16px;
+.product-btn-delete,
+.product-btn-toggle {
+    padding: 6px 12px;
     border: none;
-    border-radius: 20px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.3s ease;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .product-btn-edit {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+    background: transparent;
+    color: #3182ce;
+    border: 2px solid #3182ce;
 }
 
 .product-btn-edit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    background: #3182ce;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
 }
 
 .product-btn-delete {
-    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-    color: white;
-    box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+    background: transparent;
+    color: #e53e3e;
+    border: 2px solid #e53e3e;
 }
 
 .product-btn-delete:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    background: #e53e3e;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+.product-btn-toggle {
+    background: transparent;
+    color: #0bc5ea;
+    border: 2px solid #0bc5ea;
+    cursor: pointer;
+}
+
+.product-btn-toggle:hover {
+    background: #0bc5ea;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(11, 197, 234, 0.3);
 }
 
 /* Category Badge */
