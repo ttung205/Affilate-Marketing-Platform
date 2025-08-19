@@ -65,7 +65,6 @@
                                name="password" 
                                class="user-form-input @error('password') is-invalid @enderror" 
                                placeholder="Để trống nếu không thay đổi">
-                        <small class="user-form-help">Để trống nếu không muốn thay đổi mật khẩu</small>
                         @error('password')
                             <div class="user-form-error">{{ $message }}</div>
                         @enderror
@@ -93,7 +92,6 @@
                                 class="user-form-select @error('role') is-invalid @enderror"
                                 required>
                             <option value="">Chọn vai trò</option>
-                            <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
                             <option value="shop" {{ old('role', $user->role) === 'shop' ? 'selected' : '' }}>Shop</option>
                             <option value="publisher" {{ old('role', $user->role) === 'publisher' ? 'selected' : '' }}>Publisher</option>
                             <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>

@@ -93,7 +93,6 @@
                                 class="user-form-select @error('role') is-invalid @enderror"
                                 required>
                             <option value="">Chọn vai trò</option>
-                            <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>User</option>
                             <option value="shop" {{ old('role') === 'shop' ? 'selected' : '' }}>Shop</option>
                             <option value="publisher" {{ old('role') === 'publisher' ? 'selected' : '' }}>Publisher</option>
                             <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
