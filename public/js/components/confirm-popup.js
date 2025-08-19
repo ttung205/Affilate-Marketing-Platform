@@ -21,10 +21,6 @@ class ConfirmPopup {
                 </div>
                 <div class="confirm-popup-body">
                     <p class="confirm-popup-message">Bạn có chắc chắn muốn thực hiện hành động này?</p>
-                    <div class="confirm-popup-details">
-                        <strong>Chi tiết:</strong><br>
-                        <span class="confirm-popup-detail-text"></span>
-                    </div>
                 </div>
                 <div class="confirm-popup-actions">
                     <button class="confirm-popup-btn confirm-popup-btn-cancel">
@@ -66,7 +62,6 @@ class ConfirmPopup {
         const {
             title = 'Xác nhận',
             message = 'Bạn có chắc chắn muốn thực hiện hành động này?',
-            details = '',
             type = 'danger', // 'danger' or 'warning'
             confirmText = 'Xác nhận',
             cancelText = 'Hủy bỏ',
@@ -76,7 +71,6 @@ class ConfirmPopup {
         // Update content
         this.overlay.querySelector('.confirm-popup-title').textContent = title;
         this.overlay.querySelector('.confirm-popup-message').textContent = message;
-        this.overlay.querySelector('.confirm-popup-detail-text').textContent = details;
         this.overlay.querySelector('.confirm-popup-btn-confirm').textContent = confirmText;
         this.overlay.querySelector('.confirm-popup-btn-cancel').textContent = cancelText;
 
@@ -90,6 +84,10 @@ class ConfirmPopup {
         // Update icon
         if (type === 'warning') {
             icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        } else if (type === 'success') {
+            icon.innerHTML = '<i class="fas fa-check"></i>';
+        } else if (type === 'info') {
+            icon.innerHTML = '<i class="fas fa-info-circle"></i>';
         } else {
             icon.innerHTML = '<i class="fas fa-trash"></i>';
         }

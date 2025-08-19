@@ -39,6 +39,10 @@ body{
     display: flex;
     align-items: center;
     gap: 8px;
+    color: #495057;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .breadcrumb-link {
@@ -79,7 +83,7 @@ body{
 .breadcrumb-item.active span {
     color: #495057;
     font-weight: 600;
-    padding: 6px 12px;
+    padding: 6px;
 }
 
 .search-box input {

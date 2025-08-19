@@ -1,0 +1,183 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Campaign;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
+
+class CampaignController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        $query = Campaign::query();
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by date range
+        if ($request->filled('start_date')) {
+            $query->where('start_date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('end_date', '<=', $request->end_date);
+        }
+
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $campaigns = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        // Get statistics
+        $stats = [
+            'total' => Campaign::count(),
+            'active' => Campaign::where('status', 'active')->count(),
+            'inactive' => Campaign::where('status', 'inactive')->count(),
+            'draft' => Campaign::where('status', 'draft')->count(),
+            'total_budget' => Campaign::sum('budget'),
+            'total_conversions' => Campaign::withCount('affiliateLinks')->get()->sum('affiliate_links_count'),
+        ];
+
+        return view('admin.campaigns.index', compact('campaigns', 'stats'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('admin.campaigns.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|in:active,inactive,draft',
+            'budget' => 'nullable|numeric|min:0',
+            'target_conversions' => 'nullable|integer|min:0',
+        ]);
+
+        try {
+            $campaign = Campaign::create($request->all());
+
+            Log::info('Campaign created successfully', [
+                'id' => $campaign->id,
+                'name' => $campaign->name,
+                'status' => $campaign->status,
+            ]);
+
+            return redirect()->route('admin.campaigns.index')
+                ->with('success', 'Campaign đã được tạo thành công.');
+        } catch (Exception $e) {
+            Log::error('Failed to create campaign', [
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Không thể tạo campaign. Vui lòng thử lại.');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Campaign $campaign)
+    {
+        $campaign->load(['affiliateLinks.product', 'affiliateLinks.publisher']);
+        
+        // Get campaign performance
+        $stats = [
+            'total_links' => $campaign->affiliateLinks()->count(),
+            'total_clicks' => $campaign->getTotalClicksAttribute(),
+            'total_conversions' => $campaign->getTotalConversionsAttribute(),
+            'total_commission' => $campaign->getTotalCommissionAttribute(),
+            'conversion_rate' => $campaign->getTotalClicksAttribute() > 0 
+                ? round(($campaign->getTotalConversionsAttribute() / $campaign->getTotalClicksAttribute()) * 100, 2)
+                : 0,
+        ];
+
+        return view('admin.campaigns.show', compact('campaign', 'stats'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Campaign $campaign)
+    {
+        return view('admin.campaigns.edit', compact('campaign'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Campaign $campaign)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|in:active,inactive,draft',
+            'budget' => 'nullable|numeric|min:0',
+            'target_conversions' => 'nullable|integer|min:0',
+        ]);
+
+        try {
+            $campaign->update($request->all());
+
+            Log::info('Campaign updated successfully', [
+                'id' => $campaign->id,
+                'changes' => $campaign->getChanges(),
+            ]);
+
+            return redirect()->route('admin.campaigns.index')
+                ->with('success', 'Campaign đã được cập nhật thành công.');
+        } catch (Exception $e) {
+            Log::error('Failed to update campaign', [
+                'id' => $campaign->id,
+                'data' => $request->all(),
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Không thể cập nhật campaign. Vui lòng thử lại.');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Campaign $campaign)
+    {
+        // Check if campaign has affiliate links
+        if ($campaign->affiliateLinks()->exists()) {
+            return redirect()->route('admin.campaigns.index')
+                ->with('error', 'Không thể xóa campaign đã có affiliate links.');
+        }
+
+        $campaign->delete();
+
+        return redirect()->route('admin.campaigns.index')
+            ->with('success', 'Campaign đã được xóa thành công.');
+    }
+}

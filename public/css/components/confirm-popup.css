@@ -58,6 +58,10 @@
     background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
 }
 
+.confirm-popup-icon.success {
+    background: #09c431 !important;
+}
+
 .confirm-popup-icon.danger {
     background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
 }
@@ -136,6 +140,10 @@
     background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
 }
 
+.confirm-popup-btn-confirm.success {
+    background: #08b02c !important;
+}
+
 .confirm-popup-btn-confirm:hover {
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
@@ -143,6 +151,10 @@
 
 .confirm-popup-btn-confirm.warning:hover {
     box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
+}
+
+.confirm-popup-btn-confirm.success:hover {
+    box-shadow: 0 4px 12px rgba(8, 176, 44, 0.3);
 }
 
 /* Responsive */

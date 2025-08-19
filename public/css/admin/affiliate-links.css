@@ -1,0 +1,863 @@
+/* ===================================
+   AFFILIATE LINKS ADMIN STYLING
+   Pure CSS - No Bootstrap
+   Updated to match users.css color scheme
+   =================================== */
+
+/* Reset and Base Styles */
+.affiliate-links-container {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #2d3748;
+    background-color: #f7fafc;
+    min-height: 100vh;
+}
+
+/* Header Section */
+.affiliate-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.affiliate-header-left {
+    flex: 1;
+}
+
+.affiliate-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 10px 0;
+}
+
+.affiliate-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.affiliate-breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.affiliate-breadcrumb a:hover {
+    color: #0056b3;
+}
+
+.breadcrumb-separator {
+    color: #718096;
+}
+
+.breadcrumb-current {
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.affiliate-header-right {
+    flex-shrink: 0;
+}
+
+/* Button Styles */
+.affiliate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.affiliate-btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}
+
+.affiliate-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
+}
+
+.affiliate-btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+.affiliate-btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
+}
+
+/* Statistics Grid */
+.affiliate-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.affiliate-stat-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.affiliate-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.affiliate-stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.affiliate-stat-primary .affiliate-stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.affiliate-stat-success .affiliate-stat-icon {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.affiliate-stat-warning .affiliate-stat-icon {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.affiliate-stat-info .affiliate-stat-icon {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+}
+
+.affiliate-stat-secondary .affiliate-stat-icon {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+.affiliate-stat-danger .affiliate-stat-icon {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.affiliate-stat-content h3 {
+    margin: 0 0 8px 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.affiliate-stat-content p {
+    margin: 0;
+    color: #718096;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Filters Section */
+.affiliate-filters-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.filters-header {
+    background-color: #f7fafc;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.filters-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.filters-body {
+    padding: 24px;
+}
+
+.filters-form {
+    width: 100%;
+}
+
+.filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.filter-input,
+.filter-select {
+    width: 80%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+    margin-right: 25px;
+}
+
+/* Form Section */
+.affiliate-form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.form-header {
+    background-color: #f7fafc;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-title {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.form-subtitle {
+    margin: 0;
+    color: #718096;
+    font-size: 16px;
+}
+
+.form-body {
+    padding: 24px;
+}
+
+.affiliate-form {
+    width: 100%;
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 300px;
+}
+
+.form-group-full {
+    flex: 1 1 100%;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.required {
+    color: #e53e3e;
+}
+
+.form-input,
+.form-select {
+    width: 90%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    background-color: white;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-input:invalid,
+.form-select:invalid {
+    border-color: #e53e3e;
+}
+
+.form-error {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.form-help {
+    color: #718096;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Tracking Preview */
+.tracking-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f7fafc;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+}
+
+.tracking-code-display {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #007bff;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding-top: 24px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Table Section */
+.affiliate-table-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background-color: #f7fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.table-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.table-count {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.table-body {
+    padding: 24px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* Table Styles */
+.affiliate-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.affiliate-table th {
+    background-color: #f7fafc;
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #2d3748;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.affiliate-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.affiliate-table tbody tr:hover {
+    background-color: #f7fafc;
+}
+
+/* Table Cell Specific Styles */
+.table-id {
+    font-weight: 600;
+    color: #718096;
+}
+
+.table-tracking {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.tracking-code {
+    background-color: #f7fafc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #007bff;
+    border: 1px solid #e2e8f0;
+    word-break: break-all;
+    line-height: 1.3;
+    max-width: 200px;
+}
+
+.copy-btn {
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #718096;
+    align-self: flex-start;
+    font-size: 12px;
+}
+
+.copy-btn:hover {
+    background-color: #e2e8f0;
+    color: #2d3748;
+}
+
+.copy-btn.copy-success {
+    background: linear-gradient(135deg, #38a169 0%, #68d391 100%);
+    color: white;
+    border-color: #38a169;
+}
+
+/* User and Product Info */
+.user-info,
+.product-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.user-details,
+.product-details {
+    min-width: 0;
+    width: 100%;
+}
+
+.user-name,
+.product-name {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.user-email,
+.product-category {
+    font-size: 13px;
+    color: #718096;
+    line-height: 1.2;
+}
+
+/* Badges */
+.campaign-badge,
+.commission-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.campaign-badge {
+    background: linear-gradient(135deg, #0bc5ea 0%, #00d4ff 100%);
+    color: white;
+}
+
+.commission-badge {
+    background: linear-gradient(135deg, #38a169 0%, #68d391 100%);
+    color: white;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.status-active {
+    background: #c6f6d5;
+    color: #22543d;
+}
+
+.status-inactive {
+    background: #fed7d7;
+    color: #742a2a;
+}
+
+.status-pending {
+    background: #fef5e7;
+    color: #744210;
+}
+
+/* URL Link */
+.url-link {
+    color: #007bff;
+    text-decoration: none;
+    max-width: 200px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.url-link:hover {
+    text-decoration: underline;
+}
+
+/* Statistics in Table */
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item .stat-label {
+    font-size: 10px;
+    color: #718096;
+    margin-bottom: 2px;
+}
+
+.stat-item .stat-value {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.stat-item .stat-value.clicks { color: #007bff; }
+.stat-item .stat-value.conversions { color: #38a169; }
+.stat-item .stat-value.rate { color: #0bc5ea; }
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.action-view {
+    background: linear-gradient(135deg, #0bc5ea 0%, #00d4ff 100%);
+    color: white;
+}
+
+.action-view:hover {
+    transform: translateY(-1px);
+}
+
+.action-edit {
+    background: linear-gradient(135deg, #d69e2e 0%, #f6ad55 100%);
+    color: white;
+}
+
+.action-edit:hover {
+    transform: translateY(-1px);
+}
+
+.action-enable {
+    background: linear-gradient(135deg, #38a169 0%, #68d391 100%);
+    color: white;
+}
+
+.action-enable:hover {
+    transform: translateY(-1px);
+}
+
+.action-disable {
+    background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+    color: white;
+}
+
+.action-disable:hover {
+    transform: translateY(-1px);
+}
+
+.action-delete {
+    background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%);
+    color: white;
+}
+
+.action-delete:hover {
+    transform: translateY(-1px);
+}
+
+/* Pagination */
+.pagination-wrapper {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+    background: #f7fafc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 32px;
+    color: #a0aec0;
+}
+
+.empty-title {
+    margin: 0 0 12px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.empty-description {
+    color: #718096;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .affiliate-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+    
+    .form-grid {
+        flex-direction: column;
+    }
+    
+    .form-group {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .affiliate-links-container {
+        padding: 15px;
+    }
+    
+    .affiliate-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .affiliate-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .filters-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filter-group {
+        min-width: auto;
+    }
+    
+    .filter-actions {
+        justify-content: center;
+        margin-top: 15px;
+        margin-right: 0;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .affiliate-table {
+        font-size: 12px;
+    }
+    
+    .affiliate-table th,
+    .affiliate-table td {
+        padding: 12px 8px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 3px;
+    }
+}
+
+@media (max-width: 576px) {
+    .affiliate-links-container {
+        padding: 10px;
+    }
+    
+    .affiliate-title {
+        font-size: 24px;
+    }
+    
+    .affiliate-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .form-body {
+        padding: 20px;
+    }
+    
+    .affiliate-table {
+        font-size: 11px;
+    }
+    
+    .affiliate-table th,
+    .affiliate-table td {
+        padding: 8px 6px;
+    }
+}
+
+/* Utility Classes */
+.text-muted {
+    color: #718096 !important;
+}
+
+/* Animation Effects */
+.affiliate-stat-card,
+.affiliate-filters-card,
+.affiliate-table-card,
+.affiliate-form-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.affiliate-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Custom Scrollbar */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

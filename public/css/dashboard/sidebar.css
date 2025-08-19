@@ -121,9 +121,14 @@
 
 .sidebar-menu-link.has-submenu {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+    gap: 7px;
+}
+
+.sidebar-menu-link.has-submenu .submenu-arrow {
+    margin-left: auto;
 }
 
 .submenu-arrow {

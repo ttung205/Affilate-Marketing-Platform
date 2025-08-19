@@ -13,16 +13,103 @@
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-separator"></i>
                         </li>
-                        <li class="breadcrumb-item active">
+                        <li class="breadcrumb-item">
                             <span>Quản lý sản phẩm</span>
                         </li>
+                        @if(request()->routeIs('admin.products.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tất cả sản phẩm</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.products.create'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Thêm sản phẩm</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.products.edit'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Sửa sản phẩm</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.products.show'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Chi tiết sản phẩm</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('admin.categories.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Quản lý sản phẩm</span>
+                        </li>
+                        @if(request()->routeIs('admin.categories.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Danh mục</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.categories.create'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Thêm danh mục</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.categories.edit'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Sửa danh mục</span>
+                            </li>
+                        @endif
                     @elseif(request()->routeIs('admin.users.*'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-separator"></i>
                         </li>
-                        <li class="breadcrumb-item active">
+                        <li class="breadcrumb-item">
                             <span>Quản lý người dùng</span>
                         </li>
+                        @if(request()->routeIs('admin.users.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tất cả người dùng</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.users.create'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Thêm người dùng</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.users.edit'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Sửa người dùng</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.users.show'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Chi tiết người dùng</span>
+                            </li>
+                        @endif
                     @elseif(request()->routeIs('admin.orders.*'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-separator"></i>
@@ -41,9 +128,7 @@
                 </ol>
             </nav>
         </div>
-        
     </div>
-
     <div class="header-right">
         <div class="search-box">
             <input type="text" placeholder="Tìm kiếm..." class="form-control">

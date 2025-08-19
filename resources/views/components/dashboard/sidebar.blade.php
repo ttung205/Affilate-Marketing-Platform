@@ -61,7 +61,29 @@
                         Thêm người dùng
                     </a>
                 </li>
-
+            </ul>
+        </li>
+        
+        <!-- Quản lý Affiliate với submenu -->
+        <li class="sidebar-menu-item {{ request()->routeIs('admin.affiliate-links.*') || request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+                <i class="fas fa-link"></i>
+                <span>Quản lý Affiliate</span>
+                <i class="fas fa-chevron-down submenu-arrow"></i>
+            </a>
+            <ul class="sidebar-submenu">
+                <li class="{{ request()->routeIs('admin.affiliate-links.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.affiliate-links.index') }}">
+                        <i class="fas fa-link"></i>
+                        Affiliate Links
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.campaigns.index') }}">
+                        <i class="fas fa-bullhorn"></i>
+                        Campaigns
+                    </a>
+                </li>
             </ul>
         </li>
         

@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AffiliateLinkController;
+use App\Http\Controllers\Admin\CampaignController;
 
 Route::get('/', function () {
     return view('home');
@@ -64,4 +66,12 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     // User management routes - CRUD đầy đủ
     Route::resource('users', App\Http\Controllers\Admin\UserController::class);
     Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    
+    // Affiliate Link management routes - CRUD đầy đủ
+    Route::resource('affiliate-links', AffiliateLinkController::class);
+    Route::patch('/affiliate-links/{affiliateLink}/toggle-status', [AffiliateLinkController::class, 'toggleStatus'])->name('affiliate-links.toggle-status');
+    
+    // Campaign management routes - CRUD đầy đủ
+    Route::resource('campaigns', CampaignController::class);
+    Route::patch('/campaigns/{campaign}/toggle-status', [CampaignController::class, 'toggleStatus'])->name('campaigns.toggle-status');
 });
