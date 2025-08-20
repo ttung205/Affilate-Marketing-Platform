@@ -100,4 +100,26 @@ class CategoryController extends Controller
 
         return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được xóa thành công!');
     }
+
+    /**
+     * Remove category image and set to default
+     */
+    public function removeImage(Category $category)
+    {
+        try {
+            $category->image = $this->imageService->deleteImageAndSetDefault($category->image, 'category');
+            $category->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Ảnh danh mục đã được xóa và trở về ảnh mặc định',
+                'image_url' => get_image_url($category->image)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi xóa ảnh: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

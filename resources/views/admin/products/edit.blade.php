@@ -103,11 +103,34 @@
                     <label for="image" class="form-label">Hình ảnh sản phẩm</label>
                     @if($product->image)
                         <div class="current-image">
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="Current image" class="product-thumbnail">
+                            <img src="{{ get_image_url($product->image) }}" alt="Current image" class="product-thumbnail">
                             <small>Hình ảnh hiện tại</small>
+                                                    <div class="product-image-actions">
+                            <button type="button"
+                                    class="product-btn product-btn-sm product-btn-outline-danger"
+                                    onclick="removeProductImage({{ $product->id }})">
+                                <i class="fas fa-trash"></i>
+                                Xóa ảnh
+                            </button>
+                        </div>
                         </div>
                     @endif
-                    <input type="file" id="image" name="image" class="form-file" accept="image/*">
+                    <input type="file" 
+                           id="image" 
+                           name="image" 
+                           class="product-image-input" 
+                           accept="image/*"
+                           style="display: none;">
+                    <label for="image" class="product-image-upload-btn">
+                        <i class="fas fa-upload"></i>
+                        {{ $product->image ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
+                    </label>
+                    <div class="product-image-help">
+                        Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
+                        @if($product->image)
+                            <br><small>Để trống nếu muốn giữ hình ảnh hiện tại</small>
+                        @endif
+                    </div>
                     @error('image')
                         <div class="form-error">{{ $message }}</div>
                     @enderror
@@ -159,3 +182,67 @@
     </div>
 </div>
 @endsection
+
+<script>
+function removeProductImage(productId) {
+    showConfirmPopup({
+        title: 'Xóa ảnh sản phẩm',
+        message: 'Bạn có chắc chắn muốn xóa ảnh sản phẩm? Ảnh sẽ được thay thế bằng ảnh mặc định.',
+        type: 'danger',
+        confirmText: 'Xóa ảnh',
+        onConfirm: () => {
+            fetch(`/admin/products/${productId}/image`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật preview
+                    const currentImage = document.querySelector('.current-image');
+                    currentImage.innerHTML = `
+                        <img src="${data.image_url}" alt="Default image" class="product-thumbnail">
+                        <small>Ảnh mặc định</small>
+                    `;
+                    
+                    // Ẩn nút xóa
+                    const removeBtn = document.querySelector('.product-image-actions');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                    
+                    // Hiển thị thông báo thành công
+                    showConfirmPopup({
+                        title: 'Thành công',
+                        message: data.message,
+                        type: 'success',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                } else {
+                    // Hiển thị thông báo lỗi
+                    showConfirmPopup({
+                        title: 'Lỗi',
+                        message: data.message,
+                        type: 'danger',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showConfirmPopup({
+                    title: 'Lỗi',
+                    message: 'Có lỗi xảy ra khi xóa ảnh',
+                    type: 'danger',
+                    confirmText: 'OK',
+                    onConfirm: () => {}
+                });
+            });
+        }
+    });
+}
+</script>

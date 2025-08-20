@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AffiliateLinkController;
 use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\TrackingController;
@@ -61,16 +62,19 @@ Route::post('/reset-password', [ResetPasswordController::class,'reset'])->name('
 Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     
+    // User management routes
+    Route::resource('users', UserController::class);
+    Route::patch('/users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::delete('/users/{user}/avatar', [UserController::class, 'removeAvatar'])->name('users.remove-avatar');
+    
     // Product management routes - CRUD đầy đủ
     Route::resource('products', ProductController::class);
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::delete('/products/{product}/image', [ProductController::class, 'removeImage'])->name('products.remove-image');
     
-    // Category management routes - CRUD đầy đủ
-    Route::resource('categories', App\Http\Controllers\Admin\CategoryController::class);
-    
-    // User management routes - CRUD đầy đủ
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
-    Route::patch('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    // Category management routes
+    Route::resource('categories', CategoryController::class);
+    Route::delete('/categories/{category}/image', [CategoryController::class, 'removeImage'])->name('categories.remove-image');
     
     // Affiliate Link management routes - CRUD đầy đủ
     Route::resource('affiliate-links', AffiliateLinkController::class);

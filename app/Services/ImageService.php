@@ -101,6 +101,45 @@ class ImageService
     }
 
     /**
+     * Delete image and return default image path
+     */
+    public function deleteImageAndSetDefault(string $imagePath, string $type = 'avatar'): string
+    {
+        // Xóa ảnh cũ nếu tồn tại
+        if ($imagePath && $imagePath !== $this->getDefaultImagePath($type)) {
+            $this->deleteImage($imagePath);
+        }
+        
+        // Trả về đường dẫn ảnh mặc định
+        return $this->getDefaultImagePath($type);
+    }
+
+    /**
+     * Get default image path based on type
+     */
+    public function getDefaultImagePath(string $type = 'avatar'): string
+    {
+        switch ($type) {
+            case 'avatar':
+                return 'images/default-avatar.svg';
+            case 'product':
+                return 'images/default-product.svg';
+            case 'category':
+                return 'images/default-category.svg';
+            default:
+                return 'images/placeholder.svg';
+        }
+    }
+
+    /**
+     * Check if image is default image
+     */
+    public function isDefaultImage(string $imagePath, string $type = 'avatar'): bool
+    {
+        return $imagePath === $this->getDefaultImagePath($type);
+    }
+
+    /**
      * Generate optimized filename
      */
     private function generateFileName(UploadedFile $image): string

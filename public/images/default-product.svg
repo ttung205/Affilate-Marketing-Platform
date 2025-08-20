@@ -1,0 +1,27 @@
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rectangle -->
+  <rect width="300" height="300" fill="#F3F4F6" rx="20"/>
+  
+  <!-- Product box icon -->
+  <g transform="translate(75, 75)">
+    <!-- Box base -->
+    <rect x="0" y="0" width="150" height="100" fill="#9CA3AF" rx="8"/>
+    
+    <!-- Box top -->
+    <path d="M0 0 L75 30 L150 0" stroke="#6B7280" stroke-width="3" fill="none"/>
+    
+    <!-- Box side -->
+    <rect x="0" y="0" width="150" height="100" fill="#D1D5DB" rx="8" opacity="0.3"/>
+    
+    <!-- Product lines -->
+    <line x1="20" y1="40" x2="130" y2="40" stroke="#6B7280" stroke-width="2"/>
+    <line x1="20" y1="60" x2="110" y2="60" stroke="#6B7280" stroke-width="2"/>
+    <line x1="20" y1="80" x2="90" y2="80" stroke="#6B7280" stroke-width="2"/>
+    
+    <!-- Package icon -->
+    <circle cx="75" cy="50" r="8" fill="#6B7280"/>
+  </g>
+  
+  <!-- Text label -->
+  <text x="150" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6B7280">Product</text>
+</svg>

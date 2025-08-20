@@ -190,6 +190,27 @@ class UserController extends Controller
             ->with('success', "Người dùng đã được {$status} thành công.");
     }
 
+    /**
+     * Remove user avatar and set to default
+     */
+    public function removeAvatar(User $user)
+    {
+        try {
+            $user->avatar = $this->imageService->deleteImageAndSetDefault($user->avatar, 'avatar');
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Avatar đã được xóa và trở về ảnh mặc định',
+                'avatar_url' => get_image_url($user->avatar)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi xóa avatar: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 
 
     /**

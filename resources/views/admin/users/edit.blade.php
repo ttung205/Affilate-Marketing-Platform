@@ -121,7 +121,7 @@
                         <div class="avatar-upload-container">
                             <div class="avatar-preview" id="avatarPreview">
                                 @if($user->avatar)
-                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
+                                    <img src="{{ get_image_url($user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
                                     <div class="avatar-preview-overlay">
                                         <i class="fas fa-eye"></i>
                                     </div>
@@ -142,7 +142,16 @@
                                 <i class="fas fa-upload"></i>
                                 {{ $user->avatar ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
                             </label>
+                            @if($user->avatar)
+                                <button type="button" 
+                                        class="user-btn user-btn-sm user-btn-outline-danger" 
+                                        onclick="removeAvatar({{ $user->id }})">
+                                    <i class="fas fa-trash"></i>
+                                    Xóa ảnh
+                                </button>
+                            @endif
                         </div>
+                        
                         <div class="avatar-help">
                             Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
                             @if($user->avatar)
@@ -232,7 +241,7 @@ function previewAvatar(input) {
         // Restore original avatar if exists
         @if($user->avatar)
             preview.innerHTML = `
-                <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
+                <img src="{{ get_image_url($user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
                 <div class="avatar-preview-overlay">
                     <i class="fas fa-eye"></i>
                 </div>
@@ -246,5 +255,74 @@ function previewAvatar(input) {
             `;
         @endif
     }
+}
+
+// Remove avatar function
+function removeAvatar(userId) {
+    showConfirmPopup({
+        title: 'Xóa ảnh đại diện',
+        message: 'Bạn có chắc chắn muốn xóa ảnh đại diện? Ảnh sẽ được thay thế bằng ảnh mặc định.',
+        type: 'danger',
+        confirmText: 'Xóa ảnh',
+        onConfirm: () => {
+            fetch(`/admin/users/${userId}/avatar`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật preview
+                    const preview = document.getElementById('avatarPreview');
+                    preview.innerHTML = `
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                            <span>Chưa có ảnh</span>
+                        </div>
+                    `;
+                    
+                    // Ẩn nút xóa
+                    const removeBtn = document.querySelector('.avatar-upload-container .user-btn-outline-danger');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                    
+                    // Cập nhật label
+                    const uploadLabel = document.querySelector('.avatar-upload-btn');
+                    uploadLabel.textContent = 'Chọn ảnh';
+                    
+                    // Hiển thị thông báo thành công
+                    showConfirmPopup({
+                        title: 'Thành công',
+                        message: data.message,
+                        type: 'success',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                } else {
+                    // Hiển thị thông báo lỗi
+                    showConfirmPopup({
+                        title: 'Lỗi',
+                        message: data.message,
+                        type: 'danger',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showConfirmPopup({
+                    title: 'Lỗi',
+                    message: 'Có lỗi xảy ra khi xóa ảnh',
+                    type: 'danger',
+                    confirmText: 'OK',
+                    onConfirm: () => {}
+                });
+            });
+        }
+    });
 }
 </script>

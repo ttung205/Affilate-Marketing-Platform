@@ -9,11 +9,16 @@ if (!function_exists('get_image_url')) {
         if (!$imagePath) {
             return $fallback ?: asset('images/placeholder.svg');
         }
-
+        
+        // Kiểm tra xem có phải ảnh mặc định không
+        if (str_starts_with($imagePath, 'images/default-')) {
+            return asset($imagePath);
+        }
+        
         if (Storage::disk('public')->exists($imagePath)) {
             return asset('storage/' . $imagePath);
         }
-
+        
         return $fallback ?: asset('images/placeholder.svg');
     }
 }

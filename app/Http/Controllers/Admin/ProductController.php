@@ -157,4 +157,26 @@ class ProductController extends Controller
     return redirect()->route('admin.products.index')
         ->with('success', "Sản phẩm '" . $product->name . "' đã được {$status}!");
     }
+
+    /**
+     * Remove product image and set to default
+     */
+    public function removeImage(Product $product)
+    {
+        try {
+            $product->image = $this->imageService->deleteImageAndSetDefault($product->image, 'product');
+            $product->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Ảnh sản phẩm đã được xóa và trở về ảnh mặc định',
+                'image_url' => get_image_url($product->image)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Lỗi khi xóa ảnh: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

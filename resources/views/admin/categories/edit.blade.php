@@ -75,12 +75,20 @@
                         
                         @if($category->image)
                             <div class="current-image">
-                                <img src="{{ asset('storage/' . $category->image) }}" 
+                                <img src="{{ get_image_url($category->image) }}" 
                                      alt="{{ $category->name }}" 
                                      class="category-preview-image">
                                 <div class="image-info">
                                     <span>Hình ảnh hiện tại</span>
                                     <small>{{ basename($category->image) }}</small>
+                                </div>
+                                <div class="category-image-remove-actions">
+                                    <button type="button" 
+                                            class="category-image-remove-btn category-image-remove-btn-sm category-image-remove-btn-danger" 
+                                            onclick="removeCategoryImage({{ $category->id }})">
+                                        <i class="fas fa-trash"></i>
+                                        Xóa ảnh
+                                    </button>
                                 </div>
                             </div>
                         @endif
@@ -88,9 +96,14 @@
                         <input type="file" 
                                id="image" 
                                name="image" 
-                               class="form-file @error('image') is-invalid @enderror" 
-                               accept="image/*">
-                        <div class="form-help">
+                               class="category-image-input @error('image') is-invalid @enderror" 
+                               accept="image/*"
+                               style="display: none;">
+                        <label for="image" class="category-image-upload-btn">
+                            <i class="fas fa-upload"></i>
+                            {{ $category->image ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
+                        </label>
+                        <div class="category-image-help">
                             Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
                             @if($category->image)
                                 <br><small>Để trống nếu muốn giữ hình ảnh hiện tại</small>
@@ -130,3 +143,70 @@
     </div>
 </div>
 @endsection
+
+<script>
+function removeCategoryImage(categoryId) {
+    showConfirmPopup({
+        title: 'Xóa ảnh danh mục',
+        message: 'Bạn có chắc chắn muốn xóa ảnh danh mục? Ảnh sẽ được thay thế bằng ảnh mặc định.',
+        type: 'danger',
+        confirmText: 'Xóa ảnh',
+        onConfirm: () => {
+            fetch(`/admin/categories/${categoryId}/image`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật preview
+                    const currentImage = document.querySelector('.current-image');
+                    currentImage.innerHTML = `
+                        <img src="${data.image_url}" alt="Default image" class="category-preview-image">
+                        <div class="image-info">
+                            <span>Ảnh mặc định</span>
+                            <small>default-category.svg</small>
+                        </div>
+                    `;
+                    
+                    // Ẩn nút xóa
+                    const removeBtn = document.querySelector('.category-image-remove-actions');
+                    if (removeBtn) {
+                        removeBtn.style.display = 'none';
+                    }
+                    
+                    // Hiển thị thông báo thành công
+                    showConfirmPopup({
+                        title: 'Thành công',
+                        message: data.message,
+                        type: 'success',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                } else {
+                    // Hiển thị thông báo lỗi
+                    showConfirmPopup({
+                        title: 'Lỗi',
+                        message: data.message,
+                        type: 'danger',
+                        confirmText: 'OK',
+                        onConfirm: () => {}
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showConfirmPopup({
+                    title: 'Lỗi',
+                    message: 'Có lỗi xảy ra khi xóa ảnh',
+                    type: 'danger',
+                    confirmText: 'OK',
+                    onConfirm: () => {}
+                });
+            });
+        }
+    });
+}
+</script>
