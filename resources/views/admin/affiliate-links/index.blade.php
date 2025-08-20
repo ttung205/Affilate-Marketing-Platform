@@ -60,6 +60,16 @@
             </div>
         </div>
 
+        <div class="affiliate-stat-card affiliate-stat-primary">
+            <div class="affiliate-stat-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="affiliate-stat-content">
+                <h3>{{ number_format($stats['total_revenue'] ?? 0) }} VNĐ</h3>
+                <p>Tổng Doanh thu</p>
+            </div>
+        </div>
+
         <div class="affiliate-stat-card affiliate-stat-secondary">
             <div class="affiliate-stat-icon">
                 <i class="fas fa-clock"></i>
@@ -179,7 +189,7 @@
                                 <th>Commission</th>
                                 <th>Trạng thái</th>
                                 <th>Thống kê</th>
-                                <th>Ngày tạo</th>
+                                <th>Doanh thu</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -273,23 +283,52 @@
                                     </td>
                                     <td class="table-stats">
                                         <div class="stats-grid">
+                                            @php
+                                                $totalClicks = $link->clicks->count();
+                                                $totalConversions = $link->conversions->count();
+                                                $conversionRate = $totalClicks > 0 ? ($totalConversions / $totalClicks) * 100 : 0;
+                                            @endphp
                                             <div class="stat-item">
                                                 <div class="stat-label">Clicks</div>
-                                                <div class="stat-value clicks">{{ number_format($link->total_clicks ?? 0) }}</div>
+                                                <div class="stat-value clicks">{{ number_format($totalClicks) }}</div>
                                             </div>
                                             <div class="stat-item">
                                                 <div class="stat-label">Conversions</div>
-                                                <div class="stat-value conversions">{{ number_format($link->total_conversions ?? 0) }}</div>
+                                                <div class="stat-value conversions">{{ number_format($totalConversions) }}</div>
                                             </div>
-                                            @if(($link->total_clicks ?? 0) > 0)
+                                            @if($totalClicks > 0)
                                                 <div class="stat-item">
                                                     <div class="stat-label">Rate</div>
-                                                    <div class="stat-value rate">{{ number_format($link->conversion_rate ?? 0, 2) }}%</div>
+                                                    <div class="stat-value rate">{{ number_format($conversionRate, 2) }}%</div>
                                                 </div>
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="table-date">{{ ($link->created_at ?? now())->format('d/m/Y H:i') }}</td>
+                                    <td class="table-revenue">
+                                        @php
+                                            $totalClicks = $link->clicks->count();
+                                            $totalConversions = $link->conversions->count();
+                                            $clickRevenue = $totalClicks * 100; // 1 click = 100 VND
+                                            $commissionRevenue = 0;
+                                            if ($link->product && $totalConversions > 0) {
+                                                $commissionRevenue = ($link->product->price ?? 0) * ($link->commission_rate ?? 0) / 100 * $totalConversions;
+                                            }
+                                            $totalRevenue = $clickRevenue + $commissionRevenue;
+                                        @endphp
+                                        <div class="revenue-info">
+                                            <div class="revenue-total">
+                                                <strong>{{ number_format($totalRevenue) }} VNĐ</strong>
+                                            </div>
+                                            <div class="revenue-breakdown">
+                                                <small class="text-muted">
+                                                    <span class="click-revenue">Click: {{ number_format($clickRevenue) }} VNĐ</span>
+                                                    @if($commissionRevenue > 0)
+                                                        <span class="commission-revenue"> | Commission: {{ number_format($commissionRevenue) }} VNĐ</span>
+                                                    @endif
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td class="table-actions">
                                         <div class="action-buttons">
                                             <a href="{{ route('admin.affiliate-links.edit', $link) }}" class="action-btn action-edit" title="Chỉnh sửa">

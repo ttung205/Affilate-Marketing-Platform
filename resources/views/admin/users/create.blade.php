@@ -20,7 +20,7 @@
 
     <!-- Create Form -->
     <div class="user-create-card">
-        <form method="POST" action="{{ route('admin.users.store') }}" class="user-create-form">
+        <form method="POST" action="{{ route('admin.users.store') }}" class="user-create-form" enctype="multipart/form-data">
             @csrf
             
             <div class="user-form-section">
@@ -115,6 +115,36 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="user-form-row">
+                    <div class="user-form-group">
+                        <label for="avatar" class="user-form-label">Ảnh đại diện</label>
+                        <div class="avatar-upload-container">
+                            <div class="avatar-preview" id="avatarPreview">
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user"></i>
+                                    <span>Chưa có ảnh</span>
+                                </div>
+                            </div>
+                            <input type="file" 
+                                   id="avatar" 
+                                   name="avatar" 
+                                   class="avatar-input @error('avatar') is-invalid @enderror" 
+                                   accept="image/*"
+                                   onchange="previewAvatar(this)">
+                            <label for="avatar" class="avatar-upload-btn">
+                                <i class="fas fa-upload"></i>
+                                Chọn ảnh
+                            </label>
+                        </div>
+                        <div class="avatar-help">
+                            Chọn file hình ảnh (JPG, PNG, GIF) - Tối đa 2MB
+                        </div>
+                        @error('avatar')
+                            <div class="user-form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
             <div class="user-form-actions">
@@ -140,5 +170,31 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('role').value = roleParam;
     }
 });
+
+// Avatar preview function
+function previewAvatar(input) {
+    const preview = document.getElementById('avatarPreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Avatar preview" class="avatar-preview-img">
+                <div class="avatar-preview-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = `
+            <div class="avatar-placeholder">
+                <i class="fas fa-user"></i>
+                <span>Chưa có ảnh</span>
+            </div>
+        `;
+    }
+}
 </script>
 @endsection

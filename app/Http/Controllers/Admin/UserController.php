@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
 
 class UserController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -64,15 +73,23 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role' => ['required', Rule::in(['admin', 'shop', 'publisher', 'user'])],
             'is_active' => 'boolean',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        User::create([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'is_active' => $request->boolean('is_active', true),
-        ]);
+        ];
+
+        // Handle avatar upload using ImageService
+        if ($request->hasFile('avatar')) {
+            $data['avatar'] = $this->imageService->uploadAvatar($request->file('avatar'));
+        }
+
+        User::create($data);
 
         return redirect()->route('admin.users.index')
             ->with('success', 'Người dùng đã được tạo thành công.');
@@ -105,14 +122,27 @@ class UserController extends Controller
             'role' => ['required', Rule::in(['admin', 'shop', 'publisher', 'user'])],
             'is_active' => 'boolean',
             'password' => 'nullable|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $user->update([
+        $data = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
             'is_active' => $request->boolean('is_active'),
-        ]);
+        ];
+
+        // Handle avatar upload using ImageService
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($user->avatar) {
+                $this->imageService->deleteImage($user->avatar);
+            }
+            
+            $data['avatar'] = $this->imageService->uploadAvatar($request->file('avatar'));
+        }
+
+        $user->update($data);
 
         if ($request->filled('password')) {
             $user->update(['password' => Hash::make($request->password)]);
@@ -130,6 +160,11 @@ class UserController extends Controller
         if ($user->id === auth()->id()) {
             return redirect()->route('admin.users.index')
                 ->with('error', 'Bạn không thể xóa chính mình.');
+        }
+
+        // Delete avatar using ImageService
+        if ($user->avatar) {
+            $this->imageService->deleteImage($user->avatar);
         }
 
         $user->delete();
@@ -174,6 +209,4 @@ class UserController extends Controller
             'last_month' => User::whereMonth('created_at', now()->subMonth()->month)->count(),
         ];
     }
-
-
 }

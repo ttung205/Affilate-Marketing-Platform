@@ -100,7 +100,7 @@
                                     <td>{{ $product->id }}</td>
                                     <td>
                                         @if($product->image)
-                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                            <img src="{{ get_image_url($product->image) }}" alt="{{ $product->name }}"
                                                 class="product-table-image">
                                         @else
                                             <div class="product-no-image">

@@ -148,7 +148,7 @@
                                     <div class="user-name-with-avatar">
                                         <div class="user-avatar">
                                             @if($user->avatar)
-                                                <img src="{{ asset('storage/' . $user->avatar) }}" 
+                                                <img src="{{ get_image_url($user->avatar) }}" 
                                                      alt="{{ $user->name }}" 
                                                      class="user-avatar-img">
                                             @else

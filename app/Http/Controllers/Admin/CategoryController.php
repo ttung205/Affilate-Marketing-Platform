@@ -7,9 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Services\ImageService;
 
 class CategoryController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index(){
         $categories = Category::withCount('products')->orderBy('sort_order')->orderBy('name')->paginate(15);
         return view('admin.categories.index', compact('categories'));
@@ -30,7 +38,7 @@ class CategoryController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
-            'image' => $request->image ? $this->uploadImage($request->image) : null,
+            'image' => $request->image ? $this->imageService->uploadCategoryImage($request->image) : null,
             'is_active' => $request->is_active ?? true,
             'sort_order' => $request->sort_order ?? 0
         ]);
@@ -53,14 +61,25 @@ class CategoryController extends Controller
             'sort_order' => 'nullable|integer|min:0'
         ]);
 
-        $category->update([
+        $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
             'description' => $request->description,
-            'image' => $request->image ? $this->uploadImage($request->image) : $category->image,
             'is_active' => $request->is_active ?? true,
             'sort_order' => $request->sort_order ?? 0
-        ]);
+        ];
+
+        // Handle image upload using ImageService
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($category->image) {
+                $this->imageService->deleteImage($category->image);
+            }
+            
+            $data['image'] = $this->imageService->uploadCategoryImage($request->file('image'));
+        }
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được cập nhật thành công!');
     }
@@ -72,20 +91,13 @@ class CategoryController extends Controller
             return redirect()->route('admin.categories.index')->with('error', 'Không thể xóa danh mục có sản phẩm!');
         }
 
-        // Xóa hình ảnh
+        // Delete image using ImageService
         if ($category->image) {
-            Storage::disk('public')->delete($category->image);
+            $this->imageService->deleteImage($category->image);
         }
 
         $category->delete();
 
         return redirect()->route('admin.categories.index')->with('success', 'Danh mục đã được xóa thành công!');
-    }
-
-    private function uploadImage($image)
-    {
-        $fileName = time() . '_' . $image->getClientOriginalName();
-        $path = $image->storeAs('categories', $fileName, 'public');
-        return $path;
     }
 }

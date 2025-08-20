@@ -20,7 +20,7 @@
 
     <!-- Edit Form -->
     <div class="user-edit-card">
-        <form method="POST" action="{{ route('admin.users.update', $user) }}" class="user-edit-form">
+        <form method="POST" action="{{ route('admin.users.update', $user) }}" class="user-edit-form" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             
@@ -114,6 +114,46 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="user-form-row">
+                    <div class="user-form-group">
+                        <label for="avatar" class="user-form-label">Ảnh đại diện</label>
+                        <div class="avatar-upload-container">
+                            <div class="avatar-preview" id="avatarPreview">
+                                @if($user->avatar)
+                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
+                                    <div class="avatar-preview-overlay">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                @else
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                        <span>Chưa có ảnh</span>
+                                    </div>
+                                @endif
+                            </div>
+                            <input type="file" 
+                                   id="avatar" 
+                                   name="avatar" 
+                                   class="avatar-input @error('avatar') is-invalid @enderror" 
+                                   accept="image/*"
+                                   onchange="previewAvatar(this)">
+                            <label for="avatar" class="avatar-upload-btn">
+                                <i class="fas fa-upload"></i>
+                                {{ $user->avatar ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
+                            </label>
+                        </div>
+                        <div class="avatar-help">
+                            Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
+                            @if($user->avatar)
+                                <br><small>Để trống nếu muốn giữ ảnh hiện tại</small>
+                            @endif
+                        </div>
+                        @error('avatar')
+                            <div class="user-form-error">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
             </div>
 
             <div class="user-form-section">
@@ -170,3 +210,41 @@
     </div>
 </div>
 @endsection
+
+<script>
+// Avatar preview function
+function previewAvatar(input) {
+    const preview = document.getElementById('avatarPreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Avatar preview" class="avatar-preview-img">
+                <div class="avatar-preview-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Restore original avatar if exists
+        @if($user->avatar)
+            preview.innerHTML = `
+                <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="avatar-preview-img">
+                <div class="avatar-preview-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        @else
+            preview.innerHTML = `
+                <div class="avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                    <span>Chưa có ảnh</span>
+                </div>
+            `;
+        @endif
+    }
+}
+</script>

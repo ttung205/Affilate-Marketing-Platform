@@ -7,8 +7,17 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
+use App\Services\ImageService;
+
 class ProductController extends Controller
 {
+    protected $imageService;
+
+    public function __construct(ImageService $imageService)
+    {
+        $this->imageService = $imageService;
+    }
+
     public function index(Request $request)
     {
         $query = Product::with('category');
@@ -63,7 +72,7 @@ class ProductController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
-            'image' => $request->image ? $this->uploadImage($request->image) : null,
+            'image' => $request->image ? $this->imageService->uploadProductImage($request->image) : null,
             'category_id' => $request->category_id, // Thêm category_id
             'stock' => $request->stock,
             'is_active' => $request->is_active ?? true,
@@ -99,26 +108,37 @@ class ProductController extends Controller
             'commission_rate' => 'nullable|numeric|min:0|max:100'
         ]);
 
-        $product->update([
+        $data = [
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
-            'image' => $request->image ? $this->uploadImage($request->image) : $product->image,
-            'category_id' => $request->category_id, // Thêm category_id
+            'category_id' => $request->category_id,
             'stock' => $request->stock,
             'is_active' => $request->is_active ?? true,
             'affiliate_link' => $request->affiliate_link,
             'commission_rate' => $request->commission_rate
-        ]);
+        ];
+
+        // Handle image upload using ImageService
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image) {
+                $this->imageService->deleteImage($product->image);
+            }
+            
+            $data['image'] = $this->imageService->uploadProductImage($request->file('image'));
+        }
+
+        $product->update($data);
 
         return redirect()->route('admin.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
 
     public function destroy(Product $product)
     {
-        // Xóa hình ảnh cũ nếu có
+        // Delete image using ImageService
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            $this->imageService->deleteImage($product->image);
         }
 
         $product->delete();
@@ -136,21 +156,5 @@ class ProductController extends Controller
         $status = $product->is_active ? '✅ kích hoạt' : '⏸️ vô hiệu hóa';
     return redirect()->route('admin.products.index')
         ->with('success', "Sản phẩm '" . $product->name . "' đã được {$status}!");
-    }
-
-
-
-    private function uploadImage($image)
-    {
-        $fileName = time() . '_' . $image->getClientOriginalName();
-        $path = $image->storeAs('products', $fileName, 'public');
-        return $path;
-    }
-
-    private function deleteImage($imagePath)
-    {
-        if ($imagePath && Storage::disk('public')->exists($imagePath)) {
-            Storage::disk('public')->delete($imagePath);
-        }
     }
 }

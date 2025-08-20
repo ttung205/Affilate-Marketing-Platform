@@ -573,13 +573,6 @@
 
 .commission-different {
     background: linear-gradient(135deg, #e53e3e 0%, #fc8181 100%) !important;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
 }
 
 .commission-info {
@@ -654,6 +647,40 @@
 .status-pending {
     background: #fef5e7;
     color: #744210;
+}
+
+/* Revenue Column */
+.table-revenue {
+    min-width: 150px;
+}
+
+.revenue-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.revenue-total {
+    font-size: 13px;
+    color: #2d3748;
+}
+
+.revenue-total strong {
+    color: #38a169;
+    font-weight: 600;
+}
+
+.revenue-breakdown {
+    font-size: 11px;
+    line-height: 1.2;
+}
+
+.click-revenue {
+    color: #3182ce;
+}
+
+.commission-revenue {
+    color: #38a169;
 }
 
 /* URL Link */
@@ -984,6 +1011,22 @@
     .affiliate-table th,
     .affiliate-table td {
         padding: 8px 6px;
+    }
+    
+    .table-revenue {
+        min-width: 120px;
+    }
+    
+    .revenue-info {
+        gap: 2px;
+    }
+    
+    .revenue-total {
+        font-size: 12px;
+    }
+    
+    .revenue-breakdown {
+        font-size: 10px;
     }
 }
 

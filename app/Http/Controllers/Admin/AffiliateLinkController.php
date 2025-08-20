@@ -19,7 +19,7 @@ class AffiliateLinkController extends Controller
      */
     public function index(Request $request)
     {
-        $query = AffiliateLink::with(['publisher', 'product', 'campaign']);
+        $query = AffiliateLink::with(['publisher', 'product', 'campaign', 'clicks', 'conversions']);
 
         // Filter by publisher
         if ($request->filled('publisher_id')) {
@@ -314,6 +314,20 @@ class AffiliateLinkController extends Controller
         $totalConversions = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
             ->count();
 
+        // Calculate total revenue
+        $totalRevenue = 0;
+        
+        // Revenue from clicks (1 click = 100 VND)
+        $totalRevenue += $totalClicks * 100;
+        
+        // Revenue from conversions (commission)
+        $conversionRevenue = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
+            ->join('products', 'affiliate_links.product_id', '=', 'products.id')
+            ->selectRaw('SUM(products.price * affiliate_links.commission_rate / 100) as total_commission')
+            ->value('total_commission') ?? 0;
+        
+        $totalRevenue += $conversionRevenue;
+
         return [
             'total' => array_sum($statusCounts),
             'active' => $statusCounts['active'] ?? 0,
@@ -321,6 +335,7 @@ class AffiliateLinkController extends Controller
             'pending' => $statusCounts['pending'] ?? 0,
             'total_clicks' => $totalClicks,
             'total_conversions' => $totalConversions,
+            'total_revenue' => $totalRevenue,
         ];
     }
 }
