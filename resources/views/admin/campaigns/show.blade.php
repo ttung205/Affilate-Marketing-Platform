@@ -8,15 +8,6 @@
     <div class="campaigns-header">
         <div class="campaigns-header-left">
             <h1 class="campaigns-title">Chi tiết Campaign</h1>
-            <nav class="campaigns-breadcrumb">
-                <a href="{{ route('admin.dashboard') }}">Admin</a>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current">Quản lý Affiliate</span>
-                <span class="breadcrumb-separator">/</span>
-                <a href="{{ route('admin.campaigns.index') }}">Campaigns</a>
-                <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-current">{{ $campaign->name }}</span>
-            </nav>
         </div>
         <div class="campaigns-header-right">
             <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="campaigns-btn campaigns-btn-primary">

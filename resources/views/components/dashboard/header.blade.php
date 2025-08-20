@@ -110,12 +110,77 @@
                                 <span>Chi tiết người dùng</span>
                             </li>
                         @endif
-                    @elseif(request()->routeIs('admin.orders.*'))
+                    @elseif(request()->routeIs('admin.affiliate-links.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Quản lý Affiliate Links</span>
+                        </li>
+                        @if(request()->routeIs('admin.affiliate-links.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tất cả Affiliate Links</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.affiliate-links.create'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tạo Affiliate Link</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.affiliate-links.edit'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Sửa Affiliate Link</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('admin.campaigns.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Quản lý Campaigns</span>
+                        </li>
+                        @if(request()->routeIs('admin.campaigns.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tất cả Campaigns</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.campaigns.create'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Tạo Campaign</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.campaigns.edit'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Sửa Campaign</span>
+                            </li>
+                        @elseif(request()->routeIs('admin.campaigns.show'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-separator"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Chi tiết Campaign</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('admin.dashboard'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-separator"></i>
                         </li>
                         <li class="breadcrumb-item active">
-                            <span>Quản lý đơn hàng</span>
+                            <span>Tổng quan</span>
                         </li>
                     @else
                         <li class="breadcrumb-item">

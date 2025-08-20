@@ -309,11 +309,6 @@
     border-color: #667eea;
 }
 
-.form-input:invalid,
-.form-select:invalid {
-    border-color: #e53e3e;
-}
-
 .form-error {
     color: #e53e3e;
     font-size: 12px;
