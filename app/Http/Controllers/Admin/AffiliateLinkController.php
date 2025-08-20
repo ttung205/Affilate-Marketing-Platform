@@ -60,10 +60,20 @@ class AffiliateLinkController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         $formData = $this->getFormData();
-        return view('admin.affiliate-links.create', $formData);
+        
+        // Pre-fill data from query parameters
+        $prefillData = [];
+        if ($request->has('product_id')) {
+            $prefillData['selected_product_id'] = $request->get('product_id');
+        }
+        if ($request->has('campaign_id')) {
+            $prefillData['selected_campaign_id'] = $request->get('campaign_id');
+        }
+        
+        return view('admin.affiliate-links.create', array_merge($formData, $prefillData));
     }
 
     /**

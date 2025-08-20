@@ -102,6 +102,14 @@
             </div>
             <div class="info-card-body">
                 <div class="info-row">
+                    <span class="info-label">Tổng sản phẩm:</span>
+                    <span class="info-value">{{ number_format($stats['total_products']) }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tổng affiliate links:</span>
+                    <span class="info-value">{{ number_format($stats['total_links']) }}</span>
+                </div>
+                <div class="info-row">
                     <span class="info-label">Tổng clicks:</span>
                     <span class="info-value">{{ number_format($campaign->total_clicks) }}</span>
                 </div>
@@ -121,66 +129,61 @@
         </div>
     </div>
 
-    <!-- Affiliate Links Section -->
-    <div class="campaigns-affiliate-links-card">
-        <div class="affiliate-links-header">
-            <h3>Affiliate Links trong Campaign</h3>
-            <span class="links-count">{{ $campaign->affiliateLinks->count() }} links</span>
+    <!-- Products Section -->
+    <div class="campaigns-products-card">
+        <div class="products-header">
+            <h3>Sản phẩm trong Campaign</h3>
+            <span class="products-count">{{ $stats['total_products'] }} sản phẩm</span>
         </div>
         
-        <div class="affiliate-links-body">
-            @if($campaign->affiliateLinks->count() > 0)
-                <div class="affiliate-links-table-wrapper">
-                    <table class="affiliate-links-table">
+        <div class="products-body">
+            @if($products->count() > 0)
+                <div class="products-table-wrapper">
+                    <table class="products-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Tracking Code</th>
-                                <th>Publisher</th>
                                 <th>Sản phẩm</th>
-                                <th>Commission</th>
-                                <th>Trạng thái</th>
-                                <th>Thống kê</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Affiliate Links</th>
+                                <th>Tổng Clicks</th>
+                                <th>Tổng Conversions</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($campaign->affiliateLinks as $link)
+                            @foreach($products as $product)
                                 <tr>
-                                    <td>{{ $link->id }}</td>
+                                    <td>{{ $product->id }}</td>
                                     <td>
-                                        <code class="tracking-code">{{ $link->tracking_code }}</code>
-                                    </td>
-                                    <td>{{ $link->publisher->name ?? 'N/A' }}</td>
-                                    <td>{{ $link->product->name ?? 'N/A' }}</td>
-                                    <td>{{ $link->commission_rate }}%</td>
-                                    <td>
-                                        <span class="status-badge status-{{ $link->status }}">
-                                            @switch($link->status)
-                                                @case('active')
-                                                    Đang hoạt động
-                                                    @break
-                                                @case('inactive')
-                                                    Vô hiệu hóa
-                                                    @break
-                                                @default
-                                                    Chờ duyệt
-                                            @endswitch
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="stats-mini">
-                                            <span class="stat-mini clicks">{{ number_format($link->total_clicks) }} clicks</span>
-                                            <span class="stat-mini conversions">{{ number_format($link->total_conversions) }} conv</span>
+                                        <div class="product-info">
+                                            <div class="product-name">{{ $product->name }}</div>
+                                            @if($product->image)
+                                                <div class="product-image">
+                                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="product-thumb">
+                                                </div>
+                                            @endif
                                         </div>
+                                    </td>
+                                    <td>{{ $product->category->name ?? 'N/A' }}</td>
+                                    <td>{{ number_format($product->price, 2) }} VNĐ</td>
+                                    <td>
+                                        <span class="affiliate-links-count">{{ $product->total_affiliate_links }} links</span>
+                                    </td>
+                                    <td>
+                                        <span class="clicks-count">{{ number_format($product->total_clicks) }} clicks</span>
+                                    </td>
+                                    <td>
+                                        <span class="conversions-count">{{ number_format($product->total_conversions) }} conv</span>
                                     </td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="{{ route('admin.affiliate-links.show', $link) }}" class="action-btn action-view" title="Xem chi tiết">
+                                            <a href="{{ route('admin.products.show', $product) }}" class="action-btn action-view" title="Xem chi tiết sản phẩm">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.affiliate-links.edit', $link) }}" class="action-btn action-edit" title="Chỉnh sửa">
-                                                <i class="fas fa-edit"></i>
+                                            <a href="{{ route('admin.affiliate-links.create') }}?product_id={{ $product->id }}&campaign_id={{ $campaign->id }}" class="action-btn action-edit" title="Tạo affiliate link">
+                                                <i class="fas fa-plus"></i>
                                             </a>
                                         </div>
                                     </td>
@@ -192,11 +195,11 @@
             @else
                 <div class="empty-state">
                     <div class="empty-icon">
-                        <i class="fas fa-link"></i>
+                        <i class="fas fa-box"></i>
                     </div>
-                    <h3>Chưa có affiliate link nào</h3>
-                    <p>Campaign này chưa có affiliate link nào được tạo.</p>
-                    <a href="{{ route('admin.affiliate-links.create') }}" class="campaigns-btn campaigns-btn-primary">
+                    <h3>Chưa có sản phẩm nào</h3>
+                    <p>Campaign này chưa có sản phẩm nào được thêm vào.</p>
+                    <a href="{{ route('admin.affiliate-links.create') }}?campaign_id={{ $campaign->id }}" class="campaigns-btn campaigns-btn-primary">
                         <i class="fas fa-plus"></i>
                         <span>Tạo Affiliate Link</span>
                     </a>

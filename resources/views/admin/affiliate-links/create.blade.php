@@ -61,7 +61,7 @@
                                 <option value="{{ $product->id }}" 
                                         data-commission="{{ $product->commission_rate ?? 0 }}"
                                         data-affiliate-link="{{ $product->affiliate_link ?? '' }}"
-                                        {{ old('product_id') == $product->id ? 'selected' : '' }}>
+                                        {{ old('product_id', $selected_product_id ?? '') == $product->id ? 'selected' : '' }}>
                                     {{ $product->name }} - {{ $product->category->name ?? 'N/A' }}
                                 </option>
                             @endforeach
@@ -77,7 +77,7 @@
                         <select name="campaign_id" id="campaign_id" class="form-select">
                             <option value="">Không có campaign</option>
                             @foreach($campaigns ?? [] as $campaign)
-                                <option value="{{ $campaign->id }}" {{ old('campaign_id') == $campaign->id ? 'selected' : '' }}>
+                                <option value="{{ $campaign->id }}" {{ old('campaign_id', $selected_campaign_id ?? '') == $campaign->id ? 'selected' : '' }}>
                                     {{ $campaign->name }}
                                 </option>
                             @endforeach

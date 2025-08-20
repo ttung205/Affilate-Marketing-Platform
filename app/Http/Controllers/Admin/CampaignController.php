@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -111,11 +112,28 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        $campaign->load(['affiliateLinks.product', 'affiliateLinks.publisher']);
+        // Get products in this campaign with their affiliate links and statistics
+        $products = Product::whereHas('affiliateLinks', function($query) use ($campaign) {
+            $query->where('campaign_id', $campaign->id);
+        })->with(['affiliateLinks' => function($query) use ($campaign) {
+            $query->where('campaign_id', $campaign->id);
+        }, 'affiliateLinks.publisher', 'affiliateLinks.clicks', 'affiliateLinks.conversions'])->get();
+        
+        // Calculate statistics for each product
+        $products->each(function($product) {
+            $product->total_affiliate_links = $product->affiliateLinks->count();
+            $product->total_clicks = $product->affiliateLinks->sum(function($link) {
+                return $link->clicks->count();
+            });
+            $product->total_conversions = $product->affiliateLinks->sum(function($link) {
+                return $link->conversions->count();
+            });
+        });
         
         // Get campaign performance
         $stats = [
-            'total_links' => $campaign->affiliateLinks()->count(),
+            'total_products' => $products->count(),
+            'total_links' => $products->sum('total_affiliate_links'),
             'total_clicks' => $campaign->getTotalClicksAttribute(),
             'total_conversions' => $campaign->getTotalConversionsAttribute(),
             'total_commission' => $campaign->getTotalCommissionAttribute(),
@@ -124,7 +142,7 @@ class CampaignController extends Controller
                 : 0,
         ];
 
-        return view('admin.campaigns.show', compact('campaign', 'stats'));
+        return view('admin.campaigns.show', compact('campaign', 'stats', 'products'));
     }
 
     /**

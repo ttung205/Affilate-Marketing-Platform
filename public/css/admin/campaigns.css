@@ -683,8 +683,8 @@
     font-size: 14px;
 }
 
-/* Affiliate Links Section */
-.campaigns-affiliate-links-card {
+/* Products Section */
+.campaigns-products-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -692,7 +692,7 @@
     margin-bottom: 30px;
 }
 
-.affiliate-links-header {
+.products-header {
     padding: 20px 24px;
     background: #f7fafc;
     border-bottom: 1px solid #e2e8f0;
@@ -701,14 +701,14 @@
     align-items: center;
 }
 
-.affiliate-links-header h3 {
+.products-header h3 {
     margin: 0;
     font-size: 16px;
     font-weight: 600;
     color: #2d3748;
 }
 
-.links-count {
+.products-count {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     padding: 4px 12px;
@@ -717,21 +717,21 @@
     font-weight: 500;
 }
 
-.affiliate-links-body {
+.products-body {
     padding: 24px;
 }
 
-.affiliate-links-table-wrapper {
+.products-table-wrapper {
     overflow-x: auto;
 }
 
-.affiliate-links-table {
+.products-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
 }
 
-.affiliate-links-table th {
+.products-table th {
     background: #f7fafc;
     padding: 12px 8px;
     text-align: left;
@@ -741,39 +741,63 @@
     font-size: 12px;
 }
 
-.affiliate-links-table td {
+.products-table td {
     padding: 12px 8px;
     border-bottom: 1px solid #e2e8f0;
     vertical-align: middle;
-    font-size: 12px;
+    font-size: 14px;
 }
 
-.tracking-code {
-    background: #f7fafc;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    color: #4a5568;
-}
-
-.stats-mini {
+.product-info {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: 12px;
 }
 
-.stat-mini {
-    font-size: 11px;
+.product-name {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+.product-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.product-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.affiliate-links-count {
+    background: #e6fffa;
+    color: #22543d;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
     font-weight: 500;
 }
 
-.stat-mini.clicks {
-    color: #3182ce;
+.clicks-count {
+    background: #ebf8ff;
+    color: #2c5282;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-.stat-mini.conversions {
-    color: #38a169;
+.conversions-count {
+    background: #f0fff4;
+    color: #22543d;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Actions Card */
@@ -941,6 +965,14 @@
     }
     
     .campaigns-table {
+        min-width: 800px;
+    }
+    
+    .products-table-wrapper {
+        overflow-x: auto;
+    }
+    
+    .products-table {
         min-width: 800px;
     }
 }
