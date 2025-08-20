@@ -60,6 +60,7 @@
                             @foreach($products ?? [] as $product)
                                 <option value="{{ $product->id }}" 
                                         data-commission="{{ $product->commission_rate ?? 0 }}"
+                                        data-affiliate-link="{{ $product->affiliate_link ?? '' }}"
                                         {{ old('product_id') == $product->id ? 'selected' : '' }}>
                                     {{ $product->name }} - {{ $product->category->name ?? 'N/A' }}
                                 </option>
@@ -173,10 +174,11 @@
 document.getElementById('publisher_id').addEventListener('change', updatePreview);
 document.getElementById('product_id').addEventListener('change', updatePreviewAndCommission);
 
-// Khởi tạo commission rate khi trang được load
+// Khởi tạo commission rate và URL khi trang được load
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('product_id').value) {
         updateCommissionRate();
+        updateOriginalUrl();
     }
 });
 
@@ -204,6 +206,7 @@ function updatePreview() {
 function updatePreviewAndCommission() {
     updatePreview();
     updateCommissionRate();
+    updateOriginalUrl();
 }
 
 function updateCommissionRate() {
@@ -228,6 +231,20 @@ function updateCommissionRate() {
     } else {
         // Ẩn thông tin khi không có sản phẩm nào được chọn
         productCommissionInfo.style.display = 'none';
+    }
+}
+
+function updateOriginalUrl() {
+    const productSelect = document.getElementById('product_id');
+    const originalUrlInput = document.getElementById('original_url');
+    
+    if (productSelect.value) {
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const affiliateLink = selectedOption.getAttribute('data-affiliate-link');
+        
+        if (affiliateLink) {
+            originalUrlInput.value = affiliateLink;
+        }
     }
 }
 

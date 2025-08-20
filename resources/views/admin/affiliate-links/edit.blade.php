@@ -59,7 +59,10 @@
                         <select name="product_id" id="product_id" class="form-select" required>
                             <option value="">Chọn sản phẩm</option>
                             @foreach($products ?? [] as $product)
-                                <option value="{{ $product->id }}" {{ old('product_id', $affiliateLink->product_id) == $product->id ? 'selected' : '' }}>
+                                <option value="{{ $product->id }}" 
+                                        data-commission="{{ $product->commission_rate ?? 0 }}"
+                                        data-affiliate-link="{{ $product->affiliate_link ?? '' }}"
+                                        {{ old('product_id', $affiliateLink->product_id) == $product->id ? 'selected' : '' }}>
                                     {{ $product->name }} - {{ $product->category->name ?? 'N/A' }}
                                 </option>
                             @endforeach
@@ -155,6 +158,48 @@
 </div>
 
 <script>
+// Event listeners
+document.getElementById('product_id').addEventListener('change', updateCommissionAndUrl);
+
+// Khởi tạo khi trang được load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('product_id').value) {
+        updateCommissionAndUrl();
+    }
+});
+
+function updateCommissionAndUrl() {
+    updateCommissionRate();
+    updateOriginalUrl();
+}
+
+function updateCommissionRate() {
+    const productSelect = document.getElementById('product_id');
+    const commissionInput = document.getElementById('commission_rate');
+    
+    if (productSelect.value) {
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const productCommission = parseFloat(selectedOption.getAttribute('data-commission')) || 0;
+        
+        // Tự động điền commission rate của sản phẩm
+        commissionInput.value = productCommission;
+    }
+}
+
+function updateOriginalUrl() {
+    const productSelect = document.getElementById('product_id');
+    const originalUrlInput = document.getElementById('original_url');
+    
+    if (productSelect.value) {
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const affiliateLink = selectedOption.getAttribute('data-affiliate-link');
+        
+        if (affiliateLink) {
+            originalUrlInput.value = affiliateLink;
+        }
+    }
+}
+
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
         const btn = event.target.closest('button');
