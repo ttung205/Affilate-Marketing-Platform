@@ -71,12 +71,33 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="image" class="form-label">Hình ảnh danh mục</label>
-                        <input type="file" 
-                               id="image" 
-                               name="image" 
-                               class="form-file @error('image') is-invalid @enderror" 
-                               accept="image/*">
-                        <div class="form-help">Chọn file hình ảnh (JPG, PNG, GIF) - Tối đa 2MB</div>
+                        <div class="category-image-container">
+                            <div class="category-image-preview" id="categoryImagePreview">
+                                <div class="category-image-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>Chưa có ảnh</span>
+                                </div>
+                            </div>
+                            
+                            <input type="file" 
+                                   id="image" 
+                                   name="image" 
+                                   class="category-image-input @error('image') is-invalid @enderror" 
+                                   accept="image/*"
+                                   onchange="previewCategoryImage(this)"
+                                   style="display: none;">
+                            
+                            <div class="category-image-actions">
+                                <label for="image" class="category-image-upload-btn">
+                                    <i class="fas fa-upload"></i>
+                                    Chọn ảnh
+                                </label>
+                            </div>
+                            
+                            <div class="category-image-help">
+                                Chọn file hình ảnh (JPG, PNG, GIF) - Tối đa 2MB
+                            </div>
+                        </div>
                         @error('image')
                             <div class="form-error">{{ $message }}</div>
                         @enderror
@@ -111,3 +132,44 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function previewCategoryImage(input) {
+    const preview = document.getElementById('categoryImagePreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Category preview" class="category-preview-img">
+                <div class="category-image-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = `
+            <div class="category-image-placeholder">
+                <i class="fas fa-image"></i>
+                <span>Chưa có ảnh</span>
+            </div>
+        `;
+    }
+}
+
+function removeCategoryPreview() {
+    const preview = document.getElementById('categoryImagePreview');
+    const input = document.getElementById('image');
+    preview.innerHTML = `
+        <div class="category-image-placeholder">
+            <i class="fas fa-image"></i>
+            <span>Chưa có ảnh</span>
+        </div>
+    `;
+    input.value = '';
+}
+</script>
+@endpush

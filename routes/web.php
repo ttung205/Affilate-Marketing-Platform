@@ -45,9 +45,31 @@ Route::get('/admin', function(){
     return view('admin.dashboard');
 })->middleware('auth', 'role:admin')->name('admin.dashboard');
 
-Route::get('/shop', function(){
-    return view('shop.dashboard');
-})->middleware('auth', 'role:shop')->name('shop.dashboard');
+// Shop routes
+Route::middleware(['role:shop'])->prefix('shop')->name('shop.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Shop\DashboardController::class, 'dashboard'])->name('dashboard');
+    
+    // Product management routes
+    Route::resource('products', App\Http\Controllers\Shop\ProductController::class);
+    Route::patch('/products/{product}/toggle-status', [App\Http\Controllers\Shop\ProductController::class, 'toggleStatus'])->name('products.toggle-status');
+    Route::delete('/products/{product}/image', [App\Http\Controllers\Shop\ProductController::class, 'removeImage'])->name('products.remove-image');
+    
+    // Order management routes
+    Route::resource('orders', App\Http\Controllers\Shop\OrderController::class);
+    
+    // Revenue routes
+    Route::get('/revenue', [App\Http\Controllers\Shop\RevenueController::class, 'index'])->name('revenue.index');
+    
+    // Payment routes
+    Route::get('/payments', [App\Http\Controllers\Shop\PaymentController::class, 'index'])->name('payments.index');
+    
+    // Settings routes
+    Route::get('/settings', [App\Http\Controllers\Shop\SettingController::class, 'index'])->name('settings.index');
+    
+    // Profile routes
+    Route::get('/profile/edit', [App\Http\Controllers\Shop\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Shop\ProfileController::class, 'update'])->name('profile.update');
+});
 
 Route::get('/publisher', function(){
     return view('publisher.dashboard');

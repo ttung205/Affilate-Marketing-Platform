@@ -84,7 +84,33 @@
 
                     <div class="form-group">
                         <label for="image" class="form-label">Hình ảnh sản phẩm</label>
-                        <input type="file" id="image" name="image" class="form-file" accept="image/*">
+                        <div class="product-image-container">
+                            <div class="product-image-preview" id="productImagePreview">
+                                <div class="product-image-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>Chưa có ảnh</span>
+                                </div>
+                            </div>
+                            
+                            <input type="file" 
+                                   id="image" 
+                                   name="image" 
+                                   class="product-image-input @error('image') is-invalid @enderror" 
+                                   accept="image/*"
+                                   onchange="previewProductImage(this)"
+                                   style="display: none;">
+                            
+                            <div class="product-image-actions">
+                                <label for="image" class="product-image-upload-btn">
+                                    <i class="fas fa-upload"></i>
+                                    Chọn ảnh
+                                </label>
+                            </div>
+                            
+                            <div class="product-image-help">
+                                Chọn file hình ảnh (JPG, PNG, GIF) - Tối đa 2MB
+                            </div>
+                        </div>
                         @error('image')
                             <span class="form-error">{{ $message }}</span>
                         @enderror
@@ -120,3 +146,44 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+function previewProductImage(input) {
+    const preview = document.getElementById('productImagePreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Product preview" class="product-preview-img">
+                <div class="product-image-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = `
+            <div class="product-image-placeholder">
+                <i class="fas fa-image"></i>
+                <span>Chưa có ảnh</span>
+            </div>
+        `;
+    }
+}
+
+function removePreview() {
+    const preview = document.getElementById('productImagePreview');
+    const input = document.getElementById('image');
+    preview.innerHTML = `
+        <div class="product-image-placeholder">
+            <i class="fas fa-image"></i>
+            <span>Chưa có ảnh</span>
+        </div>
+    `;
+    input.value = '';
+}
+</script>
+@endpush

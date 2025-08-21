@@ -1,27 +1,17 @@
-<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background rectangle -->
-  <rect width="300" height="300" fill="#F3F4F6" rx="20"/>
-  
-  <!-- Product box icon -->
-  <g transform="translate(75, 75)">
-    <!-- Box base -->
-    <rect x="0" y="0" width="150" height="100" fill="#9CA3AF" rx="8"/>
-    
-    <!-- Box top -->
-    <path d="M0 0 L75 30 L150 0" stroke="#6B7280" stroke-width="3" fill="none"/>
-    
-    <!-- Box side -->
-    <rect x="0" y="0" width="150" height="100" fill="#D1D5DB" rx="8" opacity="0.3"/>
-    
-    <!-- Product lines -->
-    <line x1="20" y1="40" x2="130" y2="40" stroke="#6B7280" stroke-width="2"/>
-    <line x1="20" y1="60" x2="110" y2="60" stroke="#6B7280" stroke-width="2"/>
-    <line x1="20" y1="80" x2="90" y2="80" stroke="#6B7280" stroke-width="2"/>
-    
-    <!-- Package icon -->
-    <circle cx="75" cy="50" r="8" fill="#6B7280"/>
-  </g>
-  
-  <!-- Text label -->
-  <text x="150" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6B7280">Product</text>
-</svg>
+<?xml version="1.0" ?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<title/>
+<g fill="none" fill-rule="evenodd" id="页面-1" stroke="none" stroke-width="1">
+<g id="导航图标" transform="translate(-325.000000, -80.000000)">
+<g id="编组" transform="translate(325.000000, 80.000000)">
+<polygon fill="#FFFFFF" fill-opacity="0.01" fill-rule="nonzero" id="路径" points="24 0 0 0 0 24 24 24"/>
+<polygon id="路径" points="22 7 12 2 2 7 2 17 12 22 22 17" stroke="#212121" stroke-linejoin="round" stroke-width="1.5"/>
+<line id="路径" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" x1="2" x2="12" y1="7" y2="12"/>
+<line id="路径" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" x1="12" x2="12" y1="22" y2="12"/>
+<line id="路径" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" x1="22" x2="12" y1="7" y2="12"/>
+<line id="路径" stroke="#212121" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" x1="17" x2="7" y1="4.5" y2="9.5"/>
+</g>
+</g>
+</g>
+</svg>

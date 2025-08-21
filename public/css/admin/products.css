@@ -1,9 +1,4 @@
 /* CSS riêng cho Product Management - Class unique */
-body{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 .product-management-content {
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,9 +10,11 @@ body{
     align-items: center;
     margin-bottom: 30px;
 }
-.product-management-title{
+
+.product-management-title {
     margin-left: 20px;
 }
+
 .product-management-title h2 {
     margin: 0;
     color: #333;
@@ -43,7 +40,6 @@ body{
     font-weight: 600;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-decoration: none;
 }
 
@@ -89,7 +85,6 @@ body{
     border-radius: 25px;
     font-size: 14px;
     transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .product-search-input:focus {
@@ -161,7 +156,6 @@ body{
     width: 100%;
     border-collapse: collapse;
     background: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .product-management-table th {
@@ -185,47 +179,6 @@ body{
 
 .product-management-table tbody tr:hover {
     background: #f8f9fa;
-}
-
-/* Responsive Table */
-@media (max-width: 1200px) {
-    .product-management-table {
-        font-size: 13px;
-    }
-    
-    .product-management-table th,
-    .product-management-table td {
-        padding: 12px 8px;
-    }
-    
-    .commission-rate-badge,
-    .status-badge {
-        font-size: 11px;
-        padding: 4px 8px;
-        min-width: 50px;
-    }
-}
-
-@media (max-width: 768px) {
-    .product-management-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-    
-    .product-management-table th,
-    .product-management-table td {
-        padding: 10px 6px;
-        font-size: 12px;
-    }
-    
-    .product-name {
-        font-size: 13px;
-    }
-    
-    .product-description {
-        font-size: 11px;
-    }
 }
 
 .product-table-image {
@@ -277,7 +230,6 @@ body{
     font-size: 12px;
     font-weight: 500;
     transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -313,7 +265,6 @@ body{
     background: transparent;
     color: #0bc5ea;
     border: 2px solid #0bc5ea;
-    cursor: pointer;
 }
 
 .product-btn-toggle:hover {
@@ -494,7 +445,6 @@ body{
     border-radius: 8px;
     font-size: 14px;
     transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .product-filter-input:focus,
@@ -519,7 +469,7 @@ body{
     font-weight: 500;
 }
 
-/* Product Buttons for No Results */
+/* Product Buttons */
 .product-btn {
     display: inline-flex;
     align-items: center;
@@ -532,7 +482,6 @@ body{
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .product-btn-primary {
@@ -564,56 +513,37 @@ body{
     justify-content: center;
 }
 
-/* Product Image Display Container */
-.product-image-display-container {
-    background: #ffffff;
-    border: 2px dashed #d1d5db;
-    border-radius: 12px;
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
+/* Product Image Container and Preview Styles */
+.product-image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.product-image-display-container:hover {
-    border-color: #9ca3af;
-    background: #f9fafb;
-}
-
-.product-image-display-container.has-image {
-    border-style: solid;
-    border-color: #10b981;
-    background: #f0fdf4;
-}
-
-.product-image-display-container.no-image {
-    border-color: #d1d5db;
-    background: #f9fafb;
-}
-
-/* Product Image Preview */
 .product-image-preview {
+    position: relative;
     width: 200px;
     height: 200px;
-    margin: 0 auto 15px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 3px solid #e5e7eb;
-    background: #f3f4f6;
+    border: 2px dashed #e9ecef;
+    border-radius: 10px;
+    background: #f8f9fa;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.product-image-preview.has-image {
-    border-color: #10b981;
+.product-image-preview:hover {
+    border-color: #007bff;
+    background: #f0f8ff;
 }
 
-.product-image-preview-img {
+.product-preview-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 8px;
 }
 
 .product-image-placeholder {
@@ -621,162 +551,140 @@ body{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #9ca3af;
-    font-size: 14px;
+    color: #999;
+    text-align: center;
 }
 
 .product-image-placeholder i {
     font-size: 48px;
-    margin-bottom: 12px;
-    color: #d1d5db;
+    margin-bottom: 10px;
+    color: #ccc;
 }
 
-/* Product Image Info */
-.product-image-info {
-    margin-bottom: 15px;
-}
-
-.product-image-info span {
-    display: block;
-    font-weight: 600;
-    color: #374151;
-    margin-bottom: 5px;
-}
-
-.product-image-info small {
-    color: #6b7280;
-    font-size: 12px;
-}
-
-/* Product Image Actions */
-.product-image-actions {
-    margin-top: 15px;
-}
-
-.product-image-actions .btn {
-    padding: 8px 16px;
+.product-image-placeholder span {
     font-size: 14px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+    color: #666;
 }
 
-.product-image-actions .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Product Button Styles - Similar to User Buttons */
-.product-btn {
-    display: inline-flex;
+.product-image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    line-height: 1.5;
-    min-height: 36px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.product-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.product-image-preview:hover .product-image-overlay {
+    opacity: 1;
 }
 
-.product-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.product-btn-sm {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    min-height: 32px;
-}
-
-.product-btn-outline-danger {
-    color: #dc2626;
-    background: transparent;
-    border-color: #dc2626;
-}
-
-.product-btn-outline-danger:hover {
+.product-image-overlay i {
     color: white;
-    background: #dc2626;
-    border-color: #dc2626;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    font-size: 24px;
 }
 
-.product-btn-outline-danger:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
-}
-
-/* Product Image Upload Button */
-.product-image-upload-btn {
-    display: inline-flex;
+.product-image-actions {
+    display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background: #3b82f6;
+}
+
+.product-image-upload-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    text-align: center;
     text-decoration: none;
-    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .product-image-upload-btn:hover {
-    background: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+}
+
+.product-image-help {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Product button variants */
+.product-btn-sm {
+    padding: 6px 12px;
+    font-size: 11px;
+}
+
+.product-btn-outline-danger {
+    background: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.product-btn-outline-danger:hover {
+    background: #dc3545;
+    color: white;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
-.product-image-upload-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+/* Responsive Table */
+@media (max-width: 1200px) {
+    .product-management-table {
+        font-size: 13px;
+    }
+    
+    .product-management-table th,
+    .product-management-table td {
+        padding: 12px 8px;
+    }
+    
+    .commission-rate-badge,
+    .status-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+        min-width: 50px;
+    }
 }
 
-.product-image-upload-btn i {
-    font-size: 16px;
+@media (max-width: 768px) {
+    .product-management-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    .product-management-table th,
+    .product-management-table td {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+    
+    .product-name {
+        font-size: 13px;
+    }
+    
+    .product-description {
+        font-size: 11px;
+    }
 }
 
-/* Product Image Input (Hidden) */
-.product-image-input {
-    display: none;
-}
-
-/* Product Image Help */
-.product-image-help {
-    font-size: 0.875rem;
-    color: #6b7280;
-    line-height: 1.5;
-    margin-top: 10px;
-    padding: 12px;
-    background: #f3f4f6;
-    border-radius: 6px;
-}
-
-/* Product Image Help Text */
-.product-image-help {
-    margin-top: 15px;
-    padding: 12px;
-    background: #f3f4f6;
-    border-radius: 6px;
-    font-size: 13px;
-    color: #6b7280;
-    line-height: 1.5;
-}
-
-.product-image-help small {
-    color: #9ca3af;
-    font-style: italic;
+.form-group-edit{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }

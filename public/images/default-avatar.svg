@@ -1,21 +1,5 @@
-<svg width="150" height="150" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background circle -->
-  <circle cx="75" cy="75" r="75" fill="#F3F4F6"/>
-  
-  <!-- User icon -->
-  <g transform="translate(37.5, 30)">
-    <!-- Head -->
-    <circle cx="37.5" cy="30" r="25" fill="#9CA3AF"/>
-    
-    <!-- Body -->
-    <path d="M12.5 70 C12.5 55 25 45 37.5 45 C50 45 62.5 55 62.5 70 L62.5 90 L12.5 90 Z" fill="#9CA3AF"/>
-    
-    <!-- Face details -->
-    <circle cx="30" cy="25" r="3" fill="#6B7280"/>
-    <circle cx="45" cy="25" r="3" fill="#6B7280"/>
-    <path d="M30 40 Q37.5 45 45 40" stroke="#6B7280" stroke-width="2" fill="none" stroke-linecap="round"/>
-  </g>
-  
-  <!-- Text label -->
-  <text x="75" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#6B7280">User</text>
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8 7C9.65685 7 11 5.65685 11 4C11 2.34315 9.65685 1 8 1C6.34315 1 5 2.34315 5 4C5 5.65685 6.34315 7 8 7Z" fill="#000000"/>
+<path d="M14 12C14 10.3431 12.6569 9 11 9H5C3.34315 9 2 10.3431 2 12V15H14V12Z" fill="#000000"/>
 </svg>

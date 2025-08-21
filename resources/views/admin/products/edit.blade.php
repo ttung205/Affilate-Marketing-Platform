@@ -101,77 +101,99 @@
                 
                 <div class="form-group">
                     <label for="image" class="form-label">Hình ảnh sản phẩm</label>
-                    @if($product->image)
-                        <div class="current-image">
-                            <img src="{{ get_image_url($product->image) }}" alt="Current image" class="product-thumbnail">
-                            <small>Hình ảnh hiện tại</small>
-                                                    <div class="product-image-actions">
-                            <button type="button"
-                                    class="product-btn product-btn-sm product-btn-outline-danger"
-                                    onclick="removeProductImage({{ $product->id }})">
-                                <i class="fas fa-trash"></i>
-                                Xóa ảnh
-                            </button>
+                    
+                    <div class="product-image-container">
+                        <div class="product-image-preview" id="productImagePreview">
+                            @if($product->image)
+                                <img src="{{ get_image_url($product->image) }}" alt="{{ $product->name }}" class="product-preview-img">
+                                <div class="product-image-overlay">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                            @else
+                                <div class="product-image-placeholder">
+                                    <i class="fas fa-image"></i>
+                                    <span>Chưa có ảnh</span>
+                                </div>
+                            @endif
                         </div>
+                        
+                        <input type="file" 
+                               id="image" 
+                               name="image" 
+                               class="product-image-input @error('image') is-invalid @enderror" 
+                               accept="image/*"
+                               onchange="previewProductImage(this)"
+                               style="display: none;">
+                        
+                        <div class="product-image-actions">
+                            <label for="image" class="product-image-upload-btn">
+                                <i class="fas fa-upload"></i>
+                                {{ $product->image ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
+                            </label>
+                            
+                            @if($product->image)
+                                <button type="button" 
+                                        class="product-btn product-btn-sm product-btn-outline-danger" 
+                                        onclick="removeProductImage({{ $product->id }})">
+                                    <i class="fas fa-trash"></i>
+                                    Xóa ảnh
+                                </button>
+                            @endif
                         </div>
-                    @endif
-                    <input type="file" 
-                           id="image" 
-                           name="image" 
-                           class="product-image-input" 
-                           accept="image/*"
-                           style="display: none;">
-                    <label for="image" class="product-image-upload-btn">
-                        <i class="fas fa-upload"></i>
-                        {{ $product->image ? 'Thay đổi ảnh' : 'Chọn ảnh' }}
-                    </label>
-                    <div class="product-image-help">
-                        Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
-                        @if($product->image)
-                            <br><small>Để trống nếu muốn giữ hình ảnh hiện tại</small>
-                        @endif
+                        
+                        <div class="product-image-help">
+                            Chọn file hình ảnh mới (JPG, PNG, GIF) - Tối đa 2MB
+                            @if($product->image)
+                                <br><small>Để trống nếu muốn giữ hình ảnh hiện tại</small>
+                            @endif
+                        </div>
                     </div>
+                    
                     @error('image')
                         <div class="form-error">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
             
-            <div class="form-group full-width">
-                <label for="description" class="form-label">Mô tả sản phẩm</label>
-                <textarea id="description" 
-                          name="description" 
-                          class="form-textarea" 
-                          rows="4">{{ old('description', $product->description) }}</textarea>
-                @error('description')
-                    <div class="form-error">{{ $message }}</div>
-                @enderror
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="description" class="form-label">Mô tả sản phẩm</label>
+                    <textarea id="description" 
+                              name="description" 
+                              class="form-textarea" 
+                              rows="4">{{ old('description', $product->description) }}</textarea>
+                    @error('description')
+                        <div class="form-error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group">
+                    <label for="affiliate_link" class="form-label">Original Link</label>
+                    <input type="url" 
+                           id="affiliate_link" 
+                           name="affiliate_link" 
+                           value="{{ old('affiliate_link', $product->affiliate_link) }}" 
+                           class="form-input" 
+                           placeholder="https://example.com/product">
+                    @error('affiliate_link')
+                        <div class="form-error">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
-            
-            <div class="form-group full-width">
-                <label for="affiliate_link" class="form-label">Link affiliate</label>
-                <input type="url" 
-                       id="affiliate_link" 
-                       name="affiliate_link" 
-                       value="{{ old('affiliate_link', $product->affiliate_link) }}" 
-                       class="form-input" 
-                       placeholder="https://example.com/product">
-                @error('affiliate_link')
-                    <div class="form-error">{{ $message }}</div>
-                @enderror
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-checkbox-label">
+                        <input type="checkbox" 
+                               name="is_active" 
+                               value="1" 
+                               {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
+                        <span class="checkmark"></span>
+                        Kích hoạt sản phẩm
+                    </label>
+                </div>
             </div>
-            
-            <div class="form-group full-width">
-                <label class="form-checkbox-label">
-                    <input type="checkbox" 
-                           name="is_active" 
-                           value="1" 
-                           {{ old('is_active', $product->is_active) ? 'checked' : '' }}>
-                    <span class="checkmark"></span>
-                    Kích hoạt sản phẩm
-                </label>
-            </div>
-            
+
             <div class="form-actions">
                 <button type="submit" class="form-submit-btn">
                     <i class="fas fa-save"></i> Cập nhật sản phẩm
@@ -201,17 +223,23 @@ function removeProductImage(productId) {
             .then(data => {
                 if (data.success) {
                     // Cập nhật preview
-                    const currentImage = document.querySelector('.current-image');
-                    currentImage.innerHTML = `
-                        <img src="${data.image_url}" alt="Default image" class="product-thumbnail">
-                        <small>Ảnh mặc định</small>
+                    const productImagePreview = document.getElementById('productImagePreview');
+                    productImagePreview.innerHTML = `
+                        <img src="${data.image_url}" alt="Default image" class="product-preview-img">
+                        <div class="product-image-overlay">
+                            <i class="fas fa-eye"></i>
+                        </div>
                     `;
                     
                     // Ẩn nút xóa
-                    const removeBtn = document.querySelector('.product-image-actions');
+                    const removeBtn = document.querySelector('.product-image-actions .product-btn-outline-danger');
                     if (removeBtn) {
                         removeBtn.style.display = 'none';
                     }
+                    
+                    // Cập nhật label
+                    const uploadLabel = document.querySelector('.product-image-upload-btn');
+                    uploadLabel.textContent = 'Chọn ảnh';
                     
                     // Hiển thị thông báo thành công
                     showConfirmPopup({
@@ -244,5 +272,40 @@ function removeProductImage(productId) {
             });
         }
     });
+}
+
+function previewProductImage(input) {
+    const preview = document.getElementById('productImagePreview');
+    const file = input.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Product preview" class="product-preview-img">
+                <div class="product-image-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Restore original image if exists
+        @if($product->image)
+            preview.innerHTML = `
+                <img src="{{ get_image_url($product->image) }}" alt="{{ $product->name }}" class="product-preview-img">
+                <div class="product-image-overlay">
+                    <i class="fas fa-eye"></i>
+                </div>
+            `;
+        @else
+            preview.innerHTML = `
+                <div class="product-image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <span>Chưa có ảnh</span>
+                </div>
+            `;
+        @endif
+    }
 }
 </script>
