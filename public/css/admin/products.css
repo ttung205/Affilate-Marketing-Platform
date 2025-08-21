@@ -682,9 +682,3 @@
         font-size: 11px;
     }
 }
-
-.form-group-edit{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}

@@ -19,7 +19,8 @@ class Product extends Model
         'stock',
         'is_active',
         'affiliate_link',
-        'commission_rate'
+        'commission_rate',
+        'user_id'
     ];
 
     protected $casts = [
@@ -44,6 +45,12 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    // Shop owner relationship
+    public function shopOwner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Affiliate Relationships

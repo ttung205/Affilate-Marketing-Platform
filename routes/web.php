@@ -46,7 +46,7 @@ Route::get('/admin', function(){
 })->middleware('auth', 'role:admin')->name('admin.dashboard');
 
 // Shop routes
-Route::middleware(['role:shop'])->prefix('shop')->name('shop.')->group(function () {
+Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
     Route::get('/', [App\Http\Controllers\Shop\DashboardController::class, 'dashboard'])->name('dashboard');
     
     // Product management routes

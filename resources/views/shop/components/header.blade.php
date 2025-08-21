@@ -16,16 +16,6 @@
     </div>
     
     <div class="header-right">
-        <div class="user-info">
-            <span class="user-name">{{ Auth::user()->name }}</span>
-            <a href="{{ route('logout') }}" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fas fa-sign-out-alt"></i>
-                Đăng xuất
-            </a>
-        </div>
+        
     </div>
-    
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
 </div>
