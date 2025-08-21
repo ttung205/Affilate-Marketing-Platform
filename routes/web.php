@@ -71,9 +71,36 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     Route::put('/profile', [App\Http\Controllers\Shop\ProfileController::class, 'update'])->name('profile.update');
 });
 
-Route::get('/publisher', function(){
-    return view('publisher.dashboard');
-})->middleware('auth', 'role:publisher')->name('publisher.dashboard');
+// Publisher routes
+Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publisher.')->group(function () {
+    Route::get('/', [App\Http\Controllers\PublisherController::class, 'dashboard'])->name('dashboard');
+    
+    // Affiliate Links management routes
+    Route::resource('affiliate-links', App\Http\Controllers\Publisher\AffiliateLinkController::class);
+    
+    // Campaigns routes
+    Route::resource('campaigns', App\Http\Controllers\Publisher\CampaignController::class);
+    
+    // Products routes
+    Route::resource('products', App\Http\Controllers\Publisher\ProductController::class);
+    
+    // Reports routes
+    Route::get('/reports/performance', [App\Http\Controllers\Publisher\ReportController::class, 'performance'])->name('reports.performance');
+    Route::get('/reports/commissions', [App\Http\Controllers\Publisher\ReportController::class, 'commissions'])->name('reports.commissions');
+    Route::get('/reports/clicks', [App\Http\Controllers\Publisher\ReportController::class, 'clicks'])->name('reports.clicks');
+    
+    // Payments routes
+    Route::resource('payments', App\Http\Controllers\Publisher\PaymentController::class);
+    
+    // Settings routes
+    Route::resource('settings', App\Http\Controllers\Publisher\SettingController::class);
+    
+    // Profile routes
+    Route::get('/profile/edit', [App\Http\Controllers\Publisher\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [App\Http\Controllers\Publisher\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/avatar', [App\Http\Controllers\Publisher\ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
+    Route::delete('/profile/avatar', [App\Http\Controllers\Publisher\ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+});
 
 Route::get('/forgot-password', [ForgotPasswordController::class,'showForgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class,'sendResetLinkEmail'])->name('password.email');

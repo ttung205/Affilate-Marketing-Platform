@@ -1,0 +1,435 @@
+/* Publisher Profile Edit Styles - Unique Class Names */
+
+.publisher-profile-edit-container {
+    padding: 20px;
+    background-color: #f8fafc;
+    min-height: calc(100vh - 80px);
+}
+
+.publisher-profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.publisher-profile-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.publisher-profile-header p {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.publisher-profile-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+/* Profile Row Layout */
+.publisher-profile-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.publisher-profile-avatar-col {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.publisher-profile-form-col {
+    flex: 0 0 80%;
+    max-width: 80%;
+}
+
+/* Avatar Section */
+.publisher-profile-avatar-section {
+    padding: 30px;
+    text-align: center;
+    background: #ffffff;
+    color: #333;
+    border-radius: 16px 0 0 16px;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-right: 1px solid #e2e8f0;
+}
+
+.publisher-profile-avatar-preview {
+    margin-bottom: 24px;
+}
+
+.publisher-profile-avatar-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #e9ecef;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.publisher-profile-avatar-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 4px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.publisher-profile-avatar-placeholder i {
+    font-size: 4rem;
+    color: #adb5bd;
+}
+
+.publisher-profile-avatar-actions {
+    margin-bottom: 20px;
+}
+
+.publisher-profile-avatar-btn {
+    margin: 5px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.publisher-profile-avatar-btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.publisher-profile-avatar-btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.publisher-profile-avatar-btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.publisher-profile-avatar-btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.publisher-profile-avatar-form {
+    display: inline;
+}
+
+.publisher-profile-file-input {
+    display: none;
+}
+
+.publisher-profile-avatar-info {
+    margin-top: auto;
+}
+
+.publisher-profile-avatar-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Profile Form */
+.publisher-profile-form {
+    padding: 30px;
+}
+
+.publisher-profile-form-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.publisher-profile-form-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.publisher-profile-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.publisher-profile-section-desc {
+    color: #6c757d;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+/* Form Layout - 2 columns per row */
+.publisher-profile-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px 20px -10px;
+    align-items: flex-start;
+}
+
+.publisher-profile-form-col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.publisher-profile-form-group {
+    margin-bottom: 0;
+}
+
+.publisher-profile-form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.9rem;
+}
+
+.publisher-profile-required {
+    color: #ef4444;
+}
+
+.publisher-profile-form-input,
+.publisher-profile-form-textarea {
+    width: 100%;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.publisher-profile-form-input:focus,
+.publisher-profile-form-textarea:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+.publisher-profile-form-input-error {
+    border-color: #ef4444;
+}
+
+.publisher-profile-form-input-readonly {
+    background-color: #f9fafb;
+    color: #6b7280;
+}
+
+.publisher-profile-form-textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.publisher-profile-error-message {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* Form Actions */
+.publisher-profile-form-actions {
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.publisher-profile-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.publisher-profile-btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.publisher-profile-btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.publisher-profile-btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.publisher-profile-btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Alerts */
+.publisher-profile-alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    transition: opacity 0.3s ease;
+}
+
+.publisher-profile-alert-success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.publisher-profile-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.publisher-profile-error-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.publisher-profile-alert-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: auto;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.publisher-profile-alert-close:hover {
+    opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .publisher-profile-avatar-col,
+    .publisher-profile-form-col {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .publisher-profile-avatar-section {
+        border-radius: 16px 16px 0 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .publisher-profile-edit-container {
+        padding: 15px;
+    }
+    
+    .publisher-profile-header h1 {
+        font-size: 2rem;
+    }
+    
+    .publisher-profile-avatar-section {
+        padding: 20px;
+    }
+    
+    .publisher-profile-avatar-image,
+    .publisher-profile-avatar-placeholder {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .publisher-profile-avatar-placeholder i {
+        font-size: 3rem;
+    }
+    
+    .publisher-profile-form {
+        padding: 20px;
+    }
+    
+    .publisher-profile-form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .publisher-profile-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .publisher-profile-form-col-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .publisher-profile-form-row {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .publisher-profile-edit-container {
+        padding: 10px;
+    }
+    
+    .publisher-profile-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .publisher-profile-header p {
+        font-size: 1rem;
+    }
+    
+    .publisher-profile-avatar-section {
+        padding: 15px;
+    }
+    
+    .publisher-profile-avatar-image,
+    .publisher-profile-avatar-placeholder {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .publisher-profile-avatar-placeholder i {
+        font-size: 2.5rem;
+    }
+    
+    .publisher-profile-form {
+        padding: 15px;
+    }
+    
+    .publisher-profile-section-title {
+        font-size: 1.1rem;
+    }
+}

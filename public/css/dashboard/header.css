@@ -19,6 +19,8 @@ body{
 /* Breadcrumb Styles */
 .breadcrumb-container {
     margin-bottom: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .breadcrumb-nav {
@@ -32,17 +34,18 @@ body{
     list-style: none;
     margin: 0;
     padding: 0;
-    gap: 8px;
+    gap: 0;
+    flex-wrap: wrap;
 }
 
 .breadcrumb-item {
     display: flex;
     align-items: center;
-    gap: 8px;
     color: #495057;
     font-size: 15px;
     font-weight: 600;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-right: 4px;
 }
 
 .breadcrumb-link {
@@ -76,14 +79,29 @@ body{
 
 .breadcrumb-separator {
     color: #6c757d;
-    font-size: 10px;
-    margin: 0 4px;
+    font-size: 14px;
+    margin: 0 8px;
+    font-weight: 400;
 }
 
-.breadcrumb-item.active span {
+.breadcrumb-item.active {
     color: #495057;
     font-weight: 600;
-    padding: 6px;
+    padding: 6px 12px;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 20px;
+}
+
+.breadcrumb-item a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #0056b3;
+    text-decoration: underline;
 }
 
 .search-box input {
