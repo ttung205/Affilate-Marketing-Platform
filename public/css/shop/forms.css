@@ -215,7 +215,7 @@
 
 .product-image-upload-btn {
     background: #007bff;
-    color: white;
+    color: white !important;
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
@@ -235,7 +235,7 @@
 .product-image-remove-btn {
     background: #dc3545;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
@@ -244,6 +244,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    border: none;
 }
 
 .product-image-remove-btn:hover {

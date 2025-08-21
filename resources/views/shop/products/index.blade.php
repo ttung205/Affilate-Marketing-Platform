@@ -4,6 +4,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/shop/products.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
 @endpush
 
 @section('content')
@@ -69,6 +70,7 @@
                             <th>Danh mục</th>
                             <th>Giá</th>
                             <th>Tồn kho</th>
+                            <th>Hoa hồng</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
@@ -101,14 +103,14 @@
                                 </span>
                             </td>
                             <td>
-                                <form method="POST" action="{{ route('shop.products.toggle-status', $product) }}" class="inline">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" 
-                                            class="status-toggle {{ $product->is_active ? 'status-active' : 'status-inactive' }}">
-                                        {{ $product->is_active ? 'Đang hoạt động' : 'Vô hiệu hóa' }}
-                                    </button>
-                                </form>
+                                <span class="commission-badge">
+                                    {{ $product->commission_rate ?? 0 }}%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge {{ $product->is_active ? 'status-active' : 'status-inactive' }}">
+                                    {{ $product->is_active ? 'Đang hoạt động' : 'Vô hiệu hóa' }}
+                                </span>
                             </td>
                             <td>
                                 <div class="action-buttons">
@@ -120,17 +122,18 @@
                                        class="action-btn edit" title="Chỉnh sửa">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <form method="POST" action="{{ route('shop.products.destroy', $product) }}" 
-                                          class="inline delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" 
-                                                class="action-btn delete"
-                                                title="Xóa sản phẩm"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" 
+                                            class="action-btn toggle" 
+                                            title="{{ $product->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}"
+                                            onclick="toggleProductStatus('{{ $product->id }}', '{{ $product->name }}', {{ $product->is_active ? 'true' : 'false' }})">
+                                        <i class="fas fa-{{ $product->is_active ? 'ban' : 'check' }}"></i>
+                                    </button>
+                                    <button type="button" 
+                                            class="action-btn delete" 
+                                            title="Xóa sản phẩm"
+                                            onclick="deleteProduct('{{ $product->id }}', '{{ $product->name }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -144,17 +147,25 @@
                 {{ $products->links() }}
             </div>
         @else
-            <div class="empty-state">
-                <div class="empty-state-icon">
-                    <i class="fas fa-box-open"></i>
+            @if(request()->hasAny(['search', 'category', 'status']))
+                <!-- No search results -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>Không tìm thấy kết quả</h3>
+                    <p>Không có sản phẩm nào phù hợp với tiêu chí tìm kiếm của bạn.</p>
                 </div>
-                <h3>Chưa có sản phẩm nào</h3>
-                <p>Bắt đầu tạo sản phẩm đầu tiên của bạn</p>
-                <a href="{{ route('shop.products.create') }}" class="add-product-btn">
-                    <i class="fas fa-plus"></i>
-                    Thêm Sản phẩm
-                </a>
-            </div>
+            @else
+                <!-- Empty state - no items at all -->
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>Chưa có sản phẩm nào</h3>
+                    <p>Bắt đầu tạo sản phẩm đầu tiên để quản lý cửa hàng.</p>
+                </div>
+            @endif
         @endif
     </div>
 </div>
@@ -163,6 +174,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/components/confirm-popup.js') }}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Auto-submit form when filters change
@@ -173,28 +185,74 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('status').addEventListener('change', function() {
         this.closest('form').submit();
     });
-
-    // Add loading state to forms
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function() {
-            const submitBtn = this.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
-            }
-        });
-    });
-
-    // Confirm delete with better UX
-    const deleteForms = document.querySelectorAll('.delete-form');
-    deleteForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.')) {
-                e.preventDefault();
-            }
-        });
-    });
 });
+
+// Toggle product status with confirm popup
+function toggleProductStatus(productId, productName, currentStatus) {
+    const action = currentStatus ? 'vô hiệu hóa' : 'kích hoạt';
+    const type = currentStatus ? 'warning' : 'success';
+    const icon = currentStatus ? 'ban' : 'check';
+    
+    showConfirmPopup({
+        title: `${currentStatus ? 'Vô hiệu hóa' : 'Kích hoạt'} sản phẩm`,
+        message: `Bạn có chắc chắn muốn ${action} sản phẩm "${productName}"?`,
+        type: type,
+        confirmText: currentStatus ? 'Vô hiệu hóa' : 'Kích hoạt',
+        cancelText: 'Hủy bỏ',
+        onConfirm: function() {
+            // Create and submit form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/shop/products/${productId}/toggle-status`;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'PATCH';
+            
+            form.appendChild(csrfToken);
+            form.appendChild(methodField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
+
+// Delete product with confirm popup
+function deleteProduct(productId, productName) {
+    showConfirmPopup({
+        title: 'Xóa sản phẩm',
+        message: `Bạn có chắc chắn muốn xóa sản phẩm "${productName}"? Hành động này không thể hoàn tác.`,
+        type: 'danger',
+        confirmText: 'Xóa sản phẩm',
+        cancelText: 'Hủy bỏ',
+        onConfirm: function() {
+            // Create and submit form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/shop/products/${productId}`;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'DELETE';
+            
+            form.appendChild(csrfToken);
+            form.appendChild(methodField);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+}
 </script>
 @endpush

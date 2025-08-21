@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shop/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/shop/products.css') }}">
     
     @stack('styles')
 </head>

@@ -4,6 +4,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/shop/forms.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
 @endpush
 
 @section('content')
@@ -20,7 +21,7 @@
 
         <div class="product-form-container">
             <form action="{{ route('shop.products.store') }}" method="POST" enctype="multipart/form-data"
-                class="product-form">
+                class="product-form" id="createProductForm">
                 @csrf
 
                 <div class="form-row">
@@ -104,6 +105,10 @@
                                     <i class="fas fa-upload"></i>
                                     Chọn ảnh
                                 </label>
+                                <button type="button" class="product-image-remove-btn" onclick="removePreview()">
+                                    <i class="fas fa-trash"></i>
+                                    Xóa ảnh
+                                </button>
                             </div>
                             
                             <div class="product-image-help">
@@ -136,10 +141,10 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="form-submit-btn">
+                    <button type="submit" class="form-submit-btn" id="submitBtn">
                         <i class="fas fa-save"></i> Tạo sản phẩm
                     </button>
-                    <a href="{{ route('shop.products.index') }}" class="form-cancel-btn">Hủy bỏ</a>
+                    <button type="button" class="form-cancel-btn" onclick="confirmCancel()">Hủy bỏ</button>
                 </div>
             </form>
         </div>
@@ -147,6 +152,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/components/confirm-popup.js') }}"></script>
 <script>
 function previewProductImage(input) {
     const preview = document.getElementById('productImagePreview');
@@ -184,5 +190,25 @@ function removePreview() {
     `;
     input.value = '';
 }
+
+function confirmCancel() {
+    showConfirmPopup({
+        title: 'Hủy bỏ tạo sản phẩm',
+        message: 'Bạn có chắc chắn muốn hủy bỏ? Tất cả thông tin đã nhập sẽ bị mất.',
+        type: 'warning',
+        confirmText: 'Hủy bỏ',
+        cancelText: 'Tiếp tục',
+        onConfirm: function() {
+            window.location.href = '{{ route("shop.products.index") }}';
+        }
+    });
+}
+
+// Form submission with loading state
+document.getElementById('createProductForm').addEventListener('submit', function() {
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tạo...';
+});
 </script>
 @endpush
