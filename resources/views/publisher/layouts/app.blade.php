@@ -20,7 +20,6 @@
     <!-- Publisher CSS riêng biệt -->
     <link rel="stylesheet" href="{{ asset('css/publisher/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/header.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/publisher/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/profile.css') }}">
     
     @stack('styles')

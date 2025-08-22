@@ -4,7 +4,7 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item">
-    <i class="fas fa-chevron-right breadcrumb-separator"></i>
+    <i class="fas fa-chevron-right breadcrumb-arrow"></i>
 </li>
 <li class="breadcrumb-item active">
     <span>Dashboard</span>

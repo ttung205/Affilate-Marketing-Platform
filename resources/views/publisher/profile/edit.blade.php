@@ -6,7 +6,9 @@
     <li class="breadcrumb-item">
         <a href="{{ route('publisher.dashboard') }}">Dashboard</a>
     </li>
-    <li class="breadcrumb-separator">></li>
+    <li class="breadcrumb-item">
+        <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+    </li>
     <li class="breadcrumb-item active">Chỉnh sửa hồ sơ</li>
 @endsection
 
@@ -14,12 +16,7 @@
 <div class="publisher-profile-edit-container">
     <div class="publisher-profile-header">
         <h1>Chỉnh sửa hồ sơ cá nhân</h1>
-        <p>Cập nhật thông tin cá nhân và ảnh đại diện của bạn</p>
     </div>
-
-
-
-
 
     @if($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">

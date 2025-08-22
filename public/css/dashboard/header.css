@@ -46,8 +46,8 @@ body{
     font-weight: 600;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-right: 4px;
-}
-
+    margin-left: 4px;
+} 
 .breadcrumb-link {
     display: flex;
     align-items: center;
@@ -66,6 +66,7 @@ body{
     background: rgba(0, 123, 255, 0.1);
     color: #0056b3;
     transform: translateY(-1px);
+    text-decoration: none;
 }
 
 .breadcrumb-link i {
@@ -73,22 +74,10 @@ body{
     color: #007bff;
 }
 
-.breadcrumb-link span {
-    color: inherit;
-}
-
-.breadcrumb-separator {
-    color: #6c757d;
-    font-size: 14px;
-    margin: 0 8px;
-    font-weight: 400;
-}
-
 .breadcrumb-item.active {
     color: #495057;
     font-weight: 600;
     padding: 6px 12px;
-    background: rgba(0, 123, 255, 0.1);
     border-radius: 20px;
 }
 
@@ -101,7 +90,8 @@ body{
 
 .breadcrumb-item a:hover {
     color: #0056b3;
-    text-decoration: underline;
+    background: none;
+    text-decoration: none;
 }
 
 .search-box input {
@@ -198,4 +188,10 @@ body{
 .export-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
+}
+
+/* Breadcrumb Arrow Icon - Class độc lập */
+.breadcrumb-arrow {
+    font-size: 12px;
+    color: #495057;
 }
