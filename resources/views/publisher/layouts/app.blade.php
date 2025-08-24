@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/publisher/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/publisher/product.css') }}">
     
     @stack('styles')
 </head>

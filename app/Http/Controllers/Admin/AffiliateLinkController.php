@@ -7,13 +7,14 @@ use App\Models\AffiliateLink;
 use App\Models\Campaign;
 use App\Models\Product;
 use App\Models\User;
+use App\Traits\AffiliateLinkTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
 class AffiliateLinkController extends Controller
 {
+    use AffiliateLinkTrait;
     /**
      * Display a listing of the resource.
      */
@@ -49,7 +50,23 @@ class AffiliateLinkController extends Controller
         $affiliateLinks = $query->orderBy('created_at', 'desc')->paginate(15);
 
         // Get statistics - Optimized with single query
-        $stats = $this->getStatistics();
+        $stats = $this->getAffiliateLinkStats();
+        
+        // Add revenue calculation for admin
+        $totalClicks = $stats['total_clicks'];
+        $totalRevenue = 0;
+        
+        // Revenue from clicks (1 click = 100 VND)
+        $totalRevenue += $totalClicks * 100;
+        
+        // Revenue from conversions (commission)
+        $conversionRevenue = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
+            ->join('products', 'affiliate_links.product_id', '=', 'products.id')
+            ->selectRaw('SUM(products.price * affiliate_links.commission_rate / 100) as total_commission')
+            ->value('total_commission') ?? 0;
+        
+        $totalRevenue += $conversionRevenue;
+        $stats['total_revenue'] = $totalRevenue;
 
         // Get form data for filters
         $formData = $this->getFormData();
@@ -89,6 +106,13 @@ class AffiliateLinkController extends Controller
             'commission_rate' => 'required|numeric|min:0|max:100',
             'status' => 'required|in:active,inactive,pending',
         ]);
+
+        // Check if publisher already has an affiliate link for this product
+        if ($this->checkExistingLink($request->publisher_id, $request->product_id)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Publisher này đã có link tiếp thị cho sản phẩm này rồi!');
+        }
 
         // Generate unique tracking code
         $trackingCode = $this->generateTrackingCode(
@@ -176,6 +200,13 @@ class AffiliateLinkController extends Controller
             'status' => 'required|in:active,inactive,pending',
         ]);
 
+        // Check if publisher already has an affiliate link for this product (excluding current link)
+        if ($this->checkExistingLink($request->publisher_id, $request->product_id, $affiliateLink->id)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Publisher này đã có link tiếp thị cho sản phẩm này rồi!');
+        }
+
         try {
             $affiliateLink->update([
                 'publisher_id' => $request->publisher_id,
@@ -248,41 +279,7 @@ class AffiliateLinkController extends Controller
             ->with('success', 'Affiliate link đã được xóa thành công.');
     }
 
-    /**
-     * Generate unique tracking code
-     */
-    private function generateTrackingCode(User $publisher, Product $product): string
-    {
-        $publisherCode = strtoupper(substr($publisher->name, 0, 4)) . str_pad($publisher->id, 3, '0', STR_PAD_LEFT);
-        $productCode = strtoupper(substr($product->name, 0, 8));
-        $timestamp = now()->format('Ymd');
-        $random = strtoupper(Str::random(6));
-        
-        $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
-        
-        // Ensure uniqueness
-        while (AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
-            $random = strtoupper(Str::random(6));
-            $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
-        }
-        
-        return $trackingCode;
-    }
 
-    /**
-     * Generate unique short code
-     */
-    private function generateShortCode(): string
-    {
-        $shortCode = strtoupper(Str::random(6));
-        
-        // Ensure uniqueness
-        while (AffiliateLink::where('short_code', $shortCode)->exists()) {
-            $shortCode = strtoupper(Str::random(6));
-        }
-        
-        return $shortCode;
-    }
 
     /**
      * Get form data for create and edit forms
@@ -296,46 +293,5 @@ class AffiliateLinkController extends Controller
         ];
     }
 
-    /**
-     * Get optimized statistics for affiliate links
-     */
-    private function getStatistics(): array
-    {
-        // Single query to get all counts
-        $statusCounts = AffiliateLink::selectRaw('status, COUNT(*) as count')
-            ->groupBy('status')
-            ->pluck('count', 'status')
-            ->toArray();
 
-        // Get total clicks and conversions in single queries
-        $totalClicks = AffiliateLink::join('clicks', 'affiliate_links.id', '=', 'clicks.affiliate_link_id')
-            ->count();
-        
-        $totalConversions = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
-            ->count();
-
-        // Calculate total revenue
-        $totalRevenue = 0;
-        
-        // Revenue from clicks (1 click = 100 VND)
-        $totalRevenue += $totalClicks * 100;
-        
-        // Revenue from conversions (commission)
-        $conversionRevenue = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
-            ->join('products', 'affiliate_links.product_id', '=', 'products.id')
-            ->selectRaw('SUM(products.price * affiliate_links.commission_rate / 100) as total_commission')
-            ->value('total_commission') ?? 0;
-        
-        $totalRevenue += $conversionRevenue;
-
-        return [
-            'total' => array_sum($statusCounts),
-            'active' => $statusCounts['active'] ?? 0,
-            'inactive' => $statusCounts['inactive'] ?? 0,
-            'pending' => $statusCounts['pending'] ?? 0,
-            'total_clicks' => $totalClicks,
-            'total_conversions' => $totalConversions,
-            'total_revenue' => $totalRevenue,
-        ];
-    }
 }

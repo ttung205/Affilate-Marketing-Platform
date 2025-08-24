@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->string('short_code', 8)->unique()->after('tracking_code');
+            // Add unique constraint to ensure one publisher can only have one affiliate link per product
+            $table->unique(['publisher_id', 'product_id'], 'unique_publisher_product');
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->dropColumn('short_code');
+            // Drop unique constraint
+            $table->dropUnique('unique_publisher_product');
         });
     }
 };

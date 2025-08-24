@@ -11,12 +11,11 @@
 <div class="product-detail-container">
     <!-- Header Section -->
     <div class="product-header">
-        <div class="breadcrumb">
+        <div class="product-back-btn">
             <a href="{{ route('publisher.products.index') }}">
                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
             </a>
         </div>
-        <h1>{{ $product->name }}</h1>
     </div>
 
     <!-- Product Details -->
@@ -27,17 +26,6 @@
                 <img src="{{ get_image_url($product->image) }}" 
                      alt="{{ $product->name }}" 
                      class="product-detail-image">
-            </div>
-            
-            <div class="product-badges">
-                <span class="commission-badge large">
-                    <i class="fas fa-percentage"></i>
-                    {{ $product->commission_rate ?? 0 }}% hoa hồng
-                </span>
-                <span class="stock-badge large {{ $product->stock > 10 ? 'stock-high' : ($product->stock > 0 ? 'stock-medium' : 'stock-low') }}">
-                    <i class="fas fa-box"></i>
-                    {{ $product->stock }} tồn kho
-                </span>
             </div>
         </div>
 
@@ -82,23 +70,6 @@
                         </span>
                     </span>
                 </div>
-
-                @if($product->affiliate_link)
-                <div class="detail-item">
-                    <span class="detail-label">Link gốc:</span>
-                    <span class="detail-value">
-                        <a href="{{ $product->affiliate_link }}" target="_blank" class="link-value">
-                            {{ Str::limit($product->affiliate_link, 50) }}
-                            <i class="fas fa-external-link-alt"></i>
-                        </a>
-                    </span>
-                </div>
-                @endif
-
-                <div class="detail-item">
-                    <span class="detail-label">Ngày đăng:</span>
-                    <span class="detail-value">{{ $product->created_at->format('d/m/Y H:i') }}</span>
-                </div>
             </div>
 
             <!-- Affiliate Link Section -->
@@ -111,7 +82,7 @@
                             <span class="link-label">Link tiếp thị:</span>
                             <div class="link-display">
                                 <input type="text" 
-                                       value="{{ $existingLink->full_url }}" 
+                                       value="{{ url('/ref/' . $existingLink->short_code) }}" 
                                        readonly 
                                        class="link-input"
                                        id="existingAffiliateLink">
@@ -175,11 +146,6 @@
 
             <!-- Action Buttons -->
             <div class="product-actions">
-                <a href="{{ route('publisher.products.index') }}" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Quay lại danh sách
-                </a>
-                
                 @if(!$existingLink)
                 <button type="button" 
                         class="generate-btn large" 

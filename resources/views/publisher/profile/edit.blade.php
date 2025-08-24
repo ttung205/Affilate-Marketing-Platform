@@ -116,30 +116,10 @@
                                 
                                 <div class="publisher-profile-form-col-6">
                                     <div class="publisher-profile-form-group">
-                                        <label for="role" class="publisher-profile-form-label">Vai trò</label>
-                                        <input type="text" class="publisher-profile-form-input publisher-profile-form-input-readonly" id="role" value="{{ ucfirst($user->role) }}" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="publisher-profile-form-row">
-                                <div class="publisher-profile-form-col-6">
-                                    <div class="publisher-profile-form-group">
                                         <label for="address" class="publisher-profile-form-label">Địa chỉ</label>
                                         <textarea class="publisher-profile-form-textarea @error('address') publisher-profile-form-input-error @enderror" 
                                                   id="address" name="address" rows="2">{{ old('address', $user->address) }}</textarea>
                                         @error('address')
-                                            <div class="publisher-profile-error-message">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
-                                
-                                <div class="publisher-profile-form-col-6">
-                                    <div class="publisher-profile-form-group">
-                                        <label for="bio" class="publisher-profile-form-label">Giới thiệu bản thân</label>
-                                        <textarea class="publisher-profile-form-textarea @error('bio') publisher-profile-form-input-error @enderror" 
-                                                  id="bio" name="bio" rows="2" placeholder="Giới thiệu ngắn gọn về bản thân...">{{ old('bio', $user->bio) }}</textarea>
-                                        @error('bio')
                                             <div class="publisher-profile-error-message">{{ $message }}</div>
                                         @enderror
                                     </div>

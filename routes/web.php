@@ -38,8 +38,8 @@ Route::get('/dashboard', function () {
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Affiliate tracking routes
-Route::get('/track/{trackingCode}', [TrackingController::class, 'trackByCode'])->name('tracking.track');
-Route::get('/ref/{shortCode}', [TrackingController::class, 'trackByShortCode'])->name('tracking.short');
+Route::get('/track/{trackingCode}', [TrackingController::class, 'redirectByTrackingCode'])->name('tracking.track');
+Route::get('/ref/{shortCode}', [TrackingController::class, 'redirectByShortCode'])->name('tracking.short');
 
 Route::get('/admin', function(){
     return view('admin.dashboard');
@@ -83,6 +83,7 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     
     // Products routes
     Route::resource('products', App\Http\Controllers\Publisher\ProductController::class);
+    Route::post('/products/{product}/affiliate-link', [App\Http\Controllers\Publisher\ProductController::class, 'createAffiliateLink'])->name('products.create-affiliate-link');
     
     // Reports routes
     Route::get('/reports/performance', [App\Http\Controllers\Publisher\ReportController::class, 'performance'])->name('reports.performance');

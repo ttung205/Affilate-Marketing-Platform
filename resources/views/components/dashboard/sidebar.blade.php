@@ -87,6 +87,7 @@
             </ul>
         </li>
         
+        
         <!-- Tạm thời comment các menu chưa có route -->
         {{-- <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
             <a href="{{ route('admin.orders.index') }}">
