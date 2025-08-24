@@ -13,6 +13,7 @@
                 Tổng Quan
             </a>
         </li>
+        
         <!-- Quản lý sản phẩm với submenu -->
         <li class="sidebar-menu-item {{ request()->routeIs('shop.products.*') ? 'active' : '' }}">
             <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
@@ -36,6 +37,16 @@
             </ul>
         </li>
         
+        <!-- Quản lý hồ sơ -->
+        <li class="{{ request()->routeIs('shop.profile.*') ? 'active' : '' }}">
+            <a href="{{ route('shop.profile.edit') }}">
+                <i class="fas fa-user"></i>
+                Hồ sơ
+            </a>
+        </li>
+        
+        <!-- Tạm thời comment các menu chưa có controller -->
+        {{-- 
         <!-- Quản lý đơn hàng -->
         <li class="{{ request()->routeIs('shop.orders.*') ? 'active' : '' }}">
             <a href="{{ route('shop.orders.index') }}">
@@ -67,22 +78,7 @@
                 Cài đặt
             </a>
         </li>
+        --}}
     </ul>
-    
-    <div class="sidebar-footer">
-        <div class="user-info">
-            <div class="avatar">
-                <i class="fas fa-user-circle fa-2x"></i>
-            </div>
-            <div class="user-details">
-                <div class="user-name">{{ Auth::user()->name }}</div>
-                <div class="user-role">Shop Owner</div>
-            </div>
-        </div>
-        <a href="{{ route('logout') }}" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Đăng xuất
-        </a>
-    </div>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>

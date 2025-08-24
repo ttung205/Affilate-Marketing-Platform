@@ -86,31 +86,6 @@
                 </li>
             </ul>
         </li>
-        
-        
-        <!-- Tạm thời comment các menu chưa có route -->
-        {{-- <li class="{{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.orders.index') }}">
-                <i class="fas fa-shopping-cart"></i>
-                Quản lý đơn hàng
-            </a>
-        </li> --}}
     </ul>
-    
-    <div class="sidebar-footer">
-        <div class="user-info">
-            <div class="avatar">
-                <i class="fas fa-user-circle fa-2x"></i>
-            </div>
-            <div class="user-details">
-                <div class="user-name">{{ Auth::user()->name }}</div>
-                <div class="user-role">{{ Auth::user()->role }}</div>
-            </div>
-        </div>
-        <a href="{{ route('logout') }}" class="logout-btn">
-            <i class="fas fa-sign-out-alt"></i>
-            Đăng xuất
-        </a>
-    </div>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>

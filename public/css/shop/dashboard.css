@@ -1,4 +1,9 @@
 /* Shop Dashboard Styles */
+body{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
 .shop-dashboard {
     padding: 2rem;
     max-width: 1400px;

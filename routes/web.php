@@ -69,6 +69,8 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     // Profile routes
     Route::get('/profile/edit', [App\Http\Controllers\Shop\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [App\Http\Controllers\Shop\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/avatar', [App\Http\Controllers\Shop\ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
+    Route::delete('/profile/avatar', [App\Http\Controllers\Shop\ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
 });
 
 // Publisher routes

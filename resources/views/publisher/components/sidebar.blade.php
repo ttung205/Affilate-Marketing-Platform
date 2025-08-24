@@ -37,19 +37,21 @@
             </ul>
         </li>
         
-        <!-- Quản lý Campaigns -->
-        <li class="{{ request()->routeIs('publisher.campaigns.*') ? 'active' : '' }}">
-            <a href="{{ route('publisher.campaigns.index') }}">
-                <i class="fas fa-bullhorn"></i>
-                Chiến dịch
-            </a>
-        </li>
-        
         <!-- Quản lý Sản phẩm -->
         <li class="{{ request()->routeIs('publisher.products.*') ? 'active' : '' }}">
             <a href="{{ route('publisher.products.index') }}">
                 <i class="fas fa-box"></i>
                 Sản phẩm
+            </a>
+        </li>
+        
+        <!-- Tạm thời comment các menu chưa có controller -->
+        {{-- 
+        <!-- Quản lý Campaigns -->
+        <li class="{{ request()->routeIs('publisher.campaigns.*') ? 'active' : '' }}">
+            <a href="{{ route('publisher.campaigns.index') }}">
+                <i class="fas fa-bullhorn"></i>
+                Chiến dịch
             </a>
         </li>
         
@@ -97,8 +99,8 @@
                 Cài đặt
             </a>
         </li>
+        --}}
     </ul>
-    
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>
 

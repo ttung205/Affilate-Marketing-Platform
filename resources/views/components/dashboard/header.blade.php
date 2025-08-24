@@ -1,4 +1,4 @@
-<div class="header">
+<header class="header">
     <div class="header-left">
         <div class="breadcrumb-container">
             <nav class="breadcrumb-nav" aria-label="breadcrumb">
@@ -9,12 +9,20 @@
                             <span>Admin</span>
                         </a>
                     </li>
-                    @if(request()->routeIs('admin.products.*'))
+                    
+                    @if(request()->routeIs('admin.dashboard'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Dashboard</span>
+                        </li>
+                    @elseif(request()->routeIs('admin.products.*'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                         </li>
                         <li class="breadcrumb-item">
-                            <span>Quản lý sản phẩm</span>
+                            <span>Sản phẩm</span>
                         </li>
                         @if(request()->routeIs('admin.products.index'))
                             <li class="breadcrumb-item">
@@ -50,14 +58,14 @@
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                         </li>
                         <li class="breadcrumb-item">
-                            <span>Quản lý sản phẩm</span>
+                            <span>Danh mục</span>
                         </li>
                         @if(request()->routeIs('admin.categories.index'))
                             <li class="breadcrumb-item">
                                 <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                             </li>
                             <li class="breadcrumb-item active">
-                                <span>Danh mục</span>
+                                <span>Tất cả danh mục</span>
                             </li>
                         @elseif(request()->routeIs('admin.categories.create'))
                             <li class="breadcrumb-item">
@@ -79,7 +87,7 @@
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                         </li>
                         <li class="breadcrumb-item">
-                            <span>Quản lý người dùng</span>
+                            <span>Người dùng</span>
                         </li>
                         @if(request()->routeIs('admin.users.index'))
                             <li class="breadcrumb-item">
@@ -115,7 +123,7 @@
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                         </li>
                         <li class="breadcrumb-item">
-                            <span>Quản lý Affiliate Links</span>
+                            <span>Affiliate Links</span>
                         </li>
                         @if(request()->routeIs('admin.affiliate-links.index'))
                             <li class="breadcrumb-item">
@@ -138,13 +146,20 @@
                             <li class="breadcrumb-item active">
                                 <span>Sửa Affiliate Link</span>
                             </li>
+                        @elseif(request()->routeIs('admin.affiliate-links.show'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Chi tiết Affiliate Link</span>
+                            </li>
                         @endif
                     @elseif(request()->routeIs('admin.campaigns.*'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                         </li>
                         <li class="breadcrumb-item">
-                            <span>Quản lý Campaigns</span>
+                            <span>Campaigns</span>
                         </li>
                         @if(request()->routeIs('admin.campaigns.index'))
                             <li class="breadcrumb-item">
@@ -175,39 +190,117 @@
                                 <span>Chi tiết Campaign</span>
                             </li>
                         @endif
-                    @elseif(request()->routeIs('admin.dashboard'))
-                        <li class="breadcrumb-item">
-                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <span>Tổng quan</span>
-                        </li>
-                    @else
-                        <li class="breadcrumb-item">
-                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <span>Tổng quan</span>
-                        </li>
                     @endif
                 </ol>
             </nav>
         </div>
     </div>
+
     <div class="header-right">
-        <div class="search-box">
-            <input type="text" placeholder="Tìm kiếm..." class="form-control">
-        </div>
-        
-        <div class="notifications">
-            <a href="#" class="notification-icon">
+        <!-- Notifications -->
+        <div class="notification-dropdown">
+            <button class="notification-btn" onclick="toggleNotifications()">
                 <i class="fas fa-bell"></i>
-                <span class="badge">3</span>
-            </a>
-            <a href="#" class="notification-icon">
-                <i class="fas fa-envelope"></i>
-                <span class="badge">5</span>
-            </a>
+                <span class="notification-badge">0</span>
+            </button>
+            <div class="notification-menu" id="notificationMenu">
+                <div class="notification-header">
+                    <h6>Thông báo</h6>
+                    <button onclick="markAllAsRead()" class="mark-all-read">Đánh dấu tất cả</button>
+                </div>
+                <div class="notification-list">
+                    <div class="notification-item">
+                        <div class="notification-icon">
+                            <i class="fas fa-info-circle text-info"></i>
+                        </div>
+                        <div class="notification-content">
+                            <p>Chào mừng bạn đến với Admin Dashboard!</p>
+                            <span class="notification-time">Vừa xong</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Menu -->
+        <div class="user-dropdown">
+            <button class="user-btn-admin" onclick="toggleUserMenu()">
+                <div class="user-avatar">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                    @else
+                        <i class="fas fa-user-circle fa-lg"></i>
+                    @endif
+                </div>
+                <span class="user-name">{{ Auth::user()->name }}</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="user-menu" id="userMenu">
+                <div class="user-menu-header">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                            @else
+                                <i class="fas fa-user-circle fa-2x"></i>
+                            @endif
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">{{ Auth::user()->name }}</div>
+                            <div class="user-email">{{ Auth::user()->email }}</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-menu-items">
+                    <div class="user-menu-divider"></div>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <a href="{{ route('logout') }}" class="user-menu-item logout-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Đăng xuất
+                        </a>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</header>
+
+<script>
+    // Toggle notifications
+    function toggleNotifications() {
+        const menu = document.getElementById('notificationMenu');
+        if (menu) {
+            menu.classList.toggle('show');
+        }
+    }
+
+    // Toggle user menu
+    function toggleUserMenu() {
+        const menu = document.getElementById('userMenu');
+        if (menu) {
+            menu.classList.toggle('show');
+        }
+    }
+
+    // Mark all notifications as read
+    function markAllAsRead() {
+        console.log('Mark all as read clicked');
+        // TODO: Implement mark all as read functionality
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function (event) {
+        const notificationMenu = document.getElementById('notificationMenu');
+        const userMenu = document.getElementById('userMenu');
+
+        if (notificationMenu && !event.target.closest('.notification-dropdown')) {
+            notificationMenu.classList.remove('show');
+        }
+
+        if (userMenu && !event.target.closest('.user-dropdown')) {
+            userMenu.classList.remove('show');
+        }
+    });
+</script>

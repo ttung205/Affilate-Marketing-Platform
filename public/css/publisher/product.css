@@ -548,7 +548,7 @@
 }
 
 .product-header {
-    padding: 0 24px 0px 24px;
+    padding: 24px 24px 0px 24px;
     margin-bottom: 20px;
 
 }
@@ -845,9 +845,6 @@
 }
 
 /* ===== PRODUCT INFO SECTION ===== */
-.product-info-section {
-    /* Info section styles */
-}
 
 .product-header-info {
     margin-bottom: 24px;
