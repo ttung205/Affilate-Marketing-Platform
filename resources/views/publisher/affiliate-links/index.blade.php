@@ -161,7 +161,7 @@
                                     </div>
                                 </td>
                                 <td class="commission-cell">
-                                    <div class="commission-rate">{{ $link->commission_rate }}%</div>
+                                    <div class="commission-rate-publisher">{{ $link->commission_rate }}%</div>
                                     <div class="commission-earned">
                                         Earned: {{ number_format($link->total_commission) }} VNĐ
                                     </div>

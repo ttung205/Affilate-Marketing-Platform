@@ -22,7 +22,10 @@
     <link rel="stylesheet" href="{{ asset('css/publisher/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/product.css') }}">
-    
+    <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-links.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-details.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-form.css') }}">
+
     @stack('styles')
 </head>
 <body>

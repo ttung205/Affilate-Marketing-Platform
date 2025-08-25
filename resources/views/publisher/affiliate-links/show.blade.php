@@ -25,20 +25,6 @@
     <div class="details-layout">
         <!-- Main Info -->
         <div class="main-section">
-            <!-- Link Info -->
-            <div class="info-card">
-                <h3>Thông tin Affiliate Link</h3>
-                <div class="link-info">
-                    <div class="link-details">
-                        <h4>{{ $affiliateLink->original_url }}</h4>
-                        <p class="link-description">Landing Page URL</p>
-                        @if($affiliateLink->campaign)
-                            <span class="campaign-badge">{{ $affiliateLink->campaign->name }} - {{ $affiliateLink->commission_rate }}%</span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-
             <!-- Links Info -->
             <div class="info-card">
                 <h3>Thông tin Links</h3>

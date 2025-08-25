@@ -36,8 +36,6 @@
 }
 
 .product-image {
-    width: 80px;
-    height: 80px;
     border-radius: 12px;
     object-fit: cover;
     border: 1px solid #e2e8f0;
@@ -61,7 +59,6 @@
     font-size: 1.125rem;
     font-weight: 700;
     color: #059669;
-    margin: 0 0 12px 0;
 }
 
 .campaign-badge {
@@ -235,10 +232,11 @@
     color: #64748b;
 }
 
-.commission-rate {
+.commission-rate-publisher {
     font-weight: 700;
-    color: #059669;
     font-size: 1rem;
+    color: #059669;
+    background: none !important;
 }
 
 .revenue-value, .commission-value {

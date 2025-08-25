@@ -8,7 +8,6 @@
     <div class="content-header">
         <div class="header-left">
             <h1>Tạo Affiliate Link</h1>
-            <p>Tạo link tiếp thị mới để bắt đầu kiếm commission</p>
         </div>
         <div class="header-right">
             <a href="{{ route('publisher.affiliate-links.index') }}" class="btn btn-secondary">
@@ -63,23 +62,6 @@
                 </div>
                 <small class="form-help">Tỷ lệ hoa hồng được thiết lập bởi campaign</small>
             </div>
-
-            <!-- Preview Section -->
-            <div class="preview-section">
-                <h3>Preview Links</h3>
-                <div class="preview-grid">
-                    <div class="preview-item">
-                        <label>Tracking Code:</label>
-                        <code id="tracking-preview">Sẽ tạo tự động sau khi lưu</code>
-                    </div>
-                    <div class="preview-item">
-                        <label>Short URL:</label>
-                        <code id="short-url-preview">Sẽ tạo tự động sau khi lưu</code>
-                    </div>
-                </div>
-                <small class="form-help">Link tracking sẽ được tạo tự động khi bạn submit form</small>
-            </div>
-
             <!-- Form Actions -->
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">

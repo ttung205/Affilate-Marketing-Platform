@@ -236,11 +236,21 @@
                         <div class="link-item">
                             <div class="link-info">
                                 <div class="link-product">
-                                    <img src="{{ get_image_url($link->product->image) }}" alt="{{ $link->product->name }}" class="product-thumb">
-                                    <div class="product-details">
-                                        <h4>{{ $link->product->name }}</h4>
-                                        <p class="campaign">{{ $link->campaign->name ?? 'N/A' }}</p>
-                                    </div>
+                                    @if($link->product)
+                                        <img src="{{ get_image_url($link->product->image) }}" alt="{{ $link->product->name }}" class="product-thumb">
+                                        <div class="product-details">
+                                            <h4>{{ $link->product->name }}</h4>
+                                            <p class="campaign">{{ $link->campaign->name ?? 'N/A' }}</p>
+                                        </div>
+                                    @else
+                                        <div class="custom-link-icon">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </div>
+                                        <div class="product-details">
+                                            <h4>Link tự tạo</h4>
+                                            <p class="campaign">{{ $link->campaign->name ?? 'N/A' }}</p>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="link-details">
                                     <div class="link-url">
