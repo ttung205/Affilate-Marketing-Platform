@@ -130,6 +130,7 @@
 
 .btn {
     display: inline-flex;
+    justify-content: center;
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
@@ -156,6 +157,7 @@
 .btn-secondary {
     background: #6b7280;
     color: white;
+    width: 80px;
 }
 
 .btn-secondary:hover {
@@ -168,6 +170,7 @@
     background: #f8fafc;
     color: #374151;
     border: 1px solid #d1d5db;
+    width: 80px;
 }
 
 .btn-light:hover {

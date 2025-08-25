@@ -97,7 +97,7 @@
                 <input type="text" name="search" class="form-control" placeholder="Tracking code..." value="{{ request('search') }}">
             </div>
             <button type="submit" class="btn btn-secondary">Lọc</button>
-            <a href="{{ route('publisher.affiliate-links.index') }}" class="btn btn-light">Reset</a>
+          
         </form>
     </div>
 
