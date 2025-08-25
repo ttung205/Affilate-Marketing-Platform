@@ -4,26 +4,27 @@ namespace App\Traits;
 
 use App\Models\AffiliateLink;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 trait AffiliateLinkTrait
 {
     /**
      * Generate unique tracking code
      */
-    protected function generateTrackingCode($publisher, $product): string
+    protected function generateTrackingCode($publisher, $campaign): string
     {
         // Use simple ASCII characters to avoid encoding issues
         $publisherCode = 'PUB' . str_pad($publisher->id, 3, '0', STR_PAD_LEFT);
-        $productCode = 'PROD' . str_pad($product->id, 3, '0', STR_PAD_LEFT);
+        $campaignCode = 'CAM' . str_pad($campaign->id, 3, '0', STR_PAD_LEFT);
         $timestamp = now()->format('Ymd');
         $random = strtoupper(Str::random(4));
         
-        $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+        $trackingCode = "{$publisherCode}_{$campaignCode}_{$timestamp}_{$random}";
         
         // Ensure uniqueness
         while (AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
             $random = strtoupper(Str::random(4));
-            $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+            $trackingCode = "{$publisherCode}_{$campaignCode}_{$timestamp}_{$random}";
         }
         
         return $trackingCode;
@@ -84,32 +85,53 @@ trait AffiliateLinkTrait
             ->pluck('count', 'status')
             ->toArray();
 
-        // Get total clicks
-        $clicksQuery = AffiliateLink::query();
+        // Get total clicks using relationship
+        $totalClicks = 0;
         if ($publisherId) {
-            $clicksQuery->where('publisher_id', $publisherId);
+            $totalClicks = DB::table('clicks')
+                ->whereIn('affiliate_link_id', function($query) use ($publisherId) {
+                    $query->select('id')
+                        ->from('affiliate_links')
+                        ->where('publisher_id', $publisherId);
+                })
+                ->count();
+        } else {
+            $totalClicks = DB::table('clicks')
+                ->join('affiliate_links', 'affiliate_links.id', '=', 'clicks.affiliate_link_id')
+                ->count();
         }
         
-        $totalClicks = $clicksQuery->join('clicks', 'affiliate_links.id', '=', 'clicks.affiliate_link_id')
-            ->count();
-        
-        // Get total conversions
-        $conversionsQuery = AffiliateLink::query();
+        // Get total conversions using relationship
+        $totalConversions = 0;
         if ($publisherId) {
-            $conversionsQuery->where('publisher_id', $publisherId);
+            $totalConversions = DB::table('conversions')
+                ->whereIn('affiliate_link_id', function($query) use ($publisherId) {
+                    $query->select('id')
+                        ->from('affiliate_links')
+                        ->where('publisher_id', $publisherId);
+                })
+                ->count();
+        } else {
+            $totalConversions = DB::table('conversions')
+                ->join('affiliate_links', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
+                ->count();
         }
-        
-        $totalConversions = $conversionsQuery->join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
-            ->count();
 
-        // Calculate total commission
-        $commissionQuery = AffiliateLink::query();
+        // Calculate total commission using relationship
+        $totalCommission = 0;
         if ($publisherId) {
-            $commissionQuery->where('publisher_id', $publisherId);
+            $totalCommission = DB::table('conversions')
+                ->whereIn('affiliate_link_id', function($query) use ($publisherId) {
+                    $query->select('id')
+                        ->from('affiliate_links')
+                        ->where('publisher_id', $publisherId);
+                })
+                ->sum('commission');
+        } else {
+            $totalCommission = DB::table('conversions')
+                ->join('affiliate_links', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
+                ->sum('commission');
         }
-        
-        $totalCommission = $commissionQuery->join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
-            ->sum('conversions.commission');
 
         return [
             'total' => array_sum($statusCounts),

@@ -25,7 +25,7 @@ class TrackingController extends Controller
             // Find affiliate link by code
             $affiliateLink = AffiliateLink::where($type, $code)
                 ->where('status', 'active')
-                ->with(['product', 'publisher'])
+                ->with(['product', 'publisher', 'campaign'])
                 ->first();
 
             if (!$affiliateLink) {
@@ -43,7 +43,7 @@ class TrackingController extends Controller
                 'ref' => $affiliateLink->publisher_id,
                 'utm_source' => 'publisher',
                 'utm_medium' => 'affiliate',
-                'utm_campaign' => 'product_' . $affiliateLink->product_id,
+                'utm_campaign' => $affiliateLink->product_id ? 'product_' . $affiliateLink->product_id : 'campaign_' . $affiliateLink->campaign_id,
                 'tracking_code' => $affiliateLink->tracking_code
             ];
 
@@ -63,22 +63,31 @@ class TrackingController extends Controller
             DB::beginTransaction();
 
             // Create click record
-            Click::create([
+            $clickData = [
                 'affiliate_link_id' => $affiliateLink->id,
                 'publisher_id' => $affiliateLink->publisher_id,
-                'product_id' => $affiliateLink->product_id,
+                'product_id' => $affiliateLink->product_id, // This can be null for self-created links
                 'tracking_code' => $affiliateLink->tracking_code,
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
                 'referrer' => request()->header('referer'),
                 'clicked_at' => now(),
-            ]);
+            ];
+
+            \Log::info('Creating click record', $clickData);
+            
+            Click::create($clickData);
 
             DB::commit();
+            \Log::info('Click recorded successfully for link: ' . $affiliateLink->id);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Error recording click: ' . $e->getMessage());
+            \Log::error('Error recording click: ' . $e->getMessage(), [
+                'affiliate_link_id' => $affiliateLink->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
     }
 }

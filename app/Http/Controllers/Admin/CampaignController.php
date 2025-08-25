@@ -82,6 +82,7 @@ class CampaignController extends Controller
             'status' => 'required|in:active,paused,completed,draft',
             'budget' => 'nullable|numeric|min:0',
             'target_conversions' => 'nullable|integer|min:0',
+            'commission_rate' => 'required|numeric|min:0|max:100',
         ]);
 
         try {
@@ -166,6 +167,7 @@ class CampaignController extends Controller
             'status' => 'required|in:active,paused,completed,draft',
             'budget' => 'nullable|numeric|min:0',
             'target_conversions' => 'nullable|integer|min:0',
+            'commission_rate' => 'required|numeric|min:0|max:100',
         ]);
 
         try {

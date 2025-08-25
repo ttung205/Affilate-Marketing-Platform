@@ -41,6 +41,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/track/{trackingCode}', [TrackingController::class, 'redirectByTrackingCode'])->name('tracking.track');
 Route::get('/ref/{shortCode}', [TrackingController::class, 'redirectByShortCode'])->name('tracking.short');
 
+
 Route::get('/admin', function(){
     return view('admin.dashboard');
 })->middleware('auth', 'role:admin')->name('admin.dashboard');

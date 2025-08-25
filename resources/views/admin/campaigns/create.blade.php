@@ -134,6 +134,28 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="commission_rate" class="form-label">
+                            Tỷ lệ hoa hồng (%) <span class="required">*</span>
+                        </label>
+                        <input type="number" 
+                               class="form-input @error('commission_rate') is-invalid @enderror" 
+                               id="commission_rate" 
+                               name="commission_rate" 
+                               value="{{ old('commission_rate', '15.00') }}" 
+                               min="0" 
+                               max="100" 
+                               step="0.01" 
+                               placeholder="15.00" 
+                               required>
+                        @error('commission_rate')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                        <div class="form-help">Tỷ lệ hoa hồng (%) mà publisher sẽ nhận được cho mỗi conversion</div>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
                         <label for="target_conversions" class="form-label">
                             Mục tiêu Conversions
                         </label>

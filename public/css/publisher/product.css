@@ -562,7 +562,10 @@
     width: fit-content;
     background-color: #4b5563;
 }
-
+.product-back-btn:hover {
+    background-color: #374151;
+    color: white;
+}
 .product-back-btn a {
     text-decoration: none;
     color: white;
@@ -788,17 +791,12 @@
     margin-bottom: 40px;
 }
 
-.product-image-section {
-    /* Image section styles */
-}
-
 .product-main-image {
     margin-bottom: 20px;
 }
 
 .product-detail-image {
     width: 100%;
-    height: 400px;
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

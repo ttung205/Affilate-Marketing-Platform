@@ -15,6 +15,7 @@ class Campaign extends Model
         'status',
         'budget',
         'target_conversions',
+        'commission_rate',
     ];
 
     protected $casts = [

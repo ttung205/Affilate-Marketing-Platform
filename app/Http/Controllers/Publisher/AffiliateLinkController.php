@@ -62,9 +62,6 @@ class AffiliateLinkController extends Controller
         
         // Pre-fill data from query parameters
         $prefillData = [];
-        if ($request->has('product_id')) {
-            $prefillData['selected_product_id'] = $request->get('product_id');
-        }
         if ($request->has('campaign_id')) {
             $prefillData['selected_campaign_id'] = $request->get('campaign_id');
         }
@@ -78,24 +75,15 @@ class AffiliateLinkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'campaign_id' => 'nullable|exists:campaigns,id',
             'original_url' => 'required|url',
-            'commission_rate' => 'required|numeric|min:0|max:100',
+            'campaign_id' => 'required|exists:campaigns,id',
         ]);
 
-        // Check if user already has an affiliate link for this product
-        if ($this->checkExistingLink(auth()->id(), $request->product_id)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Bạn đã có link tiếp thị cho sản phẩm này rồi!');
-        }
+        // Get campaign to retrieve commission rate
+        $campaign = Campaign::findOrFail($request->campaign_id);
 
-        // Get product for default values
-        $product = Product::findOrFail($request->product_id);
-
-        // Generate unique tracking code
-        $trackingCode = $this->generateTrackingCode(auth()->user(), $product);
+        // Generate unique tracking code for this user and campaign
+        $trackingCode = $this->generateTrackingCode(auth()->user(), $campaign);
 
         // Generate unique short code
         $shortCode = $this->generateShortCode();
@@ -103,24 +91,26 @@ class AffiliateLinkController extends Controller
         try {
             $affiliateLink = auth()->user()->affiliateLinks()->create([
                 'publisher_id' => auth()->id(),
-                'product_id' => $request->product_id,
+                'product_id' => null, // No specific product required
                 'campaign_id' => $request->campaign_id,
                 'original_url' => $request->original_url,
                 'tracking_code' => $trackingCode,
                 'short_code' => $shortCode,
-                'commission_rate' => $request->commission_rate,
+                'commission_rate' => $campaign->commission_rate, // Get from campaign
                 'status' => 'active', // Publisher links are active by default
             ]);
 
             Log::info('Publisher affiliate link created successfully', [
                 'id' => $affiliateLink->id,
                 'tracking_code' => $trackingCode,
+                'short_code' => $shortCode,
                 'publisher_id' => auth()->id(),
-                'product_id' => $request->product_id,
+                'campaign_id' => $request->campaign_id,
+                'commission_rate' => $campaign->commission_rate,
             ]);
 
-            return redirect()->route('publisher.affiliate-links.index')
-                ->with('success', 'Link tiếp thị đã được tạo thành công.');
+            return redirect()->route('publisher.affiliate-links.show', $affiliateLink)
+                ->with('success', 'Link tiếp thị đã được tạo thành công. Bạn có thể copy link để sử dụng.');
         } catch (Exception $e) {
             Log::error('Failed to create publisher affiliate link', [
                 'data' => $request->all(),
@@ -184,24 +174,27 @@ class AffiliateLinkController extends Controller
         }
 
         $request->validate([
-            'campaign_id' => 'nullable|exists:campaigns,id',
+            'campaign_id' => 'required|exists:campaigns,id',
             'original_url' => 'required|url',
-            'commission_rate' => 'required|numeric|min:0|max:100',
         ]);
+
+        // Get campaign to retrieve commission rate
+        $campaign = Campaign::findOrFail($request->campaign_id);
 
         try {
             $affiliateLink->update([
                 'campaign_id' => $request->campaign_id,
                 'original_url' => $request->original_url,
-                'commission_rate' => $request->commission_rate,
+                'commission_rate' => $campaign->commission_rate, // Get from campaign
             ]);
 
             Log::info('Publisher affiliate link updated successfully', [
                 'id' => $affiliateLink->id,
                 'changes' => $affiliateLink->getChanges(),
+                'new_commission_rate' => $campaign->commission_rate,
             ]);
 
-            return redirect()->route('publisher.affiliate-links.index')
+            return redirect()->route('publisher.affiliate-links.show', $affiliateLink)
                 ->with('success', 'Link tiếp thị đã được cập nhật thành công.');
         } catch (Exception $e) {
             Log::error('Failed to update publisher affiliate link', [
@@ -247,7 +240,10 @@ class AffiliateLinkController extends Controller
     {
         return [
             'products' => Product::where('is_active', true)->get(),
-            'campaigns' => Campaign::all(),
+            'campaigns' => Campaign::whereNotNull('commission_rate')
+                ->where('commission_rate', '>', 0)
+                ->where('status', 'active')
+                ->get(),
         ];
     }
 

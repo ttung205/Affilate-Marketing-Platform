@@ -25,6 +25,13 @@ class AffiliateLink extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'total_clicks',
+        'total_conversions',
+        'conversion_rate',
+        'total_commission',
+    ];
+
     // Relationships
     public function publisher(): BelongsTo
     {
