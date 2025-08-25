@@ -11,7 +11,7 @@
             <p>Quản lý affiliate links của bạn</p>
         </div>
         <div class="header-right">
-            <a href="{{ route('publisher.affiliate-links.create') }}" class="btn btn-primary">
+            <a href="{{ route('publisher.affiliate-links.create') }}" class="btn btn-primary1">
                 <i class="fas fa-plus"></i>
                 Tạo Link Mới
             </a>
@@ -200,13 +200,12 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         @if(!$link->clicks()->exists() && !$link->conversions()->exists())
-                                            <form method="POST" action="{{ route('publisher.affiliate-links.destroy', $link) }}" class="d-inline delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa" onclick="return confirm('Bạn có chắc chắn muốn xóa link này?')">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    title="Xóa"
+                                                    onclick="deleteAffiliateLink('{{ $link->id }}', '{{ $link->tracking_code }}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         @endif
                                     </div>
                                 </td>
@@ -255,6 +254,38 @@ function copyToClipboard(text) {
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
+    });
+}
+
+// Delete affiliate link with confirm popup
+function deleteAffiliateLink(linkId, trackingCode) {
+    showConfirmPopup({
+        title: 'Xóa Affiliate Link',
+        message: `Bạn có chắc chắn muốn xóa affiliate link "${trackingCode}"? Hành động này không thể hoàn tác.`,
+        type: 'danger',
+        confirmText: 'Xóa Link',
+        cancelText: 'Hủy bỏ',
+        onConfirm: function() {
+            // Create and submit form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/publisher/affiliate-links/${linkId}`;
+            
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            const methodField = document.createElement('input');
+            methodField.type = 'hidden';
+            methodField.name = '_method';
+            methodField.value = 'DELETE';
+            
+            form.appendChild(csrfToken);
+            form.appendChild(methodField);
+            document.body.appendChild(form);
+            form.submit();
+        }
     });
 }
 </script>

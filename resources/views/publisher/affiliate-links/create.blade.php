@@ -68,10 +68,10 @@
                     <i class="fas fa-save"></i>
                     Tạo Affiliate Link
                 </button>
-                <a href="{{ route('publisher.affiliate-links.index') }}" class="btn btn-light">
+                <button type="button" class="btn btn-light" onclick="confirmCancel()">
                     <i class="fas fa-times"></i>
                     Hủy
-                </a>
+                </button>
             </div>
         </form>
     </div>
@@ -108,6 +108,29 @@ document.addEventListener('DOMContentLoaded', function() {
         campaignSelect.dispatchEvent(new Event('change'));
     }
 });
+
+// Confirm before canceling form if user has entered data
+function confirmCancel() {
+    const originalUrl = document.getElementById('original_url').value;
+    const campaignId = document.getElementById('campaign_id').value;
+    
+    // Check if user has entered any data
+    if (originalUrl.trim() || campaignId) {
+        showConfirmPopup({
+            title: 'Hủy tạo Affiliate Link',
+            message: 'Bạn có chắc chắn muốn hủy? Tất cả dữ liệu đã nhập sẽ bị mất.',
+            type: 'warning',
+            confirmText: 'Có, hủy bỏ',
+            cancelText: 'Tiếp tục chỉnh sửa',
+            onConfirm: function() {
+                window.location.href = '{{ route("publisher.affiliate-links.index") }}';
+            }
+        });
+    } else {
+        // If no data entered, redirect immediately
+        window.location.href = '{{ route("publisher.affiliate-links.index") }}';
+    }
+}
 </script>
 @endsection
 

@@ -170,7 +170,6 @@
 }
 
 .product-details h4 {
-    font-size: 0.875rem;
     font-weight: 600;
     color: #1e293b;
     margin: 0 0 4px 0;
@@ -178,7 +177,6 @@
 }
 
 .product-details p {
-    font-size: 0.75rem;
     color: #64748b;
     margin: 0;
 }
@@ -190,7 +188,7 @@
     background: #e0f2fe;
     color: #0369a1;
     border-radius: 6px;
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     font-weight: 600;
 }
 
@@ -229,88 +227,369 @@
 }
 
 .copy-btn {
-    padding: 6px 8px;
-    font-size: 0.75rem;
+    background: linear-gradient(135deg, #0bc5ea 0%, #00d4ff 100%);
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.link-item code {
-    display: inline-block;
-    background: #f1f5f9;
-    color: #475569;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+.copy-btn:hover {
+    background: linear-gradient(135deg, #0087a8 0%, #0099cc 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(11, 197, 234, 0.3);
 }
 
-/* Commission Cell */
-.commission-rate-publisher {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #059669;
-    margin-bottom: 4px;
+.copy-btn.copy-success {
+    background: linear-gradient(135deg, #38a169 0%, #68d391 100%);
+    color: white;
 }
 
-.commission-earned {
-    font-size: 0.75rem;
-    color: #64748b;
+.copy-btn.copy-success:hover {
+    background: linear-gradient(135deg, #2f855a 0%, #4fd1c7 100%);
 }
 
-/* Stats Cell */
-.stats-grid {
-    display: flex;
-    gap: 16px;
-}
-
-.stat-item {
+/* Base button styles */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
     text-align: center;
+    transition: all 0.3s ease;
+    min-height: 36px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
+    white-space: nowrap;
+    user-select: none;
+    vertical-align: middle;
+    background: transparent;
 }
 
-.stat-value {
-    display: block;
-    font-size: 1.125rem;
+.btn:hover {
+    text-decoration: none;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Primary button */
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    color: white;
+}
+.btn-primary1{
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    border: 2px solid transparent;
+    padding: 4px 8px;
+}
+.btn-primary1:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    color: white;
+}
+/* Secondary button */
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+    border: 2px solid transparent;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+    color: white;
+}
+
+/* Light button */
+.btn-light {
+    background: #f8f9fa;
+    color: #212529;
+    border: 2px solid #dee2e6;
+}
+
+.btn-light:hover {
+    background: #e2e6ea;
+    color: #212529;
+    border-color: #dae0e5;
+}
+
+/* Button Outline Styles - Unified for table actions */
+.btn-outline-primary {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    min-height: 32px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+.btn-outline-primary:hover {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    min-height: 32px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.btn-outline-success {
+    background: transparent;
+    color: #28a745;
+    border: 2px solid #28a745;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    min-height: 32px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+.btn-outline-success:hover {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.btn-outline-info {
+    background: transparent;
+    color: #17a2b8;
+    border: 2px solid #17a2b8;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    min-height: 32px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+.btn-outline-info:hover {
+    background: #17a2b8;
+    color: white;
+    border-color: #17a2b8;
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    min-height: 32px;
+    min-width: 36px;
+    justify-content: center;
+}
+
+.btn-outline-danger:hover {
+    background: #dc3545;
+    color: white;
+    border-color: #dc3545;
+}
+
+/* Button sizes */
+.btn-sm {
+    font-size: 12px;
+    min-height: 32px;
+    min-width: 36px;
+}
+
+.btn-lg {
+    padding: 10px 20px;
+    font-size: 14px;
+    min-height: 40px;
+}
+
+/* Confirmation Modal Styles */
+.delete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.delete-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.delete-modal.show .delete-modal-content {
+    transform: scale(1);
+}
+
+.delete-modal-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 36px;
+    color: white;
+}
+
+.delete-modal h3 {
+    font-size: 1.5rem;
     font-weight: 700;
     color: #1e293b;
+    margin: 0 0 16px 0;
 }
 
-.stat-label {
-    font-size: 0.75rem;
+.delete-modal p {
     color: #64748b;
+    margin: 0 0 32px 0;
+    line-height: 1.6;
 }
 
-/* Status Cell */
-.status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
+.delete-modal-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
 }
 
-.status-active {
-    background: #dcfce7;
-    color: #166534;
+.modal-btn-cancel {
+    background: transparent;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-.status-inactive {
-    background: #fef2f2;
-    color: #dc2626;
+.modal-btn-cancel:hover {
+    background: #6c757d;
+    color: white;
 }
 
-.status-pending {
-    background: #fef3c7;
-    color: #d97706;
+.modal-btn-confirm {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
 }
 
-/* Actions Cell */
+.modal-btn-confirm:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Action buttons container */
 .action-buttons {
     display: flex;
     gap: 8px;
-}
-
-.action-buttons .btn {
-    padding: 6px 8px;
-    font-size: 0.75rem;
+    align-items: center;
 }
 
 /* Empty State */
@@ -345,8 +624,8 @@
 /* Toast Messages */
 .toast {
     position: fixed;
-    top: 5%;
-    right: 3%;
+    top: 10%;
+    right: 40%;
     padding: 12px 16px;
     border-radius: 8px;
     font-size: 0.875rem;
@@ -356,9 +635,8 @@
 }
 
 .toast.success {
-    background: white;
-    color: black;
-    border: 1px solid #09c431;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -370,6 +648,64 @@
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+/* JavaScript for Delete Confirmation */
+.delete-confirmation-script {
+    display: none;
+}
+
+/* Additional responsive styles for modal */
+@media (max-width: 576px) {
+    .delete-modal-content {
+        padding: 24px;
+        margin: 20px;
+    }
+    
+    .delete-modal-icon {
+        width: 64px;
+        height: 64px;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    
+    .delete-modal h3 {
+        font-size: 1.25rem;
+    }
+    
+    .delete-modal-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .modal-btn-cancel,
+    .modal-btn-confirm {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Loading state for delete button */
+.delete-btn.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.delete-btn.loading::after {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 8px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 
