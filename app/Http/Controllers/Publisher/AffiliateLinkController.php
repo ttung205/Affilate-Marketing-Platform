@@ -89,6 +89,7 @@ class AffiliateLinkController extends Controller
         $shortCode = $this->generateShortCode();
 
         try {
+            // Create affiliate link
             $affiliateLink = auth()->user()->affiliateLinks()->create([
                 'publisher_id' => auth()->id(),
                 'product_id' => null, // No specific product required
@@ -96,7 +97,7 @@ class AffiliateLinkController extends Controller
                 'original_url' => $request->original_url,
                 'tracking_code' => $trackingCode,
                 'short_code' => $shortCode,
-                'commission_rate' => $campaign->commission_rate, // Get from campaign
+                'commission_rate' => $campaign->commission_rate ?? 15.00, // Get from campaign or default
                 'status' => 'active', // Publisher links are active by default
             ]);
 
@@ -144,6 +145,8 @@ class AffiliateLinkController extends Controller
             'conversion_rate' => $affiliateLink->getConversionRateAttribute(),
             'total_revenue' => $affiliateLink->conversions()->sum('amount'),
             'total_commission' => $affiliateLink->conversions()->sum('commission'),
+            'click_commission' => $affiliateLink->click_commission,
+            'combined_commission' => $affiliateLink->combined_commission,
         ];
 
         return view('publisher.affiliate-links.show', compact('affiliateLink', 'stats'));
@@ -185,7 +188,6 @@ class AffiliateLinkController extends Controller
             $affiliateLink->update([
                 'campaign_id' => $request->campaign_id,
                 'original_url' => $request->original_url,
-                'commission_rate' => $campaign->commission_rate, // Get from campaign
             ]);
 
             Log::info('Publisher affiliate link updated successfully', [

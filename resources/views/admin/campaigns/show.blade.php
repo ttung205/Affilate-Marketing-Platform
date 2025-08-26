@@ -92,6 +92,10 @@
                     <span class="info-label">Mục tiêu conversions:</span>
                     <span class="info-value">{{ number_format($campaign->target_conversions) }}</span>
                 </div>
+                <div class="info-row">
+                    <span class="info-label">Chi phí mỗi click:</span>
+                    <span class="info-value">{{ number_format($campaign->cost_per_click ?? 100) }} VNĐ</span>
+                </div>
             </div>
         </div>
 
@@ -122,8 +126,16 @@
                     <span class="info-value">{{ number_format($campaign->conversion_rate, 2) }}%</span>
                 </div>
                 <div class="info-row">
+                    <span class="info-label">Hoa hồng từ clicks:</span>
+                    <span class="info-value">{{ number_format($campaign->click_commission ?? 0) }} VNĐ</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Hoa hồng từ conversions:</span>
+                    <span class="info-value">{{ number_format($campaign->conversion_commission ?? 0) }} VNĐ</span>
+                </div>
+                <div class="info-row">
                     <span class="info-label">Tổng hoa hồng:</span>
-                    <span class="info-value">{{ number_format($campaign->total_commission) }} VNĐ</span>
+                    <span class="info-value">{{ number_format($campaign->combined_commission ?? 0) }} VNĐ</span>
                 </div>
             </div>
         </div>

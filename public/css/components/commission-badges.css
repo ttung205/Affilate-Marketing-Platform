@@ -1,0 +1,52 @@
+/* Commission Rate Badges */
+.commission-rate.auto {
+    color: #059669;
+    background-color: #d1fae5;
+    border: 1px solid #10b981;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.commission-rate.manual {
+    color: #7c3aed;
+    background-color: #ede9fe;
+    border: 1px solid #8b5cf6;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.commission-auto {
+    color: #059669;
+    font-weight: 500;
+}
+
+.commission-manual {
+    color: #7c3aed;
+    font-weight: 500;
+}
+
+.commission-info.auto-mode {
+    border-left: 3px solid #10b981;
+    background-color: #f0fdf4;
+}
+
+.commission-info.manual-mode {
+    border-left: 3px solid #8b5cf6;
+    background-color: #faf5ff;
+}
+
+.form-input.readonly {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.campaign-name {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 2px;
+}

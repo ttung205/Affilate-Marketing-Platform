@@ -152,6 +152,25 @@
                         @enderror
                         <div class="form-help">Tỷ lệ hoa hồng (%) mà publisher sẽ nhận được cho mỗi conversion</div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="cost_per_click" class="form-label">
+                            Chi phí mỗi click (VND) <span class="required">*</span>
+                        </label>
+                        <input type="number" 
+                               class="form-input @error('cost_per_click') is-invalid @enderror" 
+                               id="cost_per_click" 
+                               name="cost_per_click" 
+                               value="{{ old('cost_per_click', '100.00') }}" 
+                               min="0" 
+                               step="10" 
+                               placeholder="100.00" 
+                               required>
+                        @error('cost_per_click')
+                            <div class="form-error">{{ $message }}</div>
+                        @enderror
+                        <div class="form-help">Chi phí trả cho publisher cho mỗi click (VND)</div>
+                    </div>
                 </div>
 
                 <div class="form-grid">

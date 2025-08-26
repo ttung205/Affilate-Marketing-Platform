@@ -30,6 +30,9 @@ class AffiliateLink extends Model
         'total_conversions',
         'conversion_rate',
         'total_commission',
+        'click_commission',
+        'combined_commission',
+        'effective_commission_rate',
     ];
 
     // Relationships
@@ -85,5 +88,61 @@ class AffiliateLink extends Model
     public function getTotalCommissionAttribute(): float
     {
         return $this->conversions()->sum('commission');
+    }
+
+    // New methods for CPC-based commission calculation
+    public function getClickCommissionAttribute(): float
+    {
+        $totalClicks = $this->getTotalClicksAttribute();
+        $cpc = $this->getCostPerClickAttribute();
+        return $totalClicks * $cpc;
+    }
+
+    public function getCombinedCommissionAttribute(): float
+    {
+        return $this->getClickCommissionAttribute() + $this->getTotalCommissionAttribute();
+    }
+
+    public function getCostPerClickAttribute(): float
+    {
+        // If campaign exists, use its CPC, otherwise default to 100 VND
+        if ($this->campaign && $this->campaign->cost_per_click) {
+            return $this->campaign->cost_per_click;
+        }
+        return 100.00; // Default CPC
+    }
+
+    // Override commission_rate to get from campaign if available, otherwise use stored value
+    public function getEffectiveCommissionRateAttribute(): float
+    {
+        // If campaign exists, use its commission rate (auto mode)
+        if ($this->campaign && $this->campaign->commission_rate) {
+            return $this->campaign->commission_rate;
+        }
+        
+        // If no campaign, use stored commission rate (manual mode)
+        return $this->commission_rate ?? 15.00;
+    }
+
+    // Check if this link is in auto mode (campaign-based)
+    public function isAutoCommissionMode(): bool
+    {
+        return $this->campaign && $this->campaign->commission_rate;
+    }
+
+    // Check if this link is in manual mode (product-based)
+    public function isManualCommissionMode(): bool
+    {
+        return !$this->isAutoCommissionMode();
+    }
+
+    // Allow setting commission_rate when there's no campaign
+    public function setCommissionRateAttribute($value)
+    {
+        // Only allow setting commission_rate if there's no campaign
+        if (!$this->campaign_id) {
+            $this->attributes['commission_rate'] = $value;
+        }
+        // If there's a campaign, commission_rate will be automatically derived from campaign
     }
 }

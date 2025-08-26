@@ -76,6 +76,7 @@ class ProductController extends Controller
         // Check if user already has an affiliate link for this product
         $existingLink = auth()->user()->affiliateLinks()
             ->where('product_id', $id)
+            ->with(['clicks', 'conversions', 'campaign'])
             ->first();
         
         return view('publisher.products.show', compact('product', 'existingLink'));
@@ -134,7 +135,7 @@ class ProductController extends Controller
                 'tracking_code' => $trackingCode,
                 'short_code' => $shortCode,
                 'status' => 'active',
-                'commission_rate' => $product->commission_rate ?? 15.00
+                'commission_rate' => $product->commission_rate ?? 15.00, // Use product commission rate
             ]);
             
             // Log success

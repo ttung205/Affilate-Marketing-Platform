@@ -2,6 +2,10 @@
 
 @section('title', 'Quản lý Affiliate Links')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/components/commission-badges.css') }}">
+@endpush
+
 @section('content')
 <div class="affiliate-links-container">
     <!-- Header Section -->
@@ -252,22 +256,16 @@
                                     </td>
                                     <td class="table-commission">
                                         <div class="commission-info">
-                                            <span class="commission-badge {{ $link->product && $link->product->commission_rate != $link->commission_rate ? 'commission-different' : '' }}">
-                                                {{ $link->commission_rate ?? 0 }}%
-                                            </span>
-                                            @if($link->product && $link->product->commission_rate != $link->commission_rate)
-                                                <div class="commission-note" title="Commission rate của sản phẩm: {{ $link->product->commission_rate ?? 0 }}%">
-                                                    <small class="text-muted">
-                                                        <i class="fas fa-info-circle"></i>
-                                                        Khác với sản phẩm
-                                                    </small>
+                                            @if($link->isAutoCommissionMode())
+                                                <div class="commission-rate auto">
+                                                    <i class="fas fa-sync-alt"></i> {{ $link->effective_commission_rate }}% (Auto)
                                                 </div>
-                                            @elseif($link->product)
-                                                <div class="commission-note">
-                                                    <small class="text-muted">
-                                                        <i class="fas fa-check-circle"></i>
-                                                        Từ sản phẩm
-                                                    </small>
+                                                <div class="campaign-name">
+                                                    Campaign: {{ $link->campaign->name ?? 'N/A' }}
+                                                </div>
+                                            @else
+                                                <div class="commission-rate manual">
+                                                    <i class="fas fa-edit"></i> {{ $link->commission_rate ?? 0 }}% (Manual)
                                                 </div>
                                             @endif
                                         </div>
@@ -305,25 +303,15 @@
                                         </div>
                                     </td>
                                     <td class="table-revenue">
-                                        @php
-                                            $totalClicks = $link->clicks->count();
-                                            $totalConversions = $link->conversions->count();
-                                            $clickRevenue = $totalClicks * 100; // 1 click = 100 VND
-                                            $commissionRevenue = 0;
-                                            if ($link->product && $totalConversions > 0) {
-                                                $commissionRevenue = ($link->product->price ?? 0) * ($link->commission_rate ?? 0) / 100 * $totalConversions;
-                                            }
-                                            $totalRevenue = $clickRevenue + $commissionRevenue;
-                                        @endphp
                                         <div class="revenue-info">
                                             <div class="revenue-total">
-                                                <strong>{{ number_format($totalRevenue) }} VNĐ</strong>
+                                                <strong>{{ number_format($link->combined_commission) }} VNĐ</strong>
                                             </div>
                                             <div class="revenue-breakdown">
                                                 <small class="text-muted">
-                                                    <span class="click-revenue">Click: {{ number_format($clickRevenue) }} VNĐ</span>
-                                                    @if($commissionRevenue > 0)
-                                                        <span class="commission-revenue"> | Commission: {{ number_format($commissionRevenue) }} VNĐ</span>
+                                                    <span class="click-revenue">Click: {{ number_format($link->click_commission) }} VNĐ</span>
+                                                    @if($link->total_commission > 0)
+                                                        <span class="commission-revenue"> | Commission: {{ number_format($link->total_commission) }} VNĐ</span>
                                                     @endif
                                                 </small>
                                             </div>

@@ -16,12 +16,15 @@ class Campaign extends Model
         'budget',
         'target_conversions',
         'commission_rate',
+        'cost_per_click',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'budget' => 'decimal:2',
+        'commission_rate' => 'decimal:2',
+        'cost_per_click' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -69,5 +72,28 @@ class Campaign extends Model
         return $this->affiliateLinks()
             ->join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
             ->sum('conversions.commission');
+    }
+
+    // New methods for CPC-based commission calculation
+    public function getClickCommissionAttribute(): float
+    {
+        $totalClicks = $this->getTotalClicksAttribute();
+        $cpc = $this->cost_per_click ?? 100.00; // Default 100 VND if not set
+        return $totalClicks * $cpc;
+    }
+
+    public function getConversionCommissionAttribute(): float
+    {
+        return $this->getTotalCommissionAttribute();
+    }
+
+    public function getCombinedCommissionAttribute(): float
+    {
+        return $this->getClickCommissionAttribute() + $this->getConversionCommissionAttribute();
+    }
+
+    public function getDefaultCostPerClickAttribute(): float
+    {
+        return $this->cost_per_click ?? 100.00;
     }
 }

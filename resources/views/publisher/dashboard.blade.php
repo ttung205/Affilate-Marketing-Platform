@@ -53,7 +53,11 @@
             </div>
             <div class="stat-content">
                 <h3>Tổng hoa hồng</h3>
-                <p class="stat-value">{{ number_format($stats['total_commission']) }} VNĐ</p>
+                <p class="stat-value">{{ number_format($stats['combined_commission']) }} VNĐ</p>
+                <small class="stat-breakdown">
+                    Click: {{ number_format($stats['click_commission']) }} VNĐ | 
+                    Conversion: {{ number_format($stats['total_commission']) }} VNĐ
+                </small>
             </div>
         </div>
 

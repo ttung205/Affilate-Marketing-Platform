@@ -52,20 +52,17 @@ class AffiliateLinkController extends Controller
         // Get statistics - Optimized with single query
         $stats = $this->getAffiliateLinkStats();
         
-        // Add revenue calculation for admin
-        $totalClicks = $stats['total_clicks'];
+        // Add revenue calculation for admin using new CPC-based methods
         $totalRevenue = 0;
         
-        // Revenue from clicks (1 click = 100 VND)
-        $totalRevenue += $totalClicks * 100;
+        // Get all affiliate links with their commission calculations
+        $affiliateLinksForRevenue = AffiliateLink::with(['publisher', 'product', 'campaign', 'clicks', 'conversions'])->get();
         
-        // Revenue from conversions (commission)
-        $conversionRevenue = AffiliateLink::join('conversions', 'affiliate_links.id', '=', 'conversions.affiliate_link_id')
-            ->join('products', 'affiliate_links.product_id', '=', 'products.id')
-            ->selectRaw('SUM(products.price * affiliate_links.commission_rate / 100) as total_commission')
-            ->value('total_commission') ?? 0;
+        // Calculate total revenue using the new methods
+        foreach ($affiliateLinksForRevenue as $link) {
+            $totalRevenue += $link->combined_commission;
+        }
         
-        $totalRevenue += $conversionRevenue;
         $stats['total_revenue'] = $totalRevenue;
 
         // Get form data for filters
@@ -123,6 +120,15 @@ class AffiliateLinkController extends Controller
         // Generate unique short code
         $shortCode = $this->generateShortCode();
 
+        // Determine commission rate based on campaign
+        $commissionRate = $request->commission_rate;
+        if ($request->campaign_id) {
+            $campaign = Campaign::find($request->campaign_id);
+            if ($campaign && $campaign->commission_rate) {
+                $commissionRate = $campaign->commission_rate; // Override with campaign rate
+            }
+        }
+
         try {
             $affiliateLink = AffiliateLink::create([
                 'publisher_id' => $request->publisher_id,
@@ -131,7 +137,7 @@ class AffiliateLinkController extends Controller
                 'original_url' => $request->original_url,
                 'tracking_code' => $trackingCode,
                 'short_code' => $shortCode,
-                'commission_rate' => $request->commission_rate,
+                'commission_rate' => $commissionRate,
                 'status' => $request->status,
             ]);
 
@@ -208,12 +214,21 @@ class AffiliateLinkController extends Controller
         }
 
         try {
+            // Determine commission rate based on campaign
+            $commissionRate = $request->commission_rate;
+            if ($request->campaign_id) {
+                $campaign = Campaign::find($request->campaign_id);
+                if ($campaign && $campaign->commission_rate) {
+                    $commissionRate = $campaign->commission_rate; // Override with campaign rate
+                }
+            }
+
             $affiliateLink->update([
                 'publisher_id' => $request->publisher_id,
                 'product_id' => $request->product_id,
                 'campaign_id' => $request->campaign_id,
                 'original_url' => $request->original_url,
-                'commission_rate' => $request->commission_rate,
+                'commission_rate' => $commissionRate,
                 'status' => $request->status,
             ]);
 

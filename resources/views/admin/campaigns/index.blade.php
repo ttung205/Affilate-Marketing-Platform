@@ -150,8 +150,10 @@
                                 <th>Thời gian</th>
                                 <th>Ngân sách</th>
                                 <th>Mục tiêu</th>
+                                <th>CPC (VND)</th>
                                 <th>Trạng thái</th>
                                 <th>Thống kê</th>
+                                <th>Hoa hồng</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
                             </tr>
@@ -186,6 +188,9 @@
                                     <td class="table-target">
                                         <span class="target-conversions">{{ number_format($campaign->target_conversions ?? 0) }} conversions</span>
                                     </td>
+                                    <td class="table-cpc">
+                                        <span class="cpc-amount">{{ number_format($campaign->cost_per_click ?? 100) }} VND</span>
+                                    </td>
                                     <td class="table-status">
                                         @if(($campaign->status ?? '') === 'active')
                                             <span class="status-badge status-active">Đang hoạt động</span>
@@ -213,6 +218,22 @@
                                                     <div class="stat-value rate">{{ number_format($campaign->conversion_rate ?? 0, 2) }}%</div>
                                                 </div>
                                             @endif
+                                        </div>
+                                    </td>
+                                    <td class="table-commission">
+                                        <div class="commission-info">
+                                            <div class="commission-item">
+                                                <span class="label">Click:</span>
+                                                <span class="value">{{ number_format($campaign->click_commission ?? 0) }} VND</span>
+                                            </div>
+                                            <div class="commission-item">
+                                                <span class="label">Conversion:</span>
+                                                <span class="value">{{ number_format($campaign->conversion_commission ?? 0) }} VND</span>
+                                            </div>
+                                            <div class="commission-total">
+                                                <span class="label">Tổng:</span>
+                                                <span class="value">{{ number_format($campaign->combined_commission ?? 0) }} VND</span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="table-date">{{ ($campaign->created_at ?? now())->format('d/m/Y H:i') }}</td>

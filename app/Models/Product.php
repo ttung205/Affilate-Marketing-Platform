@@ -97,4 +97,30 @@ class Product extends Model
     {
         return $this->commission_rate ?? 15.00; // Mặc định 15%
     }
+
+    // New methods for CPC-based commission calculation
+    public function getClickCommissionAttribute(): float
+    {
+        $totalClicks = $this->getTotalClicksAttribute();
+        $cpc = $this->getDefaultCostPerClickAttribute();
+        return $totalClicks * $cpc;
+    }
+
+    public function getCombinedCommissionAttribute(): float
+    {
+        return $this->getClickCommissionAttribute() + $this->getTotalCommissionAttribute();
+    }
+
+    public function getDefaultCostPerClickAttribute(): float
+    {
+        // Check if any affiliate links have campaigns with CPC
+        $campaignCpc = $this->affiliateLinks()
+            ->whereHas('campaign', function($query) {
+                $query->whereNotNull('cost_per_click');
+            })
+            ->join('campaigns', 'affiliate_links.campaign_id', '=', 'campaigns.id')
+            ->avg('campaigns.cost_per_click');
+        
+        return $campaignCpc ?? 100.00; // Default 100 VND if no campaign CPC
+    }
 }

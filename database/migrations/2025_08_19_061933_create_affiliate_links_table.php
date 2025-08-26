@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('affiliate_links', function (Blueprint $table) {
             $table->id();
             $table->foreignId('publisher_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->onDelete('set null');
-            $table->string('original_url');
+            $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade');
+            $table->foreignId('campaign_id')->nullable()->constrained('campaigns')->onDelete('cascade');
+            $table->text('original_url');
             $table->string('tracking_code')->unique();
-            $table->decimal('commission_rate', 5, 2)->default(15.00); // 15.00%
+            $table->string('short_code')->unique();
             $table->enum('status', ['active', 'inactive', 'pending'])->default('active');
             $table->timestamps();
             

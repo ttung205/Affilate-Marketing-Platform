@@ -27,6 +27,8 @@ class PublisherController extends Controller
             'total_clicks' => $this->getTotalClicks($publisher->id),
             'total_conversions' => $this->getTotalConversions($publisher->id),
             'total_commission' => $this->getTotalCommission($publisher->id),
+            'click_commission' => $this->getClickCommission($publisher->id),
+            'combined_commission' => $this->getCombinedCommission($publisher->id),
             'conversion_rate' => $this->getConversionRate($publisher->id),
             'active_links' => $this->getActiveLinks($publisher->id),
             'total_products' => $this->getTotalProducts($publisher->id),
@@ -77,6 +79,18 @@ class PublisherController extends Controller
     private function getTotalCommission($publisherId)
     {
         return Conversion::where('publisher_id', $publisherId)->sum('commission');
+    }
+
+    private function getClickCommission($publisherId)
+    {
+        $publisher = User::find($publisherId);
+        return $publisher ? $publisher->click_commission : 0;
+    }
+
+    private function getCombinedCommission($publisherId)
+    {
+        $publisher = User::find($publisherId);
+        return $publisher ? $publisher->combined_commission : 0;
     }
 
     private function getConversionRate($publisherId)

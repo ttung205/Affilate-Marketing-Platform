@@ -113,15 +113,31 @@
                 <div class="revenue-stats">
                     <div class="revenue-item">
                         <label>Commission Rate:</label>
-                        <span class="commission-rate">{{ $affiliateLink->commission_rate }}%</span>
+                        @if($affiliateLink->isAutoCommissionMode())
+                            <span class="commission-rate auto">
+                                <i class="fas fa-sync-alt"></i> {{ $affiliateLink->effective_commission_rate }}% (Auto từ Campaign)
+                            </span>
+                        @else
+                            <span class="commission-rate manual">
+                                <i class="fas fa-edit"></i> {{ $affiliateLink->commission_rate ?? 0 }}% (Manual)
+                            </span>
+                        @endif
                     </div>
                     <div class="revenue-item">
-                        <label>Tổng doanh thu:</label>
-                        <span class="revenue-value">{{ number_format($stats['total_revenue']) }} VNĐ</span>
+                        <label>Hoa hồng từ clicks:</label>
+                        <span class="revenue-value">{{ number_format($affiliateLink->click_commission) }} VNĐ</span>
                     </div>
                     <div class="revenue-item">
-                        <label>Tổng commission:</label>
-                        <span class="commission-value">{{ number_format($stats['total_commission']) }} VNĐ</span>
+                        <label>Hoa hồng từ conversions:</label>
+                        <span class="revenue-value">{{ number_format($affiliateLink->total_commission) }} VNĐ</span>
+                    </div>
+                    <div class="revenue-item">
+                        <label>Tổng hoa hồng:</label>
+                        <span class="revenue-value total">{{ number_format($affiliateLink->combined_commission) }} VNĐ</span>
+                    </div>
+                    <div class="revenue-item">
+                        <label>CPC:</label>
+                        <span class="cpc-value">{{ number_format($affiliateLink->cost_per_click) }} VNĐ</span>
                     </div>
                 </div>
             </div>

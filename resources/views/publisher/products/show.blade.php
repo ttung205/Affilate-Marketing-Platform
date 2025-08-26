@@ -120,8 +120,30 @@
                                 <span class="stat-value">{{ $existingLink->total_conversions }}</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">Thu nhập:</span>
+                                <span class="stat-label">Commission Rate:</span>
+                                <span class="stat-value">
+                                    @if($existingLink->isAutoCommissionMode())
+                                        <span class="commission-auto">
+                                            <i class="fas fa-sync-alt"></i> {{ $existingLink->effective_commission_rate }}% (Auto)
+                                        </span>
+                                    @else
+                                        <span class="commission-manual">
+                                            <i class="fas fa-edit"></i> {{ $existingLink->commission_rate ?? 0 }}% (Manual)
+                                        </span>
+                                    @endif
+                                </span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Hoa hồng từ clicks:</span>
+                                <span class="stat-value">{{ number_format($existingLink->click_commission) }} VNĐ</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Hoa hồng từ conversions:</span>
                                 <span class="stat-value">{{ number_format($existingLink->total_commission) }} VNĐ</span>
+                            </div>
+                            <div class="stat-item total-commission">
+                                <span class="stat-label">Tổng hoa hồng:</span>
+                                <span class="stat-value">{{ number_format($existingLink->combined_commission) }} VNĐ</span>
                             </div>
                         </div>
                         

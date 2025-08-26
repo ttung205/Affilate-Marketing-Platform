@@ -161,9 +161,25 @@
                                     </div>
                                 </td>
                                 <td class="commission-cell">
-                                    <div class="commission-rate-publisher">{{ $link->commission_rate }}%</div>
+                                    <div class="commission-rate-publisher">
+                                        @if($link->isAutoCommissionMode())
+                                            <span class="commission-auto">
+                                                <i class="fas fa-sync-alt"></i> {{ $link->effective_commission_rate }}% (Auto)
+                                            </span>
+                                        @else
+                                            <span class="commission-manual">
+                                                <i class="fas fa-edit"></i> {{ $link->commission_rate ?? 0 }}% (Manual)
+                                            </span>
+                                        @endif
+                                    </div>
                                     <div class="commission-earned">
-                                        Earned: {{ number_format($link->total_commission) }} VNĐ
+                                        <div class="commission-breakdown">
+                                            <div class="click-commission">Click: {{ number_format($link->click_commission) }} VNĐ</div>
+                                            @if($link->total_commission > 0)
+                                                <div class="conversion-commission">Conv: {{ number_format($link->total_commission) }} VNĐ</div>
+                                            @endif
+                                            <div class="total-commission">Tổng: {{ number_format($link->combined_commission) }} VNĐ</div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="stats-cell">

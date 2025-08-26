@@ -78,7 +78,9 @@
                         <select name="campaign_id" id="campaign_id" class="form-select">
                             <option value="">Không có campaign</option>
                             @foreach($campaigns ?? [] as $campaign)
-                                <option value="{{ $campaign->id }}" {{ old('campaign_id', $affiliateLink->campaign_id) == $campaign->id ? 'selected' : '' }}>
+                                <option value="{{ $campaign->id }}" 
+                                        data-commission-rate="{{ $campaign->commission_rate ?? 15 }}"
+                                        {{ old('campaign_id', $affiliateLink->campaign_id) == $campaign->id ? 'selected' : '' }}>
                                     {{ $campaign->name }}
                                 </option>
                             @endforeach

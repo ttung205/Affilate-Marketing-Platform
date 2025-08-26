@@ -2,6 +2,10 @@
 
 @section('title', 'Tạo Affiliate Link')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/components/commission-badges.css') }}">
+@endpush
+
 @section('content')
 <div class="affiliate-links-container">
     <!-- Header Section -->
@@ -90,14 +94,14 @@
                     <!-- Commission Rate -->
                     <div class="form-group">
                         <label for="commission_rate" class="form-label">
-                            Tỷ lệ hoa hồng (%) <span class="required">*</span>
+                            Tỷ lệ hoa hồng (%) <span class="text-muted">(Tùy theo loại link)</span>
                         </label>
                         <input type="number" name="commission_rate" id="commission_rate" 
                                class="form-input" min="0" max="100" step="0.01" 
-                               value="{{ old('commission_rate', 10) }}" required>
-                        <div id="product-commission-info" class="form-help" style="display: none;">
+                               value="{{ old('commission_rate', 15) }}" required>
+                        <div id="commission-info" class="form-help">
                             <i class="fas fa-info-circle"></i>
-                            <span id="product-commission-text">Commission rate của sản phẩm: <strong id="product-commission-value">0%</strong></span>
+                            <span id="commission-text">Commission rate cho sản phẩm này</span>
                         </div>
                         @error('commission_rate')
                             <div class="form-error">{{ $message }}</div>
@@ -212,8 +216,8 @@ function updatePreviewAndCommission() {
 function updateCommissionRate() {
     const productSelect = document.getElementById('product_id');
     const commissionInput = document.getElementById('commission_rate');
-    const productCommissionInfo = document.getElementById('product-commission-info');
-    const productCommissionValue = document.getElementById('product-commission-value');
+    const commissionInfo = document.getElementById('commission-info');
+    const commissionText = document.getElementById('commission-text');
     
     if (productSelect.value) {
         const selectedOption = productSelect.options[productSelect.selectedIndex];
@@ -223,14 +227,14 @@ function updateCommissionRate() {
         commissionInput.value = productCommission;
         
         // Hiển thị thông tin commission rate của sản phẩm
-        productCommissionValue.textContent = productCommission + '%';
-        productCommissionInfo.style.display = 'block';
+        commissionText.textContent = `Commission rate cho sản phẩm này`;
+        commissionInfo.style.display = 'block';
         
         // Thêm class để styling
-        productCommissionInfo.className = 'form-help commission-info';
+        commissionInfo.className = 'form-help commission-info';
     } else {
         // Ẩn thông tin khi không có sản phẩm nào được chọn
-        productCommissionInfo.style.display = 'none';
+        commissionInfo.style.display = 'none';
     }
 }
 
