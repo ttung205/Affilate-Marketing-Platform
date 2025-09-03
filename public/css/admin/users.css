@@ -1403,19 +1403,3 @@
 .avatar-upload-btn i {
     font-size: 16px;
 }
-
-/* Avatar Help Text */
-.avatar-help {
-    margin-top: 15px;
-    padding: 12px;
-    background: #f3f4f6;
-    border-radius: 6px;
-    font-size: 13px;
-    color: #6b7280;
-    line-height: 1.5;
-}
-
-.avatar-help small {
-    color: #9ca3af;
-    font-style: italic;
-}
