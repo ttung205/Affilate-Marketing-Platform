@@ -31,6 +31,28 @@ trait AffiliateLinkTrait
     }
 
     /**
+     * Generate unique tracking code for product (without campaign)
+     */
+    protected function generateTrackingCodeForProduct($publisher, $product): string
+    {
+        // Use simple ASCII characters to avoid encoding issues
+        $publisherCode = 'PUB' . str_pad($publisher->id, 3, '0', STR_PAD_LEFT);
+        $productCode = 'PRD' . str_pad($product->id, 3, '0', STR_PAD_LEFT);
+        $timestamp = now()->format('Ymd');
+        $random = strtoupper(Str::random(4));
+        
+        $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+        
+        // Ensure uniqueness
+        while (AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
+            $random = strtoupper(Str::random(4));
+            $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+        }
+        
+        return $trackingCode;
+    }
+
+    /**
      * Generate unique short code
      */
     protected function generateShortCode(): string

@@ -105,6 +105,8 @@ class ProductController extends Controller
     public function createAffiliateLink(Request $request, $id)
     {
         try {
+            \Log::info('Creating affiliate link', ['product_id' => $id, 'user_id' => auth()->id()]);
+            
             // Validate request - no need to validate id as it comes from route parameter
             // $request->validate([
             //     'id' => 'required|exists:products,id'
@@ -115,6 +117,8 @@ class ProductController extends Controller
                 ->where('is_active', true)
                 ->findOrFail($id);
             
+            \Log::info('Product found', ['product' => $product->name]);
+            
             // Check if user already has an affiliate link for this product
             if ($this->checkExistingLink(auth()->id(), $id)) {
                 return response()->json([
@@ -124,8 +128,10 @@ class ProductController extends Controller
             }
             
             // Generate unique codes
-            $trackingCode = $this->generateTrackingCode(auth()->user(), $product);
+            $trackingCode = $this->generateSimpleTrackingCode(auth()->user(), $product);
             $shortCode = $this->generateShortCode();
+            
+            \Log::info('Generated codes', ['tracking_code' => $trackingCode, 'short_code' => $shortCode]);
             
             // Create affiliate link
             $affiliateLink = auth()->user()->affiliateLinks()->create([
@@ -137,6 +143,8 @@ class ProductController extends Controller
                 'status' => 'active',
                 'commission_rate' => $product->commission_rate ?? 15.00, // Use product commission rate
             ]);
+            
+            \Log::info('Affiliate link created', ['affiliate_link_id' => $affiliateLink->id]);
             
             // Log success
             \Log::info('Affiliate link created successfully', [
@@ -181,5 +189,25 @@ class ProductController extends Controller
         }
     }
     
+    /**
+     * Generate simple tracking code for product
+     */
+    private function generateSimpleTrackingCode($publisher, $product): string
+    {
+        $publisherCode = 'PUB' . str_pad($publisher->id, 3, '0', STR_PAD_LEFT);
+        $productCode = 'PRD' . str_pad($product->id, 3, '0', STR_PAD_LEFT);
+        $timestamp = now()->format('Ymd');
+        $random = strtoupper(Str::random(4));
+        
+        $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+        
+        // Ensure uniqueness
+        while (\App\Models\AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
+            $random = strtoupper(Str::random(4));
+            $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
+        }
+        
+        return $trackingCode;
+    }
 
 }

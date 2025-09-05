@@ -6,7 +6,8 @@
     padding: 32px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid #e2e8f0;
-    max-width: 800px;
+    max-width: 1200px;
+    width: 100%;
 }
 
 .affiliate-form {

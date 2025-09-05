@@ -294,7 +294,7 @@
                         <i class="fas fa-user-edit"></i>
                         Chỉnh sửa hồ sơ
                     </a>
-                    <a href="{{ route('publisher.settings.index') }}" class="user-menu-item">
+                    <a href="#" class="user-menu-item">
                         <i class="fas fa-cog"></i>
                         Cài đặt
                     </a>

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->string('short_code', 8)->unique()->after('tracking_code')->nullable();
+            $table->decimal('commission_rate', 5, 2)->nullable()->after('status');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('affiliate_links', function (Blueprint $table) {
-            $table->dropColumn('short_code');
+            $table->dropColumn('commission_rate');
         });
     }
 };
