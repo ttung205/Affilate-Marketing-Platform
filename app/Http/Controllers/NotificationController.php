@@ -95,18 +95,4 @@ class NotificationController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Test notification (for development)
-     */
-    public function test()
-    {
-        $user = Auth::user();
-        
-        $this->notificationService->sendNotification($user, 'test', [
-            'message' => 'This is a test notification!',
-            'user_name' => $user->name,
-        ]);
-
-        return response()->json(['success' => true, 'message' => 'Test notification sent']);
-    }
 }

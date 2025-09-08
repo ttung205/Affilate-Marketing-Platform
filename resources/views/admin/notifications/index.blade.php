@@ -405,8 +405,6 @@ function loadStats() {
 }
 
 function loadUsers(role = '') {
-    console.log('Loading users for role:', role);
-    
     fetch(`/admin/notifications/users?role=${role}`, {
         method: 'GET',
         headers: {
@@ -414,12 +412,8 @@ function loadUsers(role = '') {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-        .then(response => {
-            console.log('Users response status:', response.status);
-            return response.json();
-        })
+        .then(response => response.json())
         .then(users => {
-            console.log('Users data:', users);
             const select = document.getElementById('userSelect');
             select.innerHTML = '<option value="">-- Chọn người dùng --</option>';
             
@@ -430,9 +424,7 @@ function loadUsers(role = '') {
                     option.textContent = `${user.name} (${user.email}) - ${user.role}`;
                     select.appendChild(option);
                 });
-                console.log(`Loaded ${users.length} users`);
             } else {
-                console.log('No users found');
                 const option = document.createElement('option');
                 option.value = '';
                 option.textContent = '-- Không có người dùng --';
@@ -447,9 +439,6 @@ function loadUsers(role = '') {
 }
 
 function sendNotification(type, form) {
-    console.log('=== SEND NOTIFICATION DEBUG ===');
-    console.log('Sending notification type:', type);
-    console.log('Form data:', new FormData(form));
     
     const formData = new FormData(form);
     const url = type === 'all' ? '/admin/notifications/send-all' :
@@ -469,17 +458,12 @@ function sendNotification(type, form) {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
     })
-    .then(response => {
-        console.log('Response status:', response.status);
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log('Response data:', data);
         if (data.success) {
-            // Hiển thị thông báo thành công với animation
             showSuccessModal(data.message);
             form.reset();
-            loadStats(); // Reload stats
+            loadStats();
         } else {
             showErrorModal(data.message);
         }
@@ -491,9 +475,6 @@ function sendNotification(type, form) {
 }
 
 function showSuccessModal(message) {
-    console.log('=== SHOW SUCCESS POPUP ===');
-    console.log('Message:', message);
-    
     const popup = document.getElementById('successPopup');
     const messageElement = document.getElementById('successMessage');
     
@@ -502,13 +483,9 @@ function showSuccessModal(message) {
         return;
     }
     
-    // Cập nhật nội dung thông báo
     messageElement.textContent = message;
-    
-    // Hiển thị popup
     popup.classList.add('show');
     
-    // Tự động đóng sau 3 giây
     setTimeout(() => {
         closeSuccessPopup();
     }, 3000);
@@ -522,9 +499,6 @@ function closeSuccessPopup() {
 }
 
 function showErrorModal(message) {
-    console.log('=== SHOW ERROR POPUP ===');
-    console.log('Message:', message);
-    
     const popup = document.getElementById('errorPopup');
     const messageElement = document.getElementById('errorMessage');
     
@@ -533,10 +507,7 @@ function showErrorModal(message) {
         return;
     }
     
-    // Cập nhật nội dung thông báo
     messageElement.textContent = message;
-    
-    // Hiển thị popup
     popup.classList.add('show');
 }
 

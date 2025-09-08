@@ -118,73 +118,8 @@ Route::middleware('auth')->prefix('api')->group(function () {
     Route::post('/notifications/{id}/mark-read', [App\Http\Controllers\NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-read', [App\Http\Controllers\NotificationController::class, 'markAllAsRead']);
     Route::delete('/notifications/{id}', [App\Http\Controllers\NotificationController::class, 'destroy']);
-    Route::post('/notifications/test', [App\Http\Controllers\NotificationController::class, 'test']);
 });
 
-// Test route for notifications
-Route::get('/test-notification', function() {
-    $user = auth()->user();
-    if (!$user) {
-        return 'Please login first';
-    }
-    
-    // Test tạo notification trực tiếp
-    \DB::table('notifications')->insert([
-        'id' => \Str::uuid(),
-        'type' => 'App\Notifications\RealTimeNotification',
-        'notifiable_type' => 'App\Models\User',
-        'notifiable_id' => $user->id,
-        'data' => json_encode([
-            'type' => 'test',
-            'title' => 'Test Notification! 🎉',
-            'message' => 'This is a test notification from ' . $user->name,
-            'icon' => 'fas fa-bell',
-            'color' => 'blue',
-            'data' => ['test' => true]
-        ]),
-        'read_at' => null,
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-    
-    return 'Notification sent! Check your notification bell.';
-})->middleware('auth');
-
-// Test admin notification sending
-Route::get('/test-admin-notification', function() {
-    $user = auth()->user();
-    if (!$user || $user->role !== 'admin') {
-        return 'Admin access required';
-    }
-    
-    // Test gửi cho tất cả users
-    $users = \App\Models\User::all();
-    $count = 0;
-    
-    foreach ($users as $targetUser) {
-        \DB::table('notifications')->insert([
-            'id' => \Str::uuid(),
-            'type' => 'App\Notifications\RealTimeNotification',
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $targetUser->id,
-            'data' => json_encode([
-                'type' => 'admin_broadcast',
-                'title' => 'Thông báo từ Admin! 👑',
-                'message' => 'Admin ' . $user->name . ' đã gửi thông báo cho tất cả',
-                'icon' => 'fas fa-crown',
-                'color' => 'purple',
-                'admin_sent' => true,
-                'admin_name' => $user->name
-            ]),
-            'read_at' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $count++;
-    }
-    
-    return "Đã gửi thông báo cho {$count} users!";
-})->middleware('auth');
 
 // Admin routes
 Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
