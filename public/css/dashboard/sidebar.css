@@ -8,24 +8,22 @@
 
 .sidebar {
     width: 270px;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
+    background: white;
+    color: black;
     padding: 20px 0;
     position: fixed;
     height: 100vh;
     overflow-y: auto;
-    box-shadow: 0 2px 20px rgba(0, 123, 255, 0.15);    
 }
 
 .sidebar-header {
     padding: 0 20px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     margin-bottom: 20px;
 }
 
 .sidebar-header h4 {
     margin: 0;
-    color: white;
+    color: #0060c7;
     font-weight: 700;
     font-size: 1.5rem;
 }
@@ -43,24 +41,22 @@
 .sidebar-menu a {
     display: block;
     padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(0, 0, 0, 0.8);
     text-decoration: none;
-    transition: all 0.1s ease;
     font-weight: 500;
     font-size: 1rem;
 }
 
 .sidebar-menu a:hover,
 .sidebar-menu a.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-left: 4px solid white;
+    background: rgba(0, 96, 199, 0.1);
+    color: #0060c7;
 }
 
 .sidebar-menu i {
     margin-right: 10px;
     width: 20px;
-    color: white;
+    color: black;
 }
 
 .sidebar-footer {
@@ -69,7 +65,7 @@
     width: 270px;
     padding: 20px 90px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .user-info {
@@ -80,30 +76,18 @@
 
 .avatar {
     margin-right: 10px;
-    color: white;
+    color: black;
 }
 
 .user-details .user-name {
     font-weight: 600;
     font-size: 0.9rem;
-    color: white;
+    color: black;
 }
 
 .user-details .user-role {
     font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.logout-btn {
-    color: white;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-    color: #e82929;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .main-content {
@@ -131,8 +115,9 @@
 }
 
 .submenu-arrow {
-    transition: transform 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 12px;
+    transform-origin: center;
 }
 
 .sidebar-menu-item.submenu-open .submenu-arrow {
@@ -140,18 +125,22 @@
 }
 
 .sidebar-submenu {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) ;
+    background: transparent;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease;
     border-radius: 8px;
     list-style: none;
     padding-left: 10px !important;
     width: 100% !important;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-menu-item.submenu-open .sidebar-submenu {
     max-height: 300px; /* Đủ cao để chứa submenu */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .sidebar-submenu li {
@@ -166,19 +155,60 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
+    transform: translateX(-10px);
+    opacity: 0;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu a {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu a:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu a:nth-child(2) {
+    transition-delay: 0.15s;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu a:nth-child(3) {
+    transition-delay: 0.2s;
+}
+
+.sidebar-menu-item.submenu-open .sidebar-submenu a:nth-child(4) {
+    transition-delay: 0.25s;
 }
 
 .sidebar-submenu a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 96, 199, 0.1);
+    color: #0060c7;
 }
 
 .sidebar-submenu a.active {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 96, 199, 0.15);
     font-weight: 600;
+    color: #0060c7;
 }
 
-/* Hover effect cho menu chính */
+/* Hover effect cho menu chính - đơn giản */
 .sidebar-menu-link.has-submenu:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 96, 199, 0.1);
+    color: #0060c7;
 }
+
+/* Đảm bảo submenu không bị ảnh hưởng bởi các thao tác khác */
+.sidebar-submenu {
+    position: relative;
+    z-index: 10;
+}
+
+/* Hiệu ứng mở/đóng submenu đơn giản */
+
+/* Đảm bảo submenu không bị đóng khi click vào bên trong */
+.sidebar-submenu a {
+    pointer-events: auto;
+}
+
+/* Đảm bảo submenu hoạt động ổn định */
