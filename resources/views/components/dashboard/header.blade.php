@@ -190,6 +190,13 @@
                                 <span>Chi tiết Campaign</span>
                             </li>
                         @endif
+                    @elseif(request()->routeIs('admin.notifications.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Quản lý Thông báo</span>
+                        </li>
                     @endif
                 </ol>
             </nav>
@@ -286,8 +293,9 @@
 
     // Mark all notifications as read
     function markAllAsRead() {
-        console.log('Mark all as read clicked');
-        // TODO: Implement mark all as read functionality
+        if (window.realtimeNotifications) {
+            window.realtimeNotifications.markAllAsRead();
+        }
     }
 
     // Close dropdowns when clicking outside
@@ -304,3 +312,9 @@
         }
     });
 </script>
+
+<!-- Real-time Notifications Script -->
+<script>
+    window.userId = {{ Auth::id() }};
+</script>
+<script src="{{ asset('js/notifications/realtime.js') }}"></script>

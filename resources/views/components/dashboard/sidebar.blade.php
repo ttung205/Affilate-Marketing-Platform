@@ -86,6 +86,14 @@
                 </li>
             </ul>
         </li>
+        
+        <!-- Quản lý Thông báo -->
+        <li class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.notifications.index') }}">
+                <i class="fas fa-bell"></i>
+                <span>Quản lý Thông báo</span>
+            </a>
+        </li>
     </ul>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>

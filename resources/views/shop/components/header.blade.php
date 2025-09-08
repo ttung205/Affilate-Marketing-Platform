@@ -168,8 +168,9 @@
 
     // Mark all notifications as read
     function markAllAsRead() {
-        console.log('Mark all as read clicked');
-        // TODO: Implement mark all as read functionality
+        if (window.realtimeNotifications) {
+            window.realtimeNotifications.markAllAsRead();
+        }
     }
 
     // Close dropdowns when clicking outside

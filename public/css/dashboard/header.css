@@ -250,6 +250,50 @@
     color: #64748b;
 }
 
+/* Notification Actions */
+.notification-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.notification-item:hover .notification-actions {
+    opacity: 1;
+}
+
+.mark-read-btn,
+.delete-btn {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.mark-read-btn:hover {
+    background: #e8f5e8;
+    color: #22c55e;
+}
+
+.delete-btn:hover {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+/* Unread notification styles */
+.notification-item.unread {
+    background: #f0f9ff;
+    border-left: 3px solid #3b82f6;
+}
+
+.notification-item.unread .notification-content p {
+    font-weight: 600;
+}
+
 /* User Dropdown */
 .user-dropdown {
     position: relative;

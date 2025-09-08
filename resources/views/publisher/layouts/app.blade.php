@@ -49,6 +49,12 @@
     <!-- Confirm Popup JavaScript -->
     <script src="{{ asset('js/components/confirm-popup.js') }}"></script>
     
+    <!-- Real-time Notifications Script -->
+    <script>
+        window.userId = {{ Auth::id() }};
+    </script>
+    <script src="{{ asset('js/notifications/realtime.js') }}"></script>
+    
     @stack('scripts')
 </body>
 </html>
