@@ -1,0 +1,202 @@
+THÔNG TIN NHÓM - NHÓM 5
+===============
+Đỗ Thanh Tùng - 23010044 - Nhóm trưởng
+Phạm Duy Anh - 23010155 - Thành viên  
+Nguyễn Hữu Tú - 23010199 - Thành viên
+
+ĐỀ TÀI XÂY DỰNG HỆ THỐNG AFFILIATE MARKETING PLATFORM
+=====================================
+
+1. MÔ TẢ VỀ HỆ THỐNG
+
+1.1. Bối cảnh
+--------------
+Trong bối cảnh thương mại điện tử phát triển mạnh mẽ tại Việt Nam và thế giới, nhu cầu về tiếp thị liên kết (Affiliate Marketing) ngày càng tăng cao. Các doanh nghiệp cần tìm cách mở rộng thị trường và tăng doanh số bán hàng thông qua việc hợp tác với các nhà tiếp thị (Publisher), trong khi các Publisher cần một nền tảng đáng tin cậy để kiếm thu nhập từ việc quảng bá sản phẩm.
+
+Tuy nhiên, hiện tại các nền tảng affiliate marketing hiện có thường phức tạp, khó sử dụng và không phù hợp với thị trường Việt Nam. Điều này tạo ra khoảng trống lớn cho một giải pháp affiliate marketing toàn diện, dễ sử dụng và tối ưu cho người dùng Việt Nam.
+
+1.2. Mục tiêu chiến lược
+-------------------------
+- Xây dựng nền tảng affiliate marketing hàng đầu tại Việt Nam
+- Tạo ra hệ sinh thái kết nối hiệu quả giữa Shop (người bán) và Publisher (người tiếp thị)
+- Cung cấp công cụ quản lý và theo dõi hiệu suất marketing toàn diện
+- Tối ưu hóa quy trình tạo link affiliate và tính toán hoa hồng
+- Xây dựng cộng đồng kinh doanh bền vững và minh bạch
+
+1.3. Các đối tượng người dùng
+------------------------------
+- **Admin**: Quản trị viên hệ thống, quản lý toàn bộ nền tảng
+- **Shop (Người bán)**: Các doanh nghiệp, cửa hàng muốn bán sản phẩm thông qua affiliate
+- **Publisher (Người tiếp thị)**: Các cá nhân, tổ chức muốn kiếm thu nhập từ việc quảng bá sản phẩm
+
+1.4. Giá trị mang lại
+----------------------
+- **Cho Shop**: Tăng doanh số bán hàng, mở rộng thị trường, quản lý hiệu quả chiến dịch marketing
+- **Cho Publisher**: Tạo thu nhập ổn định, công cụ quản lý chuyên nghiệp, báo cáo chi tiết
+- **Cho Admin**: Quản lý tập trung, giám sát hiệu suất, đảm bảo chất lượng dịch vụ
+- **Cho thị trường**: Thúc đẩy phát triển thương mại điện tử, tạo việc làm, tăng cường cạnh tranh lành mạnh
+
+1.5. Phạm vi dự án
+------------------
+- Nền tảng web-based sử dụng Laravel 12
+- Tích hợp Google OAuth cho xác thực
+- Hệ thống tracking và analytics real-time
+- Quản lý hoa hồng theo nhiều mô hình (CPC, CPA, CPS)
+- Dashboard quản lý cho từng loại người dùng
+
+2. CÁC YÊU CẦU NGHIỆP VỤ CHỨC NĂNG
+
+2.1. Quản lý người dùng và xác thực
+------------------------------------
+- Đăng ký/đăng nhập tài khoản với email và mật khẩu
+- Đăng nhập bằng Google OAuth
+- Phân quyền người dùng theo vai trò (Admin, Shop, Publisher)
+- Quản lý thông tin cá nhân và avatar
+- Quên mật khẩu và reset mật khẩu qua email
+- Kích hoạt/vô hiệu hóa tài khoản
+
+2.2. Quản lý sản phẩm (Shop)
+-----------------------------
+- CRUD sản phẩm với thông tin: tên, mô tả, giá, hình ảnh, danh mục, tồn kho
+- Quản lý danh mục sản phẩm
+- Upload và quản lý hình ảnh sản phẩm
+- Thiết lập tỷ lệ hoa hồng cho từng sản phẩm
+- Kích hoạt/vô hiệu hóa sản phẩm
+- Tìm kiếm và lọc sản phẩm
+
+2.3. Quản lý Affiliate Links
+-----------------------------
+- Tạo link affiliate tự động cho sản phẩm
+- Tạo tracking code và short code duy nhất
+- Quản lý link theo chiến dịch (Campaign)
+- Theo dõi số lượng click và conversion
+- Tính toán hoa hồng theo nhiều mô hình
+- Redirect link với tracking parameters
+
+2.4. Quản lý chiến dịch (Campaign)
+-----------------------------------
+- Tạo và quản lý chiến dịch marketing
+- Thiết lập ngân sách và mục tiêu
+- Cấu hình tỷ lệ hoa hồng và cost-per-click
+- Quản lý thời gian chạy chiến dịch
+- Theo dõi hiệu suất chiến dịch
+
+2.5. Hệ thống tracking và analytics
+------------------------------------
+- Ghi nhận click từ affiliate links
+- Tracking IP, user agent, referrer
+- Phát hiện click trùng lặp
+- Tính toán conversion rate
+- Báo cáo real-time
+- Export dữ liệu thống kê
+
+2.6. Quản lý hoa hồng và thanh toán
+------------------------------------
+- Tính toán hoa hồng theo CPC (Cost Per Click)
+- Tính toán hoa hồng theo CPA (Cost Per Action)
+- Tính toán hoa hồng theo CPS (Cost Per Sale)
+- Quản lý lịch sử thanh toán
+- Báo cáo thu nhập cho Publisher
+- Quản lý ngân sách cho Shop
+
+2.7. Dashboard và báo cáo
+--------------------------
+- Dashboard tổng quan cho từng vai trò
+- Biểu đồ thống kê real-time
+- Báo cáo hiệu suất theo thời gian
+- Top sản phẩm bán chạy
+- Báo cáo doanh thu và hoa hồng
+- Thống kê click và conversion
+
+2.8. Hệ thống thông báo
+------------------------
+- Thông báo real-time cho người dùng
+- Thông báo về click mới, conversion mới
+- Thông báo hệ thống và cập nhật
+- Quản lý trạng thái đã đọc/chưa đọc
+- Gửi thông báo hàng loạt
+
+2.9. Quản lý Admin
+-------------------
+- Quản lý tất cả người dùng
+- Quản lý sản phẩm và danh mục
+- Quản lý affiliate links
+- Quản lý chiến dịch
+- Giám sát giao dịch và báo cáo
+- Cài đặt hệ thống và bảo mật
+
+3. CÁC YÊU CẦU PHI CHỨC NĂNG
+
+3.1. Yêu cầu hiệu suất
+-----------------------
+- Thời gian phản hồi trang web < 2 giây
+- Hỗ trợ đồng thời ít nhất 1000 người dùng
+- Thời gian xử lý tracking click < 500ms
+- Database query tối ưu với index phù hợp
+- Cache dữ liệu thường xuyên truy cập
+- CDN cho static assets
+
+3.2. Yêu cầu bảo mật
+---------------------
+- Mã hóa mật khẩu với bcrypt
+- Xác thực 2 lớp cho tài khoản quan trọng
+- Bảo vệ chống SQL injection và XSS
+- CSRF protection cho tất cả form
+- Rate limiting cho API endpoints
+- Log và monitor các hoạt động bất thường
+- Backup dữ liệu định kỳ
+
+3.3. Yêu cầu khả năng mở rộng
+------------------------------
+- Kiến trúc microservices-ready
+- Database sharding cho dữ liệu lớn
+- Queue system cho xử lý bất đồng bộ
+- API RESTful cho tích hợp
+- Docker containerization
+- Load balancing support
+
+3.4. Yêu cầu khả năng sử dụng
+------------------------------
+- Giao diện responsive trên mọi thiết bị
+- Thiết kế UI/UX thân thiện với người dùng
+- Hỗ trợ đa ngôn ngữ
+- Accessibility compliance (WCAG 2.1)
+- Hướng dẫn sử dụng và tooltip
+- Error handling và validation rõ ràng
+
+3.5. Yêu cầu tương thích
+-------------------------
+- Tương thích với các trình duyệt hiện đại
+- Hỗ trợ mobile-first design
+- Tương thích với PHP 8.2+
+- Tương thích với MySQL 8.0+
+- Tương thích với Redis 6.0+
+
+3.6. Yêu cầu độ tin cậy
+------------------------
+- Uptime 99.9%
+- Backup dữ liệu hàng ngày
+- Disaster recovery plan
+- Monitoring và alerting
+- Error logging và tracking
+- Health check endpoints
+
+3.7. Yêu cầu bảo trì
+---------------------
+- Code documentation đầy đủ
+- Unit test coverage > 80%
+- Integration test cho các chức năng chính
+- Logging chi tiết cho debugging
+- Version control với Git
+
+3.8. Yêu cầu tuân thủ
+----------------------
+- Tuân thủ GDPR cho dữ liệu cá nhân
+- Tuân thủ quy định về thương mại điện tử Việt Nam
+- Privacy policy và terms of service
+- Data retention policy
+- Audit trail cho các giao dịch quan trọng
+
+---
+
+Tài liệu này mô tả chi tiết về hệ thống Affiliate Marketing Platform, bao gồm các yêu cầu chức năng và phi chức năng cần thiết để xây dựng một nền tảng affiliate marketing toàn diện và hiệu quả.

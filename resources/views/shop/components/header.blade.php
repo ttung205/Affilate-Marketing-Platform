@@ -84,18 +84,20 @@
             <div class="notification-menu" id="notificationMenu">
                 <div class="notification-header">
                     <h6>Thông báo</h6>
-                    <button onclick="markAllAsRead()" class="mark-all-read">Đánh dấu tất cả</button>
-                </div>
-                <div class="notification-list">
-                    <div class="notification-item">
-                        <div class="notification-icon">
-                            <i class="fas fa-info-circle text-info"></i>
-                        </div>
-                        <div class="notification-content">
-                            <p>Chào mừng bạn đến với Shop Dashboard!</p>
-                            <span class="notification-time">Vừa xong</span>
-                        </div>
+                    <div class="notification-header-actions">
+                        <button onclick="markAllAsRead()" class="mark-all-read">Đánh dấu tất cả</button>
+                        <button onclick="realtimeNotifications.showAllNotifications()" class="view-all-btn" title="Xem tất cả">
+                            <i class="fas fa-list"></i>
+                        </button>
                     </div>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <!-- Notifications will be loaded here by JavaScript -->
+                </div>
+                <div class="notification-footer">
+                    <button onclick="realtimeNotifications.showAllNotifications()" class="view-all-notifications">
+                        <i class="fas fa-list"></i> Xem tất cả thông báo
+                    </button>
                 </div>
             </div>
         </div>

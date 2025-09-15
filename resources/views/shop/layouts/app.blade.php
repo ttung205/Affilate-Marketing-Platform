@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/shop/products.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shop/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shop/profile.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/notifications/modal.css') }}">
     
     @stack('styles')
 </head>

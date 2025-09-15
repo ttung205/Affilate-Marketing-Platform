@@ -1,4 +1,8 @@
 /* Header Container */
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -114,26 +118,25 @@
 .notification-btn {
     background: none;
     border: none;
-    color: #6c757d;
+    color: #6b7280;
     font-size: 1.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
     padding: 8px;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .notification-btn:hover {
-    color: #007bff;
-    background: rgba(0, 123, 255, 0.1);
-    transform: translateY(-2px);
+    color: #3b82f6;
+    background: #f3f4f6;
 }
 
 .notification-badge {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    background: #ef4444;
     color: white;
     border-radius: 50%;
     width: 18px;
@@ -150,16 +153,16 @@
     top: 100%;
     right: 0;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
     min-width: 320px;
     max-width: 360px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
     overflow: hidden;
     /* Đảm bảo không bị tràn ra ngoài viewport */
     max-height: calc(100vh - 100px);
@@ -173,7 +176,7 @@
 
 .notification-header {
     padding: 16px 20px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e5e7eb;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -183,21 +186,21 @@
     margin: 0;
     font-size: 14px;
     font-weight: 600;
-    color: #1e293b;
+    color: #1f2937;
 }
 
 .mark-all-read {
     background: none;
     border: none;
-    color: #3b82f6;
+    color: #6b7280;
     font-size: 12px;
     font-weight: 500;
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.2s ease;
 }
 
 .mark-all-read:hover {
-    color: #2563eb;
+    color: #374151;
 }
 
 .notification-list {
@@ -266,22 +269,26 @@
 .delete-btn {
     background: none;
     border: none;
-    color: #64748b;
+    color: #94a3b8;
     cursor: pointer;
     padding: 4px;
-    border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
     transition: all 0.2s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mark-read-btn:hover {
-    background: #e8f5e8;
     color: #22c55e;
+    font-weight: 600;
 }
 
 .delete-btn:hover {
-    background: #fef2f2;
     color: #ef4444;
+    font-weight: 600;
 }
 
 /* Unread notification styles */

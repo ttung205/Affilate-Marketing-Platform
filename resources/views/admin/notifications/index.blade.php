@@ -12,7 +12,7 @@
     <div class="notifications-header">
         <div class="notifications-header-left">
             <h1 class="notifications-title">Quản lý Thông báo</h1>
-            <p class="notifications-subtitle">Gửi và quản lý thông báo cho người dùng</p>
+            <p class="notifications-subtitle">Gửi thông báo tùy chỉnh cho người dùng</p>
         </div>
         <div class="notifications-header-right">
             <button class="notifications-btn notifications-btn-primary" onclick="loadStats()">
@@ -84,50 +84,12 @@
                     @csrf
                     <div class="form-group">
                         <label class="form-label">Tiêu đề <span class="required">*</span></label>
-                        <input type="text" class="form-control" name="title" required>
+                        <input type="text" class="form-control" name="title" required placeholder="Nhập tiêu đề thông báo...">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Nội dung <span class="required">*</span></label>
-                        <textarea class="form-control" name="message" rows="3" required></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label class="form-label">Icon</label>
-                                <select class="form-select" name="icon">
-                                    <option value="fas fa-bell">🔔 Thông báo</option>
-                                    <option value="fas fa-info-circle">ℹ️ Thông tin</option>
-                                    <option value="fas fa-exclamation-triangle">⚠️ Cảnh báo</option>
-                                    <option value="fas fa-check-circle">✅ Thành công</option>
-                                    <option value="fas fa-times-circle">❌ Lỗi</option>
-                                    <option value="fas fa-gift">🎁 Quà tặng</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label class="form-label">Màu sắc</label>
-                                <select class="form-select" name="color">
-                                    <option value="blue">🔵 Xanh dương</option>
-                                    <option value="green">🟢 Xanh lá</option>
-                                    <option value="yellow">🟡 Vàng</option>
-                                    <option value="red">🔴 Đỏ</option>
-                                    <option value="purple">🟣 Tím</option>
-                                    <option value="indigo">🔵 Indigo</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Loại thông báo <span class="required">*</span></label>
-                        <select class="form-select" name="type" required>
-                            @foreach($templates as $template)
-                                <option value="{{ $template->type }}">{{ $template->title }}</option>
-                            @endforeach
-                        </select>
+                        <textarea class="form-control" name="message" rows="4" required placeholder="Nhập nội dung thông báo..."></textarea>
                     </div>
                     
                     <div class="form-actions">
@@ -167,50 +129,12 @@
                     
                     <div class="form-group">
                         <label class="form-label">Tiêu đề <span class="required">*</span></label>
-                        <input type="text" class="form-control" name="title" required>
+                        <input type="text" class="form-control" name="title" required placeholder="Nhập tiêu đề thông báo...">
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label">Nội dung <span class="required">*</span></label>
-                        <textarea class="form-control" name="message" rows="3" required></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label class="form-label">Icon</label>
-                                <select class="form-select" name="icon">
-                                    <option value="fas fa-bell">🔔 Thông báo</option>
-                                    <option value="fas fa-info-circle">ℹ️ Thông tin</option>
-                                    <option value="fas fa-exclamation-triangle">⚠️ Cảnh báo</option>
-                                    <option value="fas fa-check-circle">✅ Thành công</option>
-                                    <option value="fas fa-times-circle">❌ Lỗi</option>
-                                    <option value="fas fa-gift">🎁 Quà tặng</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-col">
-                            <div class="form-group">
-                                <label class="form-label">Màu sắc</label>
-                                <select class="form-select" name="color">
-                                    <option value="blue">🔵 Xanh dương</option>
-                                    <option value="green">🟢 Xanh lá</option>
-                                    <option value="yellow">🟡 Vàng</option>
-                                    <option value="red">🔴 Đỏ</option>
-                                    <option value="purple">🟣 Tím</option>
-                                    <option value="indigo">🔵 Indigo</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Loại thông báo <span class="required">*</span></label>
-                        <select class="form-select" name="type" required>
-                            @foreach($templates as $template)
-                                <option value="{{ $template->type }}">{{ $template->title }}</option>
-                            @endforeach
-                        </select>
+                        <textarea class="form-control" name="message" rows="4" required placeholder="Nhập nội dung thông báo..."></textarea>
                     </div>
                     
                     <div class="form-actions">
@@ -263,51 +187,12 @@
                 
                 <div class="form-group">
                     <label class="form-label">Tiêu đề <span class="required">*</span></label>
-                    <input type="text" class="form-control" name="title" required>
+                    <input type="text" class="form-control" name="title" required placeholder="Nhập tiêu đề thông báo...">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Nội dung <span class="required">*</span></label>
-                    <textarea class="form-control" name="message" rows="3" required></textarea>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label class="form-label">Icon</label>
-                            <select class="form-select" name="icon">
-                                <option value="fas fa-bell">🔔 Thông báo</option>
-                                <option value="fas fa-info-circle">ℹ️ Thông tin</option>
-                                <option value="fas fa-exclamation-triangle">⚠️ Cảnh báo</option>
-                                <option value="fas fa-check-circle">✅ Thành công</option>
-                                <option value="fas fa-times-circle">❌ Lỗi</option>
-                                <option value="fas fa-gift">🎁 Quà tặng</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label class="form-label">Màu sắc</label>
-                            <select class="form-select" name="color">
-                                <option value="blue">🔵 Xanh dương</option>
-                                <option value="green">🟢 Xanh lá</option>
-                                <option value="yellow">🟡 Vàng</option>
-                                <option value="red">🔴 Đỏ</option>
-                                <option value="purple">🟣 Tím</option>
-                                <option value="indigo">🔵 Indigo</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-col">
-                        <div class="form-group">
-                            <label class="form-label">Loại thông báo <span class="required">*</span></label>
-                            <select class="form-select" name="type" required>
-                                @foreach($templates as $template)
-                                    <option value="{{ $template->type }}">{{ $template->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    <textarea class="form-control" name="message" rows="4" required placeholder="Nhập nội dung thông báo..."></textarea>
                 </div>
                 
                 <div class="form-actions">

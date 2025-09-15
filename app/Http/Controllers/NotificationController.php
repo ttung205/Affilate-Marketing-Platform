@@ -23,6 +23,18 @@ class NotificationController extends Controller
     {
         $user = Auth::user();
         $perPage = $request->get('per_page', 15);
+        $loadAll = $request->get('all', false);
+        
+        if ($loadAll) {
+            // Load tất cả thông báo cho modal
+            $notifications = $user->notifications()
+                ->orderBy('created_at', 'desc')
+                ->get();
+                
+            return response()->json([
+                'notifications' => $notifications
+            ]);
+        }
         
         $notifications = $user->notifications()
             ->orderBy('created_at', 'desc')

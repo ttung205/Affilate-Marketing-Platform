@@ -167,6 +167,9 @@ class RealtimeNotifications {
     renderNotification(notification) {
         const isUnread = !notification.read_at;
         const timeAgo = this.getTimeAgo(notification.created_at);
+        const title = notification.data?.title || 'Thông báo mới';
+        const message = notification.data?.message || '';
+        const preview = this.truncateText(message, 80); // Preview 80 ký tự
         
         return `
             <div class="notification-item ${isUnread ? 'unread' : ''}" data-id="${notification.id}">
@@ -174,7 +177,8 @@ class RealtimeNotifications {
                     <i class="${notification.data?.icon || 'fas fa-bell'}"></i>
                 </div>
                 <div class="notification-content">
-                    <p>${notification.data?.title || notification.data?.message || 'Thông báo mới'}</p>
+                    <h6 class="notification-title">${title}</h6>
+                    ${preview ? `<p class="notification-preview">${preview}</p>` : ''}
                     <span class="notification-time">${timeAgo}</span>
                 </div>
                 <div class="notification-actions">
@@ -208,13 +212,23 @@ class RealtimeNotifications {
                 }
             });
 
-            // Update UI
+            // Update UI in dropdown
             const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
             if (notificationElement) {
                 notificationElement.classList.remove('unread');
                 const markReadBtn = notificationElement.querySelector('.mark-read-btn');
                 if (markReadBtn) {
                     markReadBtn.remove();
+                }
+            }
+
+            // Update UI in modal
+            const modalNotificationElement = document.querySelector(`.modal-notification-item[data-id="${notificationId}"]`);
+            if (modalNotificationElement) {
+                modalNotificationElement.classList.remove('unread');
+                const modalMarkReadBtn = modalNotificationElement.querySelector('.mark-read-btn');
+                if (modalMarkReadBtn) {
+                    modalMarkReadBtn.remove();
                 }
             }
 
@@ -234,8 +248,17 @@ class RealtimeNotifications {
                 }
             });
 
-            // Update UI
+            // Update UI in dropdown
             document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                const markReadBtn = item.querySelector('.mark-read-btn');
+                if (markReadBtn) {
+                    markReadBtn.remove();
+                }
+            });
+
+            // Update UI in modal
+            document.querySelectorAll('.modal-notification-item.unread').forEach(item => {
                 item.classList.remove('unread');
                 const markReadBtn = item.querySelector('.mark-read-btn');
                 if (markReadBtn) {
@@ -259,16 +282,28 @@ class RealtimeNotifications {
                 }
             });
 
-            // Remove from UI
+            // Remove from dropdown UI
             const notificationElement = document.querySelector(`[data-id="${notificationId}"]`);
             if (notificationElement) {
                 notificationElement.remove();
             }
 
-            // Check if list is empty
+            // Remove from modal UI
+            const modalNotificationElement = document.querySelector(`.modal-notification-item[data-id="${notificationId}"]`);
+            if (modalNotificationElement) {
+                modalNotificationElement.remove();
+            }
+
+            // Check if dropdown list is empty
             const list = document.querySelector('.notification-list');
             if (list && list.children.length === 0) {
                 this.updateNotificationList([]);
+            }
+
+            // Check if modal list is empty
+            const modalList = document.querySelector('.notification-modal-list');
+            if (modalList && modalList.children.length === 0) {
+                this.renderModalNotification([]);
             }
         } catch (error) {
             console.error('Failed to delete notification:', error);
@@ -309,14 +344,14 @@ class RealtimeNotifications {
 
     getNotificationColor(color) {
         const colors = {
-            'blue': '#e3f2fd',
-            'green': '#e8f5e8',
-            'yellow': '#fff8e1',
-            'red': '#ffebee',
-            'purple': '#f3e5f5',
-            'indigo': '#e8eaf6',
-            'teal': '#e0f2f1',
-            'gray': '#f5f5f5'
+            'blue': '#f0f9ff',
+            'green': '#f0fdf4',
+            'yellow': '#fefce8',
+            'red': '#fef2f2',
+            'purple': '#faf5ff',
+            'indigo': '#eef2ff',
+            'teal': '#f0fdfa',
+            'gray': '#f9fafb'
         };
         return colors[color] || colors['blue'];
     }
@@ -325,6 +360,157 @@ class RealtimeNotifications {
         const menu = document.getElementById('notificationMenu');
         if (menu) {
             menu.classList.remove('show');
+        }
+    }
+
+    truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+    // Tạo popup xem tất cả thông báo
+    showAllNotifications() {
+        this.createNotificationModal();
+    }
+
+    createNotificationModal() {
+        // Tạo modal nếu chưa có
+        let modal = document.getElementById('notificationModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'notificationModal';
+            modal.className = 'notification-modal-overlay';
+            modal.innerHTML = `
+                <div class="notification-modal">
+                    <div class="notification-modal-header">
+                        <h3>Tất cả thông báo</h3>
+                        <button class="close-modal" onclick="realtimeNotifications.closeNotificationModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="notification-modal-body">
+                        <div class="notification-filters">
+                            <button class="filter-btn active" data-filter="all">Tất cả</button>
+                            <button class="filter-btn" data-filter="unread">Chưa đọc</button>
+                            <button class="filter-btn" data-filter="read">Đã đọc</button>
+                        </div>
+                        <div class="notification-modal-list" id="notificationModalList">
+                            <!-- Notifications will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="notification-modal-footer">
+                        <button class="btn btn-secondary" onclick="realtimeNotifications.markAllAsRead()">
+                            Đánh dấu tất cả đã đọc
+                        </button>
+                        <button class="btn btn-primary" onclick="realtimeNotifications.closeNotificationModal()">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Load tất cả thông báo
+        this.loadAllNotifications();
+        
+        // Hiển thị modal
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+
+        // Setup filter buttons
+        this.setupNotificationFilters();
+    }
+
+    async loadAllNotifications() {
+        try {
+            const response = await fetch('/api/notifications?all=true');
+            const data = await response.json();
+            
+            const modalList = document.getElementById('notificationModalList');
+            if (modalList) {
+                if (data.notifications && data.notifications.length > 0) {
+                    modalList.innerHTML = data.notifications.map(notification => this.renderModalNotification(notification)).join('');
+                } else {
+                    modalList.innerHTML = `
+                        <div class="no-notifications">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>Chưa có thông báo nào</p>
+                        </div>
+                    `;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load all notifications:', error);
+        }
+    }
+
+    renderModalNotification(notification) {
+        const isUnread = !notification.read_at;
+        const timeAgo = this.getTimeAgo(notification.created_at);
+        const title = notification.data?.title || 'Thông báo mới';
+        const message = notification.data?.message || '';
+        
+        return `
+            <div class="modal-notification-item ${isUnread ? 'unread' : ''}" data-id="${notification.id}">
+                <div class="modal-notification-icon" style="background-color: ${this.getNotificationColor(notification.data?.color || 'blue')}">
+                    <i class="${notification.data?.icon || 'fas fa-bell'}"></i>
+                </div>
+                <div class="modal-notification-content">
+                    <h6 class="modal-notification-title">${title}</h6>
+                    <p class="modal-notification-message">${message}</p>
+                    <div class="modal-notification-meta">
+                        <span class="modal-notification-time">${timeAgo}</span>
+                        ${isUnread ? '<span class="unread-badge">Chưa đọc</span>' : ''}
+                    </div>
+                </div>
+                <div class="modal-notification-actions">
+                    ${isUnread ? `<button onclick="realtimeNotifications.markAsRead('${notification.id}')" class="mark-read-btn" title="Đánh dấu đã đọc">
+                        <i class="fas fa-check"></i>
+                    </button>` : ''}
+                    <button onclick="realtimeNotifications.deleteNotification('${notification.id}')" class="delete-btn" title="Xóa">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    setupNotificationFilters() {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Filter notifications
+                const filter = btn.dataset.filter;
+                this.filterNotifications(filter);
+            });
+        });
+    }
+
+    filterNotifications(filter) {
+        const items = document.querySelectorAll('.modal-notification-item');
+        items.forEach(item => {
+            const isUnread = item.classList.contains('unread');
+            let show = true;
+            
+            if (filter === 'unread' && !isUnread) show = false;
+            if (filter === 'read' && isUnread) show = false;
+            
+            item.style.display = show ? 'flex' : 'none';
+        });
+    }
+
+    closeNotificationModal() {
+        const modal = document.getElementById('notificationModal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
     }
 }

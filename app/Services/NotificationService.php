@@ -64,6 +64,34 @@ class NotificationService
         }
     }
 
+    /**
+     * Gửi thông báo tùy chỉnh (không cần template)
+     */
+    public function sendCustomNotification(
+        User $user,
+        array $data = [],
+        array $channels = ['database', 'broadcast']
+    ): void {
+        // Prepare notification data với giá trị mặc định
+        $notificationData = [
+            'type' => 'custom',
+            'title' => $data['title'] ?? 'Thông báo',
+            'message' => $data['message'] ?? 'Bạn có thông báo mới',
+            'icon' => 'fas fa-bell', // Icon mặc định
+            'color' => 'blue', // Màu mặc định
+            'data' => $data,
+            'created_at' => now()->toISOString(),
+        ];
+
+        // Send notification
+        try {
+            $user->notify(new RealTimeNotification($notificationData, $channels));
+            \Log::info("Custom notification sent to user {$user->id} successfully");
+        } catch (\Exception $e) {
+            \Log::error("Failed to send custom notification: " . $e->getMessage());
+        }
+    }
+
     public function sendToRole(
         string $role,
         string $type,

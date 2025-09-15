@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-links.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-details.css') }}">
     <link rel="stylesheet" href="{{ asset('css/publisher/affiliate-form.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/notifications/modal.css') }}">
 
     @stack('styles')
 </head>

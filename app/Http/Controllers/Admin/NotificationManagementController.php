@@ -22,7 +22,6 @@ class NotificationManagementController extends Controller
      */
     public function index()
     {
-        $templates = NotificationTemplate::where('is_active', true)->get();
         $userCounts = [
             'admin' => User::where('role', 'admin')->count(),
             'shop' => User::where('role', 'shop')->count(),
@@ -30,7 +29,7 @@ class NotificationManagementController extends Controller
             'all' => User::count(),
         ];
 
-        return view('admin.notifications.index', compact('templates', 'userCounts'));
+        return view('admin.notifications.index', compact('userCounts'));
     }
 
     /**
@@ -41,9 +40,6 @@ class NotificationManagementController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'message' => 'required|string',
-            'type' => 'required|string',
-            'icon' => 'nullable|string',
-            'color' => 'nullable|string',
         ]);
 
         $users = User::all();
@@ -51,11 +47,9 @@ class NotificationManagementController extends Controller
         
         foreach ($users as $user) {
             try {
-                $this->notificationService->sendNotification($user, $request->type, [
+                $this->notificationService->sendCustomNotification($user, [
                     'title' => $request->title,
                     'message' => $request->message,
-                    'icon' => $request->icon ?? 'fas fa-bell',
-                    'color' => $request->color ?? 'blue',
                     'admin_sent' => true,
                     'admin_name' => auth()->user()->name,
                 ]);
@@ -81,9 +75,6 @@ class NotificationManagementController extends Controller
             'role' => 'required|string|in:admin,shop,publisher',
             'title' => 'required|string|max:255',
             'message' => 'required|string',
-            'type' => 'required|string',
-            'icon' => 'nullable|string',
-            'color' => 'nullable|string',
         ]);
 
         $users = User::where('role', $request->role)->get();
@@ -96,11 +87,9 @@ class NotificationManagementController extends Controller
         }
 
         foreach ($users as $user) {
-            $this->notificationService->sendNotification($user, $request->type, [
+            $this->notificationService->sendCustomNotification($user, [
                 'title' => $request->title,
                 'message' => $request->message,
-                'icon' => $request->icon ?? 'fas fa-bell',
-                'color' => $request->color ?? 'blue',
                 'admin_sent' => true,
                 'admin_name' => auth()->user()->name,
                 'target_role' => $request->role,
@@ -123,18 +112,13 @@ class NotificationManagementController extends Controller
             'user_id' => 'required|exists:users,id',
             'title' => 'required|string|max:255',
             'message' => 'required|string',
-            'type' => 'required|string',
-            'icon' => 'nullable|string',
-            'color' => 'nullable|string',
         ]);
 
         $user = User::findOrFail($request->user_id);
         
-        $this->notificationService->sendNotification($user, $request->type, [
+        $this->notificationService->sendCustomNotification($user, [
             'title' => $request->title,
             'message' => $request->message,
-            'icon' => $request->icon ?? 'fas fa-bell',
-            'color' => $request->color ?? 'blue',
             'admin_sent' => true,
             'admin_name' => auth()->user()->name,
             'target_user' => $user->name,

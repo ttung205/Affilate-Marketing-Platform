@@ -116,26 +116,25 @@
 .notification-btn {
     background: none;
     border: none;
-    color: #6c757d;
+    color: #6b7280;
     font-size: 1.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
     padding: 8px;
-    border-radius: 8px;
+    border-radius: 6px;
 }
 
 .notification-btn:hover {
-    color: #007bff;
-    background: rgba(0, 123, 255, 0.1);
-    transform: translateY(-2px);
+    color: #3b82f6;
+    background: #f3f4f6;
 }
 
 .notification-badge {
     position: absolute;
     top: -5px;
     right: -5px;
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    background: #ef4444;
     color: white;
     border-radius: 50%;
     width: 18px;
@@ -152,16 +151,16 @@
     top: 100%;
     right: 0;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
     min-width: 320px;
     max-width: 360px;
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transform: translateY(-5px);
+    transition: all 0.2s ease;
     overflow: hidden;
     /* Đảm bảo không bị tràn ra ngoài viewport */
     max-height: calc(100vh - 100px);
