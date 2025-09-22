@@ -4,6 +4,34 @@
 
 @section('content')
 <div class="payment-methods-container">
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
     <!-- Header -->
     <div class="payment-methods-header">
         <div class="header-content">
@@ -132,7 +160,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="paymentMethodForm">
+                <form id="paymentMethodForm" method="POST" action="{{ route('publisher.payment-methods.store') }}">
+                    @csrf
                     <input type="hidden" id="methodId" name="id">
                     
                     <div class="row">
@@ -220,7 +249,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="savePaymentMethod()">Lưu</button>
+                <button type="submit" form="paymentMethodForm" class="btn btn-primary">Lưu</button>
             </div>
         </div>
     </div>

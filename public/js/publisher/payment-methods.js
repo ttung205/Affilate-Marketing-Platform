@@ -220,50 +220,7 @@ class PaymentMethodManager {
         }
     }
 
-    async submitPaymentMethod() {
-        const form = document.getElementById('paymentMethodForm');
-        if (!form) {
-            showError('Form không tồn tại');
-            return;
-        }
-
-        const data = {
-            type: document.getElementById('methodType').value,
-            account_name: document.getElementById('accountName').value,
-            account_number: document.getElementById('accountNumber').value,
-            bank_name: document.getElementById('bankName').value,
-            bank_code: document.getElementById('bankCode').value,
-            branch_name: document.getElementById('branchName').value,
-            is_default: document.getElementById('isDefault').checked
-        };
-
-        try {
-            const response = await fetch('/publisher/payment-methods', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify(data)
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                showSuccess(result.message);
-                bootstrap.Modal.getInstance(document.getElementById('paymentMethodModal')).hide();
-                // Reload page to show updated data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                showError(result.message || 'Có lỗi xảy ra khi tạo phương thức thanh toán');
-            }
-        } catch (error) {
-            console.error('Error submitting payment method:', error);
-            showError('Có lỗi xảy ra khi tạo phương thức thanh toán');
-        }
-    }
+    // Form sẽ submit tự động khi click nút submit
 
     async editPaymentMethod(id) {
         showInfo('Tính năng chỉnh sửa đang được phát triển');
@@ -348,8 +305,4 @@ function refreshList() {
     window.location.reload();
 }
 
-function savePaymentMethod() {
-    if (window.paymentMethodManager) {
-        window.paymentMethodManager.submitPaymentMethod();
-    }
-}
+// Function savePaymentMethod đã được thay thế bằng form submit tự động

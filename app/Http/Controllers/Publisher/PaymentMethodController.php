@@ -47,14 +47,22 @@ class PaymentMethodController extends Controller
             'request_data' => $request->all()
         ]);
 
+        // Log raw request data
+        Log::info('Raw request data', [
+            'all' => $request->all(),
+            'input' => $request->input(),
+            'json' => $request->json()->all(),
+            'content_type' => $request->header('Content-Type')
+        ]);
+
         $request->validate([
             'type' => 'required|in:bank_transfer,momo,zalopay,vnpay,phone_card',
             'account_name' => 'required|string|max:255',
             'account_number' => 'required|string|max:50',
-            'bank_name' => 'required_if:type,bank_transfer|string|max:255',
+            'bank_name' => 'required_if:type,bank_transfer|nullable|string|max:255',
             'bank_code' => 'nullable|string|max:10',
             'branch_name' => 'nullable|string|max:255',
-            'is_default' => 'boolean',
+            'is_default' => 'nullable|boolean',
         ], [
             'type.required' => 'Vui lòng chọn loại phương thức thanh toán',
             'account_name.required' => 'Vui lòng nhập tên chủ tài khoản',
@@ -71,6 +79,15 @@ class PaymentMethodController extends Controller
         try {
             $publisher = Auth::user();
             $data = $request->all();
+            
+            // Xử lý is_default: convert "on" to true, missing to false
+            $data['is_default'] = $request->has('is_default') ? true : false;
+            
+            Log::info('Processed payment method data', [
+                'user_id' => Auth::id(),
+                'is_default' => $data['is_default'],
+                'original_is_default' => $request->input('is_default')
+            ]);
             
             // Kiểm tra số lượng payment methods hiện tại
             $currentCount = $publisher->paymentMethods()->count();
@@ -90,14 +107,6 @@ class PaymentMethodController extends Controller
                 'type' => $paymentMethod->type
             ]);
 
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Phương thức thanh toán đã được thêm thành công',
-                    'data' => $paymentMethod
-                ]);
-            }
-
             return redirect()->route('publisher.payment-methods.index')
                 ->with('success', 'Phương thức thanh toán đã được thêm thành công');
                 
@@ -108,14 +117,6 @@ class PaymentMethodController extends Controller
                 'trace' => $e->getTraceAsString(),
                 'request_data' => $request->all()
             ]);
-
-            if ($request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage(),
-                    'errors' => ['error' => $e->getMessage()]
-                ], 422);
-            }
 
             return back()->withErrors(['error' => $e->getMessage()])
                 ->withInput();
