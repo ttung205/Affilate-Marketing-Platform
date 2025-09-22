@@ -45,7 +45,7 @@
 ## 🛠️ Công nghệ sử dụng
 
 ### **Backend**
-- **Laravel 10** - Framework PHP hiện đại
+- **Laravel 12** - Framework PHP hiện đại
 - **MySQL** - Cơ sở dữ liệu chính
 - **Eloquent ORM** - Query builder mạnh mẽ
 - **Queue Jobs** - Xử lý tác vụ nền
