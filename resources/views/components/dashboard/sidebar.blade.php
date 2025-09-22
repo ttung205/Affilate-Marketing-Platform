@@ -87,6 +87,14 @@
             </ul>
         </li>
         
+        <!-- Quản lý Rút tiền -->
+        <li class="{{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.withdrawals.index') }}">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Quản lý Rút tiền</span>
+            </a>
+        </li>
+        
         <!-- Quản lý Thông báo -->
         <li class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
             <a href="{{ route('admin.notifications.index') }}">

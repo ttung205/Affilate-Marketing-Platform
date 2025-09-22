@@ -4,6 +4,34 @@
 
 @section('content')
 <div class="withdrawal-container">
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i>
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
     <!-- Header -->
     <div class="withdrawal-header">
         <div class="header-content">
@@ -211,12 +239,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="withdrawalForm">
+                <form id="withdrawalForm" method="POST" action="{{ route('publisher.withdrawal.store') }}">
+                    @csrf
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Số tiền muốn rút (VNĐ)</label>
-                                <input type="number" class="form-control" id="withdrawalAmount" 
+                                <input type="number" class="form-control" id="withdrawalAmount" name="amount"
                                        min="10000" step="1000" required>
                                 <div class="form-text">
                                     Số dư khả dụng: <span id="availableBalanceText">
@@ -228,7 +257,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Phương thức thanh toán</label>
-                                <select class="form-select" id="paymentMethod" required>
+                                <select class="form-select" id="paymentMethod" name="payment_method_id" required>
                                     <option value="">Chọn phương thức</option>
                                     @foreach($paymentMethods as $method)
                                         <option value="{{ $method['id'] }}" 
@@ -260,7 +289,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="submitWithdrawal()">Tạo yêu cầu</button>
+                <button type="submit" form="withdrawalForm" class="btn btn-primary">Tạo yêu cầu</button>
             </div>
         </div>
     </div>

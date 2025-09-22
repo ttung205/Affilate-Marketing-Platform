@@ -187,8 +187,8 @@
                             </td>
                             <td>
                                 <div class="publisher-info">
-                                    <div class="publisher-name">{{ $withdrawal->publisher->name }}</div>
-                                    <div class="publisher-email">{{ $withdrawal->publisher->email }}</div>
+                                    <div class="publisher-name">{{ $withdrawal->publisher->name ?? 'N/A' }}</div>
+                                    <div class="publisher-email">{{ $withdrawal->publisher->email ?? 'N/A' }}</div>
                                 </div>
                             </td>
                             <td>
@@ -204,8 +204,8 @@
                             </td>
                             <td>
                                 <div class="payment-method">
-                                    <i class="{{ $withdrawal->paymentMethod->icon }}"></i>
-                                    <span>{{ $withdrawal->paymentMethod->type_label }}</span>
+                                    <i class="{{ $withdrawal->paymentMethod->icon ?? 'fas fa-credit-card' }}"></i>
+                                    <span>{{ $withdrawal->paymentMethod->type_label ?? 'N/A' }}</span>
                                 </div>
                             </td>
                             <td>

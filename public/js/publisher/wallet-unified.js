@@ -306,53 +306,7 @@ class WalletManager {
     }
 
     // Withdrawal Actions
-    async submitWithdrawal() {
-        const amount = parseFloat(document.getElementById('withdrawalAmount').value);
-        const paymentMethodId = document.getElementById('paymentMethod').value;
-
-        if (!amount || !paymentMethodId) {
-            this.showAlert('Vui lòng nhập đầy đủ thông tin', 'error');
-            return;
-        }
-
-        if (amount < 10000) {
-            this.showAlert('Số tiền tối thiểu là 10,000 VNĐ', 'error');
-            return;
-        }
-
-        try {
-            const response = await fetch('/publisher/withdrawal', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    amount: amount,
-                    payment_method_id: paymentMethodId
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.showAlert('Yêu cầu rút tiền đã được gửi thành công', 'success');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('withdrawalModal'));
-                if (modal) modal.hide();
-                this.resetWithdrawalForm();
-                this.loadWithdrawals();
-                // Reload page to update wallet data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                this.showAlert(data.message || 'Có lỗi xảy ra khi gửi yêu cầu rút tiền', 'error');
-            }
-        } catch (error) {
-            console.error('Error submitting withdrawal:', error);
-            this.showAlert('Có lỗi xảy ra khi gửi yêu cầu rút tiền', 'error');
-        }
-    }
+    // Form sẽ submit tự động khi click nút submit
 
     async viewWithdrawal(withdrawalId) {
         try {
@@ -635,11 +589,7 @@ function openWithdrawalModal() {
     }
 }
 
-function submitWithdrawal() {
-    if (window.walletManager) {
-        window.walletManager.submitWithdrawal();
-    }
-}
+// Function submitWithdrawal đã được thay thế bằng form submit tự động
 
 function applyFilters() {
     if (window.walletManager) {

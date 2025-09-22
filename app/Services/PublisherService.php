@@ -750,7 +750,7 @@ class PublisherService
     /**
      * Lấy danh sách yêu cầu rút tiền cho admin
      */
-    public function getWithdrawalsForAdmin(array $filters = []): array
+    public function getWithdrawalsForAdmin(array $filters = [])
     {
         $query = Withdrawal::with(['publisher', 'paymentMethod', 'processedBy', 'approvals.admin']);
 
@@ -777,7 +777,7 @@ class PublisherService
             $query->where('amount', '<=', $filters['amount_max']);
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate(20)->toArray();
+        return $query->orderBy('created_at', 'desc')->paginate(20);
     }
 
     /**
