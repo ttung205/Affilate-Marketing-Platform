@@ -1,6 +1,6 @@
 # 🚀 Affiliate Marketing Platform
 
-> **Nền tảng tiếp thị liên kết hoàn chỉnh** được xây dựng bằng Laravel 10, giúp kết nối người bán (Shop) và người tiếp thị (Publisher) để tăng doanh số và chia sẻ lợi nhuận một cách hiệu quả.
+> **Nền tảng tiếp thị liên kết hoàn chỉnh** được xây dựng bằng Laravel 12, giúp kết nối người bán (Shop) và người tiếp thị (Publisher) để tăng doanh số và chia sẻ lợi nhuận một cách hiệu quả.
 
 ## ✨ Tính năng đã được implement
 
