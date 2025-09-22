@@ -10,13 +10,13 @@ use App\Models\Click;
 use App\Models\Conversion;
 use App\Models\AffiliateLink;
 use App\Models\Campaign;
+use App\Services\PublisherService;
 
 class PublisherController extends Controller
 {
-    public function __construct()
-    {
-       
-    }
+    public function __construct(
+        private PublisherService $publisherService
+    ) {}
 
     public function dashboard()
     {
@@ -56,13 +56,17 @@ class PublisherController extends Controller
         // Dữ liệu cho biểu đồ
         $chartData = $this->getChartData($publisher->id);
 
+        // Wallet data
+        $walletData = $this->publisherService->getWalletData($publisher);
+
         return view('publisher.dashboard', compact(
             'stats', 
             'timeStats', 
             'topProducts', 
             'recentConversions', 
             'recentLinks',
-            'chartData'
+            'chartData',
+            'walletData'
         ));
     }
 

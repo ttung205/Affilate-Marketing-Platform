@@ -27,6 +27,24 @@
 
     <!-- Stats Cards -->
     <div class="stats-grid">
+        <!-- Wallet Info -->
+        <div class="stat-card wallet-card">
+            <div class="stat-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Số dư khả dụng</h3>
+                <p class="stat-value">{{ number_format($walletData['wallet']->balance ?? 0) }} VNĐ</p>
+                <small class="stat-breakdown">
+                    Chờ xử lý: {{ number_format($walletData['wallet']->pending_balance ?? 0) }} VNĐ
+                </small>
+                <div class="wallet-actions">
+                    <a href="{{ route('publisher.wallet.index') }}" class="btn btn-sm btn-primary">Xem ví</a>
+                    <a href="{{ route('publisher.withdrawal.index') }}" class="btn btn-sm btn-outline-primary">Rút tiền</a>
+                </div>
+            </div>
+        </div>
+
         <div class="stat-card">
             <div class="stat-icon">
                 <i class="fas fa-mouse-pointer"></i>

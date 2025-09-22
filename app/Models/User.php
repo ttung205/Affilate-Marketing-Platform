@@ -130,4 +130,58 @@ class User extends Authenticatable
     {
         return $this->role === 'shop';
     }
+
+    // Wallet relationships
+    public function wallet()
+    {
+        return $this->hasOne(PublisherWallet::class, 'publisher_id');
+    }
+
+    public function withdrawals()
+    {
+        return $this->hasMany(Withdrawal::class, 'publisher_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'publisher_id');
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class, 'publisher_id');
+    }
+
+    public function defaultPaymentMethod()
+    {
+        return $this->hasOne(PaymentMethod::class, 'publisher_id')->where('is_default', true);
+    }
+
+    // Wallet helper methods
+    public function getOrCreateWallet(): PublisherWallet
+    {
+        return $this->wallet ?: $this->wallet()->create([
+            'balance' => 0,
+            'pending_balance' => 0,
+            'total_earned' => 0,
+            'total_withdrawn' => 0,
+            'hold_period_days' => 30,
+            'is_active' => true,
+        ]);
+    }
+
+    public function getAvailableBalance(): float
+    {
+        return $this->getOrCreateWallet()->balance;
+    }
+
+    public function getTotalBalance(): float
+    {
+        return $this->getOrCreateWallet()->total_balance;
+    }
+
+    public function canWithdraw(float $amount): bool
+    {
+        return $this->getOrCreateWallet()->canWithdraw($amount);
+    }
 }
