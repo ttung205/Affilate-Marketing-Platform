@@ -3,7 +3,7 @@
 @elseif(auth()->user()->role === 'publisher')
     @extends('publisher.layouts.app')
 @elseif(auth()->user()->role === 'admin')
-    @extends('shop.layouts.app')
+    @extends('components.dashboard.layout')
 @else
     @extends('shop.layouts.app')
 @endif

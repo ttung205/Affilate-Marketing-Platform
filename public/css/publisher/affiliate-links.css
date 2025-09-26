@@ -106,7 +106,8 @@
     font-size: 0.875rem;
 }
 
-.form-select, .form-control {
+.form-select,
+.form-control {
     padding: 10px 12px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
@@ -114,7 +115,8 @@
     transition: border-color 0.2s ease;
 }
 
-.form-select:focus, .form-control:focus {
+.form-select:focus,
+.form-control:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -271,7 +273,7 @@
     text-align: center;
     transition: all 0.3s ease;
     min-height: 36px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.5;
     white-space: nowrap;
     user-select: none;
@@ -292,6 +294,14 @@
     opacity: 0.65;
     cursor: not-allowed;
 }
+/* fas fa-plus */
+.empty-state .btn .fas.fa-plus {
+    font-size: 1.2rem; /* chỉnh size icon */
+    line-height: 1; /* tránh bị lệch */
+    display: inline-flex; /* cho phép flex căn giữa */
+    align-items: center; /* icon luôn nằm giữa */
+    padding-top: 20px;
+}
 
 /* Primary button */
 .btn-primary {
@@ -304,7 +314,7 @@
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
     color: white;
 }
-.btn-primary1{
+.btn-primary1 {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     border: 2px solid transparent;
@@ -637,7 +647,7 @@
 .toast.success {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 @keyframes slideIn {
@@ -662,23 +672,23 @@
         padding: 24px;
         margin: 20px;
     }
-    
+
     .delete-modal-icon {
         width: 64px;
         height: 64px;
         font-size: 28px;
         margin-bottom: 20px;
     }
-    
+
     .delete-modal h3 {
         font-size: 1.25rem;
     }
-    
+
     .delete-modal-actions {
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .modal-btn-cancel,
     .modal-btn-confirm {
         width: 100%;
@@ -693,7 +703,7 @@
 }
 
 .delete-btn.loading::after {
-    content: '';
+    content: "";
     width: 16px;
     height: 16px;
     border: 2px solid currentColor;
@@ -714,26 +724,26 @@
     .publisher-content {
         padding: 16px;
     }
-    
+
     .content-header {
         flex-direction: column;
         gap: 16px;
         align-items: stretch;
     }
-    
+
     .filters-form {
         grid-template-columns: 1fr;
     }
-    
+
     .affiliate-links-table {
         font-size: 0.875rem;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 12px;
     }
-    
+
     .links-cell {
         min-width: auto;
     }

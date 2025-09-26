@@ -37,6 +37,11 @@ Route::get('/dashboard', function () {
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Chatbot demo route
+Route::get('/chatbot/demo', function () {
+    return view('chatbot.demo');
+})->name('chatbot.demo');
+
 // Affiliate tracking routes
 Route::get('/track/{trackingCode}', [TrackingController::class, 'redirectByTrackingCode'])->name('tracking.track');
 Route::get('/ref/{shortCode}', [TrackingController::class, 'redirectByShortCode'])->name('tracking.short');
