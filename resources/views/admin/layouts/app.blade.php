@@ -14,6 +14,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('css/dashboard/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard/sidebar.css') }}">
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
     
     @stack('styles')
 </head>

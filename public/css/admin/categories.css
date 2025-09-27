@@ -141,7 +141,7 @@
 }
 
 .category-products-count {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
@@ -363,7 +363,7 @@
 }
 
 .btn-primary1 {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
@@ -386,7 +386,7 @@
     color: white;
 }
 .category-btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);  
     color: white;
     border: none;
     padding: 14px 28px;
@@ -438,7 +438,7 @@
 .category-no-results-icon {
     width: 80px;
     height: 80px;
-    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -563,7 +563,7 @@
 .category-image-upload-btn {
     display: inline-block;
     padding: 12px 20px;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     border: none;
     border-radius: 8px;
