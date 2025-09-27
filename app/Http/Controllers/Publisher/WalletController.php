@@ -260,7 +260,7 @@ class WalletController extends Controller
         
         return [
             'labels' => $labels,
-            'data' => $data
+            'earnings' => array_column($data, 'total')
         ];
     }
 

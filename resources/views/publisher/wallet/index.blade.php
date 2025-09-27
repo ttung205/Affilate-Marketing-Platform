@@ -196,68 +196,6 @@
     </div>
 </div>
 
-<!-- Withdrawal Modal -->
-<div id="withdrawalModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Rút tiền</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="withdrawalForm">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Số tiền muốn rút (VNĐ)</label>
-                                <input type="number" class="form-control" id="withdrawalAmount" 
-                                       min="10000" max="{{ $wallet->balance }}" step="1000" required>
-                                <div class="form-text">
-                                    Số dư khả dụng: {{ number_format($wallet->balance, 0, ',', '.') }} VNĐ
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Phương thức thanh toán</label>
-                                <select class="form-select" id="paymentMethod" required>
-                                    <option value="">Chọn phương thức</option>
-                                    @foreach($paymentMethods as $method)
-                                        <option value="{{ $method['id'] }}" 
-                                                data-type="{{ $method['type'] }}"
-                                                data-fee-rate="{{ $method['fee_rate'] }}">
-                                            {{ $method['display_name'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="withdrawal-summary">
-                        <div class="summary-row">
-                            <span>Số tiền rút:</span>
-                            <span id="summaryAmount">0 VNĐ</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Phí giao dịch:</span>
-                            <span id="summaryFee">0 VNĐ</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>Số tiền thực nhận:</span>
-                            <span id="summaryNetAmount">0 VNĐ</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="submitWithdrawal()">Xác nhận rút tiền</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @endsection
 
 @push('styles')
