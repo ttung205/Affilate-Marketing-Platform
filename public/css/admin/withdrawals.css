@@ -5,7 +5,7 @@
 
 .withdrawals-container {
     padding: 2rem;
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
@@ -16,9 +16,9 @@
     align-items: center;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    background: white;
     border-radius: 12px;
-    color: white;
+    color: black;
 }
 
 .withdrawals-title {
@@ -37,7 +37,7 @@
 }
 
 .header-actions .btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
     padding: 0.75rem 1.5rem;
@@ -47,7 +47,7 @@
 }
 
 .header-actions .btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     transform: translateY(-2px);
 }
 
