@@ -89,19 +89,19 @@
 }
 
 .available-balance .stat-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .pending-balance .stat-icon {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .total-earned .stat-icon {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .total-withdrawn .stat-icon {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-content {
@@ -233,10 +233,11 @@
     align-items: center;
     justify-content: center;
     font-size: 1rem;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .transaction-icon i {
-    color: #6b7280;
+    color: white;
 }
 
 .transaction-content {

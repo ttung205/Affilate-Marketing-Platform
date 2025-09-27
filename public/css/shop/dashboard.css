@@ -68,27 +68,27 @@ body{
 }
 
 .stat-card:nth-child(1) .stat-icon {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card:nth-child(2) .stat-icon {
-    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card:nth-child(3) .stat-icon {
-    background: linear-gradient(135deg, #45b7d1, #96c93d);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card:nth-child(4) .stat-icon {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card:nth-child(5) .stat-icon {
-    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card:nth-child(6) .stat-icon {
-    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-content h3 {

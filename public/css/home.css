@@ -401,7 +401,7 @@ body {
     width: 80px;
     height: 80px;
     margin: 0 auto 1rem;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     border-radius: 50%;
     display: flex;
     align-items: center;

@@ -12,7 +12,7 @@
 .chatbot-toggle {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -41,7 +41,7 @@
     position: absolute;
     top: -5px;
     right: -5px;
-    background: #ef4444;
+    background: #3b82f6;
     color: white;
     border-radius: 50%;
     width: 24px;
@@ -85,7 +85,7 @@
 
 /* Chat Header */
 .chatbot-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     padding: 20px;
     display: flex;
@@ -206,12 +206,12 @@
 }
 
 .chatbot-message-bot .chatbot-message-bubble {
-    background: #0084ff;
+    background: #3b82f6;
     color: white;
 }
 
 .chatbot-message-user .chatbot-message-avatar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
 }
 
@@ -229,7 +229,7 @@
 }
 
 .chatbot-message-user .chatbot-message-bubble {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
 }
 
@@ -303,7 +303,7 @@
 }
 
 .chatbot-input-wrapper:focus-within {
-    border-color: #667eea;
+    border-color: #3b82f6;
 }
 
 .chatbot-input {
@@ -325,7 +325,7 @@
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     cursor: pointer;
     display: flex;
@@ -368,7 +368,7 @@
     width: 40px;
     height: 40px;
     border: 4px solid #f3f3f3;
-    border-top: 4px solid #667eea;
+    border-top: 4px solid #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 16px;
@@ -393,19 +393,19 @@
 .chatbot-role-admin .chatbot-header,
 .chatbot-role-publisher .chatbot-header,
 .chatbot-role-shop .chatbot-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .chatbot-role-admin .chatbot-send-btn,
 .chatbot-role-publisher .chatbot-send-btn,
 .chatbot-role-shop .chatbot-send-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .chatbot-role-admin .chatbot-toggle,
 .chatbot-role-publisher .chatbot-toggle,
 .chatbot-role-shop .chatbot-toggle {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 /* Responsive Design */
@@ -441,7 +441,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #9ca3af;
+    background: #3b82f6;
     animation: typing 1.4s infinite ease-in-out;
 }
 

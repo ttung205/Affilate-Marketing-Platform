@@ -75,6 +75,7 @@ class WalletManager {
         if (!this.chart) return;
 
         this.chart.data.labels = data.labels;
+        // Hiển thị dữ liệu gốc với đơn vị VNĐ
         this.chart.data.datasets[0].data = data.earnings;
         this.chart.update();
     }

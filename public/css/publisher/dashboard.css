@@ -53,12 +53,12 @@ body{
 .stat-card.wallet-card {
     color: #64748b;
     border: none;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .stat-card.wallet-card .stat-icon {
-    background: rgba(255, 255, 255, 0.2);
-    color:#64748b;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
 }
 
 .stat-card.wallet-card .stat-content h3 {
@@ -130,12 +130,12 @@ body{
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.stat-icon:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-.stat-icon:nth-child(2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-.stat-icon:nth-child(3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-.stat-icon:nth-child(4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-.stat-icon:nth-child(5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-.stat-icon:nth-child(6) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+.stat-icon:nth-child(1) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(2) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(3) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(4) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(5) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(6) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
 
 .stat-content h3 {
     font-size: 0.9rem;

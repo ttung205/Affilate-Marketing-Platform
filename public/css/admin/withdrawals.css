@@ -88,23 +88,23 @@
 }
 
 .stat-card.pending .stat-icon {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card.approved .stat-icon {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card.completed .stat-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card.rejected .stat-icon {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-card.total-amount .stat-icon {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .stat-content {
