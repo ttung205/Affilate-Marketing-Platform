@@ -876,6 +876,7 @@ class PublisherService
     private function getRecentTransactions(User $publisher, int $limit = 10)
     {
         return $publisher->transactions()
+            ->where('status', 'completed')
             ->orderBy('created_at', 'desc')
             ->limit($limit)
             ->get();
