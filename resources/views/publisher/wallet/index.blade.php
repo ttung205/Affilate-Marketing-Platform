@@ -13,12 +13,6 @@
             </h1>
             <p class="wallet-subtitle">Quản lý số dư và rút tiền</p>
         </div>
-        <div class="header-actions">
-            <button class="btn btn-primary" onclick="openWithdrawalModal()">
-                <i class="fas fa-money-bill-wave"></i>
-                Rút tiền
-            </button>
-        </div>
     </div>
 
     <!-- Sync Wallet Button -->

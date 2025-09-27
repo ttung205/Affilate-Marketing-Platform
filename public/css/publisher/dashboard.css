@@ -51,29 +51,28 @@ body{
 
 /* Wallet Card Special Styling */
 .stat-card.wallet-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #64748b;
     border: none;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .stat-card.wallet-card .stat-icon {
     background: rgba(255, 255, 255, 0.2);
-    color: white;
+    color:#64748b;
 }
 
 .stat-card.wallet-card .stat-content h3 {
-    color: white;
+    color: #64748b;
 }
 
 .stat-card.wallet-card .stat-value {
-    color: white;
+    color: #64748b;
     font-size: 1.8rem;
     font-weight: 700;
 }
 
 .stat-card.wallet-card .stat-breakdown {
-    color: rgba(255, 255, 255, 0.8);
+    color: #64748b;
     font-size: 0.9rem;
 }
 
@@ -94,7 +93,7 @@ body{
 .wallet-actions .btn-primary {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
+    color: #64748b;
 }
 
 .wallet-actions .btn-primary:hover {
@@ -105,7 +104,7 @@ body{
 .wallet-actions .btn-outline-primary {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.5);
-    color: white;
+    color: #64748b;
 }
 
 .wallet-actions .btn-outline-primary:hover {

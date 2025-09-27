@@ -91,7 +91,7 @@ class PaymentMethod extends Model
     {
         return match($this->type) {
             'bank_transfer' => 'fas fa-university',
-            'momo' => 'fab fa-momo',
+            'momo' => 'fas fa-wallet',
             'zalopay' => 'fas fa-mobile-alt',
             'vnpay' => 'fas fa-credit-card',
             'phone_card' => 'fas fa-sim-card',
