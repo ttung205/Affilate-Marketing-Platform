@@ -1,4 +1,4 @@
-// TTung Affiliate - Main JavaScript File
+// Affiliate Marketing - Main JavaScript File
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all components with performance optimization

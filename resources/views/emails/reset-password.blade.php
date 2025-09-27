@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đặt lại mật khẩu - TTung Affiliate</title>
+    <title>Đặt lại mật khẩu - Affiliate Marketing</title>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -74,7 +74,7 @@
     <div class="email-container">
         <div class="header">
             <div class="logo">📈</div>
-            <h1 class="title">TTung Affiliate</h1>
+            <h1 class="title">Affiliate Marketing</h1>
             <p class="subtitle">Đặt lại mật khẩu tài khoản</p>
         </div>
 
@@ -98,7 +98,7 @@
 
         <div class="footer">
             <p>Email này được gửi tự động, vui lòng không trả lời.</p>
-            <p>© {{ date('Y') }} TTung Affiliate. All rights reserved.</p>
+            <p>© {{ date('Y') }} Affiliate Marketing. All rights reserved.</p>
         </div>
     </div>
 </body>

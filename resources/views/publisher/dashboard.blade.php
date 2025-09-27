@@ -1,6 +1,6 @@
 @extends('publisher.layouts.app')
 
-@section('title', 'Publisher Dashboard - TTung Affiliate')
+@section('title', 'Publisher Dashboard - Affiliate Marketing')
 
 @section('breadcrumb')
 <li class="breadcrumb-item">

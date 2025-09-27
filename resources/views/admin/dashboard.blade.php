@@ -1,6 +1,6 @@
 @extends('components.dashboard.layout')
 
-@section('title', 'Admin Dashboard - TTung Affiliate')
+@section('title', 'Admin Dashboard - Affiliate Marketing')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/admin/dashboard.css') }}">

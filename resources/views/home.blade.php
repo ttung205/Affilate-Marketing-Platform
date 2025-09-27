@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTung Affiliate - Nền tảng Affiliate Marketing Hàng đầu</title>
+    <title>Affiliate Marketing - Nền tảng Affiliate Marketing Hàng đầu</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <link rel="stylesheet" href="{{ asset('css/animations.css') }}">
@@ -20,7 +20,7 @@
         <nav class="navbar">
             <div class="nav-brand" data-aos="fade-right">
                 <i class="fas fa-chart-line"></i>
-                <span>TTung Affiliate</span>
+                <span>Affiliate Marketing</span>
             </div>
             <div class="nav-menu" data-aos="fade-down">
                 <a href="#home" class="nav-link">Trang chủ</a>
@@ -69,8 +69,8 @@
                         <div class="center-logo">
                             <div class="logo-container">
                                 <i class="fas fa-chart-line logo-icon"></i>
-                                <span class="logo-text">TTung</span>
-                                <span class="logo-subtitle">Affiliate</span>
+                                <span class="logo-text">Affiliate</span>
+                                <span class="logo-subtitle">Marketing</span>
                             </div>
                         </div>
                         
@@ -266,7 +266,7 @@
                 <div class="about-text scroll-animate-left" data-animation="slide-left">
                     <h2 class="section-title">Về chúng tôi</h2>
                     <p class="about-description">
-                        TTung Affiliate là nền tảng tiếp thị liên kết cung cấp giải pháp toàn diện giúp kết nối
+                        Affiliate Marketing là nền tảng tiếp thị liên kết cung cấp giải pháp toàn diện giúp kết nối
                         Publisher và Shop một cách nhanh chóng và hiệu quả. Chúng tôi cam kết mang đến trải nghiệm 
                         người dùng tối ưu với giao diện hiện đại, thao tác đơn giản và tính năng mạnh mẽ.
                     </p>
@@ -308,7 +308,7 @@
                 <div class="footer-section hover-lift-enhanced" data-stagger="1">
                     <div class="footer-brand">
                         <i class="fas fa-chart-line"></i>
-                        <span>TTung Affiliate</span>
+                        <span>Affiliate Marketing</span>
                     </div>
                     <p class="footer-description">
                         Nền tảng affiliate marketing hàng đầu, kết nối Publisher với Shop một cách hiệu quả và bền vững.
@@ -355,7 +355,7 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 TTung Affiliate. Tất cả quyền được bảo lưu.</p>
+                <p>&copy; 2025 Affiliate Marketing. Tất cả quyền được bảo lưu.</p>
                 <div class="footer-bottom-links">
                     <a href="#" class="hover-scale-enhanced">Chính sách bảo mật</a>
                     <a href="#" class="hover-scale-enhanced">Điều khoản sử dụng</a>
