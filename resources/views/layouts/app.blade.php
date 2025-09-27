@@ -44,6 +44,8 @@
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
     </style>
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
     
     @stack('styles')
 </head>
@@ -59,8 +61,13 @@
     <!-- Footer -->
     @include('components.footer')
     
+    <!-- Chatbot Widget -->
+    @include('chatbot.chatbot')
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chatbot JS -->
+    <script src="{{ asset('js/chatbot/chatbot.js') }}"></script>
     
     @stack('scripts')
 </body>

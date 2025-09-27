@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="{{ asset('css/admin/affiliate-links.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/campaigns.css') }}">
     <link rel="stylesheet" href="{{ asset('css/notifications/modal.css') }}">
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
     
     @stack('styles')
 </head>
@@ -43,9 +45,13 @@
         </div>
     </div>
     
+
+    <!-- Chatbot Widget -->
+    @include('chatbot.chatbot')
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+   
     <!-- Alert System JavaScript -->
     <script src="{{ asset('js/components/alerts.js') }}"></script>
     <!-- Confirm Popup JavaScript -->
@@ -55,6 +61,8 @@
         window.userId = {{ Auth::id() }};
     </script>
     <script src="{{ asset('js/notifications/realtime.js') }}"></script>
+    <!-- Chatbot JS -->
+    <script src="{{ asset('js/chatbot/chatbot.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

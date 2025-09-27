@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('css/animations.css') }}">
     <link rel="stylesheet" href="{{ asset('css/scroll-effects.css') }}">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
 </head>
 
 <body>
@@ -490,6 +492,12 @@
             });
         });
     </script>
+    
+    <!-- Chatbot Widget -->
+    @include('chatbot.chatbot')
+    
+    <!-- Chatbot JS -->
+    <script src="{{ asset('js/chatbot/chatbot.js') }}"></script>
 </body>
 
 </html>

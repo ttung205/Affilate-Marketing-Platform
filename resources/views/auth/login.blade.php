@@ -7,6 +7,8 @@
     <title>Đăng nhập - TTung Affiliate</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
 </head>
 
 <body>
@@ -141,6 +143,12 @@
             }
         }
     </script>
+
+    <!-- Chatbot Widget -->
+    @include('chatbot.chatbot')
+
+    <!-- Chatbot JS -->
+    <script src="{{ asset('js/chatbot/chatbot.js') }}"></script>
 </body>
 
 </html>
