@@ -1,27 +1,27 @@
-/* Withdrawal Management Styles */
+/* Admin Withdrawal Approval Styles */
 * {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.withdrawal-container {
+.withdrawal-approval-container {
     padding: 2rem;
-    max-width: 1800px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 /* Header */
-.withdrawal-header {
+.withdrawal-approval-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     border-radius: 12px;
     color: white;
 }
 
-.withdrawal-title {
+.withdrawal-approval-title {
     font-size: 2rem;
     font-weight: 700;
     margin: 0;
@@ -30,7 +30,7 @@
     gap: 0.5rem;
 }
 
-.withdrawal-subtitle {
+.withdrawal-approval-subtitle {
     margin: 0.5rem 0 0 0;
     opacity: 0.9;
     font-size: 1.1rem;
@@ -52,7 +52,7 @@
 }
 
 /* Stats Cards */
-.withdrawal-stats {
+.withdrawal-approval-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
@@ -92,17 +92,16 @@
     flex: 1;
 }
 
-
-.withdrawal-stats .stat-title {
+.stat-title {
     font-size: 0.9rem;
-    /* font-weight: 600; */
-    color: #2c2d30;
+    font-weight: 600;
+    color: #6b7280;
     margin: 0 0 0.5rem 0;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-.withdrawal-stats .stat-amount {
+.stat-amount {
     font-size: 1.5rem;
     font-weight: 700;
     color: #1f2937;
@@ -110,7 +109,7 @@
 }
 
 /* Filters */
-.withdrawal-filters {
+.withdrawal-approval-filters {
     background: white;
     border-radius: 12px;
     padding: 1.5rem;
@@ -146,11 +145,11 @@
     transition: all 0.3s ease;
 }
 
-.withdrawal-stats .form-select:focus,
-.withdrawal-stats .form-control:focus {
+.form-select:focus,
+.form-control:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 /* Withdrawals List */
@@ -215,7 +214,7 @@
 }
 
 .withdrawal-id {
-    font-family: "Courier New", monospace;
+    font-family: 'Courier New', monospace;
     font-weight: 600;
     color: #6b7280;
 }
@@ -224,6 +223,22 @@
     font-weight: 600;
     color: #1f2937;
     font-size: 1rem;
+}
+
+.publisher-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.publisher-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.publisher-email {
+    font-size: 0.9rem;
+    color: #6b7280;
 }
 
 .payment-method {
@@ -287,11 +302,10 @@
     gap: 0.5rem;
 }
 
-.withdrawal-stats .action-buttons .btn {
+.action-buttons .btn {
     padding: 0.25rem 0.5rem;
     font-size: 0.8rem;
     border-radius: 4px;
-    background: #1e40af;
 }
 
 .empty-state {
@@ -313,41 +327,11 @@
     margin-top: 2rem;
 }
 
-/* Withdrawal Summary */
-.withdrawal-summary {
-    background: #f9fafb;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-top: 1rem;
-}
-
-.summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.summary-row:last-child {
-    border-bottom: none;
-}
-
-.summary-row.total {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: #1f2937;
-    border-top: 2px solid #e5e7eb;
-    margin-top: 0.5rem;
-    padding-top: 0.75rem;
-}
-
 /* Modal Styles */
 .modal-content {
     border-radius: 12px;
     border: none;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 .modal-header {
@@ -414,60 +398,110 @@
     color: #1f2937;
 }
 
+/* Action Buttons */
+.btn-approve {
+    background: #10b981;
+    border-color: #10b981;
+    color: white;
+}
+
+.btn-approve:hover {
+    background: #059669;
+    border-color: #059669;
+}
+
+.btn-reject {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
+}
+
+.btn-reject:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-complete {
+    background: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.btn-complete:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Bulk Actions */
+.bulk-actions {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.bulk-actions select {
+    min-width: 150px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
-    .withdrawal-container {
+    .withdrawal-approval-container {
         padding: 1rem;
     }
-
-    .withdrawal-header {
+    
+    .withdrawal-approval-header {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
     }
-
-
-    .withdrawal-stats {
+    
+    .withdrawal-approval-stats {
         grid-template-columns: repeat(2, 1fr);
     }
-
-
-    .withdrawal-filters {
+    
+    .withdrawal-approval-filters {
         flex-direction: column;
         align-items: stretch;
     }
-
-
+    
     .filter-group {
         min-width: auto;
     }
-
-
+    
     .list-header {
         flex-direction: column;
         gap: 1rem;
         align-items: stretch;
     }
-
-
+    
     .withdrawals-table {
         font-size: 0.8rem;
     }
-
-
+    
     .withdrawals-table th,
     .withdrawals-table td {
         padding: 0.75rem 0.5rem;
     }
+    
     .action-buttons {
         flex-direction: column;
+    }
+    
+    .bulk-actions {
+        flex-direction: column;
+        align-items: stretch;
     }
 }
 
 @media (max-width: 480px) {
-    .withdrawal-stats {
+    .withdrawal-approval-stats {
         grid-template-columns: 1fr;
     }
+    
     .withdrawals-table th,
     .withdrawals-table td {
         padding: 0.5rem 0.25rem;
@@ -481,7 +515,7 @@
 }
 
 .loading::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
@@ -489,18 +523,14 @@
     height: 20px;
     margin: -10px 0 0 -10px;
     border: 2px solid #f3f3f3;
-    border-top: 2px solid #3b82f6;
+    border-top: 2px solid #dc2626;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* Success/Error States */
@@ -517,7 +547,7 @@
     color: #065f46;
 }
 
-.alert-error {
+.alert-danger {
     background: #fee2e2;
     border-color: #fecaca;
     color: #991b1b;
@@ -527,4 +557,41 @@
     background: #fef3c7;
     border-color: #fde68a;
     color: #92400e;
+}
+
+/* Priority indicators */
+.priority-high {
+    border-left: 4px solid #ef4444;
+}
+
+.priority-medium {
+    border-left: 4px solid #f59e0b;
+}
+
+.priority-low {
+    border-left: 4px solid #10b981;
+}
+
+/* Verification status */
+.verification-status {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.verification-status.verified {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.verification-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.verification-status.failed {
+    background: #fee2e2;
+    color: #991b1b;
 }

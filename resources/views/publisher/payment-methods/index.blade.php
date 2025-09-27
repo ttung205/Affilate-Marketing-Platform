@@ -3,6 +3,7 @@
 @section('title', 'Phương thức thanh toán')
 
 @section('content')
+
     <div class="payment-methods-container">
         <!-- Success/Error Messages -->
         @if(session('success'))
@@ -256,9 +257,11 @@
 @endsection
 
 @push('styles')
+
     <link rel="stylesheet" href="{{ asset('css/publisher/payment-methods.css') }}">
 @endpush
 
 @push('scripts')
     <script src="{{ asset('js/publisher/payment-methods.js') }}"></script>
 @endpush
+

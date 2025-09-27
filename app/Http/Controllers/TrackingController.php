@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AffiliateLink;
 use App\Models\Click;
+use App\Services\PublisherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -76,7 +77,11 @@ class TrackingController extends Controller
 
             \Log::info('Creating click record', $clickData);
             
-            Click::create($clickData);
+            $click = Click::create($clickData);
+
+            // Xử lý hoa hồng từ click
+            $publisherService = new PublisherService();
+            $publisherService->processClickCommission($click);
 
             DB::commit();
             \Log::info('Click recorded successfully for link: ' . $affiliateLink->id);

@@ -107,6 +107,7 @@
     flex: 1;
 }
 
+
 .wallet-stats .stat-title {
     font-size: 0.9rem;
     /* font-weight: 600; */
@@ -535,40 +536,6 @@
     color: #92400e;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .wallet-container {
-        padding: 1rem;
-    }
-
-    .wallet-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .wallet-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .action-buttons {
-        grid-template-columns: 1fr;
-    }
-
-    .section-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: flex-start;
-    }
-
-    .chart-controls {
-        width: 100%;
-    }
-
-    .form-select {
-        width: 100%;
-    }
-}
 
 /* Loading States */
 .loading {

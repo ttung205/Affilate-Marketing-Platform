@@ -74,6 +74,7 @@
     margin: 0;
 }
 
+
 .payment-methods-list .list-actions .btn {
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
@@ -391,37 +392,7 @@
     margin: 0;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .payment-methods-container {
-        padding: 1rem;
-    }
 
-    .payment-methods-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .payment-methods-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .list-header {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
-
-    .action-buttons {
-        justify-content: center;
-    }
-
-    .preview-card {
-        flex-direction: column;
-        text-align: center;
-    }
-}
 
 /* Loading States */
 .loading {
@@ -450,6 +421,7 @@
     100% {
         transform: rotate(360deg);
     }
+
 }
 
 /* Success/Error States */

@@ -46,6 +46,13 @@ Route::get('/chatbot/demo', function () {
 Route::get('/track/{trackingCode}', [TrackingController::class, 'redirectByTrackingCode'])->name('tracking.track');
 Route::get('/ref/{shortCode}', [TrackingController::class, 'redirectByShortCode'])->name('tracking.short');
 
+// Conversion webhook routes
+Route::post('/api/conversion/create', [App\Http\Controllers\ConversionController::class, 'create'])->name('conversion.create');
+Route::middleware(['auth', 'role:publisher'])->group(function () {
+    Route::get('/api/conversions', [App\Http\Controllers\ConversionController::class, 'getPublisherConversions'])->name('conversions.list');
+    Route::get('/api/conversions/stats', [App\Http\Controllers\ConversionController::class, 'getPublisherStats'])->name('conversions.stats');
+});
+
 
 Route::get('/admin', function(){
     return view('admin.dashboard');
@@ -98,8 +105,30 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::get('/reports/commissions', [App\Http\Controllers\Publisher\ReportController::class, 'commissions'])->name('reports.commissions');
     Route::get('/reports/clicks', [App\Http\Controllers\Publisher\ReportController::class, 'clicks'])->name('reports.clicks');
     
-    // Payments routes
-    Route::resource('payments', App\Http\Controllers\Publisher\PaymentController::class);
+        // Wallet routes
+        Route::get('/wallet', [App\Http\Controllers\Publisher\WalletController::class, 'index'])->name('wallet.index');
+        Route::get('/wallet/data', [App\Http\Controllers\Publisher\WalletController::class, 'getWalletData'])->name('wallet.data');
+        Route::post('/wallet/sync', [App\Http\Controllers\Publisher\WalletController::class, 'syncWallet'])->name('wallet.sync');
+        Route::post('/wallet/check-withdrawal', [App\Http\Controllers\Publisher\WalletController::class, 'checkWithdrawal'])->name('wallet.check-withdrawal');
+        Route::get('/wallet/stats', [App\Http\Controllers\Publisher\WalletController::class, 'getStats'])->name('wallet.stats');
+        Route::get('/wallet/transactions', [App\Http\Controllers\Publisher\WalletController::class, 'getTransactions'])->name('wallet.transactions');
+        Route::get('/wallet/earnings-chart', [App\Http\Controllers\Publisher\WalletController::class, 'getEarningsChart'])->name('wallet.earnings-chart');
+    
+    // Withdrawal routes
+    Route::resource('withdrawal', App\Http\Controllers\Publisher\WithdrawalController::class);
+    Route::post('/withdrawal/{withdrawal}/cancel', [App\Http\Controllers\Publisher\WithdrawalController::class, 'cancel'])->name('withdrawal.cancel');
+    Route::get('/withdrawal/api/list', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getWithdrawals'])->name('withdrawal.api.list');
+    Route::get('/withdrawal/api/{withdrawal}', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getWithdrawal'])->name('withdrawal.api.show');
+    Route::post('/withdrawal/api/calculate-fee', [App\Http\Controllers\Publisher\WithdrawalController::class, 'calculateFee'])->name('withdrawal.api.calculate-fee');
+    Route::get('/withdrawal/api/stats', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getStats'])->name('withdrawal.api.stats');
+    
+    // Payment Methods routes
+    Route::resource('payment-methods', App\Http\Controllers\Publisher\PaymentMethodController::class);
+    Route::post('/payment-methods/{paymentMethod}/set-default', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'setDefault'])->name('payment-methods.set-default');
+    Route::get('/payment-methods/api/list', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'getPaymentMethods'])->name('payment-methods.api.list');
+    Route::get('/payment-methods/api/default', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'getDefaultPaymentMethod'])->name('payment-methods.api.default');
+    Route::post('/payment-methods/api/calculate-fee', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'calculateFee'])->name('payment-methods.api.calculate-fee');
+    Route::get('/payment-methods/api/banks', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'getSupportedBanks'])->name('payment-methods.api.banks');
     
     // Settings routes
     Route::resource('settings', App\Http\Controllers\Publisher\SettingController::class);
@@ -159,4 +188,20 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/notifications/send-user', [App\Http\Controllers\Admin\NotificationManagementController::class, 'sendToUser'])->name('notifications.send-user');
     Route::get('/notifications/users', [App\Http\Controllers\Admin\NotificationManagementController::class, 'getUsersByRole'])->name('notifications.users');
     Route::get('/notifications/stats', [App\Http\Controllers\Admin\NotificationManagementController::class, 'getStats'])->name('notifications.stats');
+    
+    // Withdrawal approval routes
+    Route::get('/withdrawals', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'index'])->name('withdrawals.index');
+    Route::get('/withdrawals/{withdrawal}', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'show'])->name('withdrawals.show');
+    Route::post('/withdrawals/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'approve'])->name('withdrawals.approve');
+    Route::post('/withdrawals/{withdrawal}/reject', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'reject'])->name('withdrawals.reject');
+    Route::post('/withdrawals/{withdrawal}/complete', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'complete'])->name('withdrawals.complete');
+    Route::post('/withdrawals/bulk-action', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'bulkAction'])->name('withdrawals.bulk-action');
+    
+    // Withdrawal API routes
+    Route::get('/withdrawals/api/list', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'getWithdrawals'])->name('withdrawals.api.list');
+    Route::get('/withdrawals/api/stats', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'getStats'])->name('withdrawals.api.stats');
+    Route::get('/withdrawals/api/{withdrawal}', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'getWithdrawal'])->name('withdrawals.api.show');
+    Route::post('/withdrawals/api/{withdrawal}/approve', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'approveWithdrawal'])->name('withdrawals.api.approve');
+    Route::post('/withdrawals/api/{withdrawal}/reject', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'rejectWithdrawal'])->name('withdrawals.api.reject');
+    Route::post('/withdrawals/api/{withdrawal}/complete', [App\Http\Controllers\Admin\WithdrawalApprovalController::class, 'completeWithdrawal'])->name('withdrawals.api.complete');
 });

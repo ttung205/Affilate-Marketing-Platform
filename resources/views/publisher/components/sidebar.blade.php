@@ -45,14 +45,33 @@
             </a>
         </li>
         
-        <!-- Tạm thời comment các menu chưa có controller -->
-        {{-- 
-        <!-- Quản lý Campaigns -->
-        <li class="{{ request()->routeIs('publisher.campaigns.*') ? 'active' : '' }}">
-            <a href="{{ route('publisher.campaigns.index') }}">
-                <i class="fas fa-bullhorn"></i>
-                Chiến dịch
+        <!-- Quản lý ví & Thanh toán -->
+        <li class="sidebar-menu-item {{ request()->routeIs('publisher.wallet.*') || request()->routeIs('publisher.withdrawal.*') || request()->routeIs('publisher.payment-methods.*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+                <i class="fas fa-wallet"></i>
+                <span>Ví & Thanh toán</span>
+                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
+            <ul class="sidebar-submenu">
+                <li class="{{ request()->routeIs('publisher.wallet.*') ? 'active' : '' }}">
+                    <a href="{{ route('publisher.wallet.index') }}">
+                        <i class="fas fa-wallet"></i>
+                        Ví của tôi
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('publisher.withdrawal.*') ? 'active' : '' }}">
+                    <a href="{{ route('publisher.withdrawal.index') }}">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Rút tiền
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('publisher.payment-methods.*') ? 'active' : '' }}">
+                    <a href="{{ route('publisher.payment-methods.index') }}">
+                        <i class="fas fa-credit-card"></i>
+                        Phương thức thanh toán
+                    </a>
+                </li>
+            </ul>
         </li>
         
         <!-- Báo cáo & Analytics -->
@@ -84,14 +103,6 @@
             </ul>
         </li>
         
-        <!-- Quản lý thanh toán -->
-        <li class="{{ request()->routeIs('publisher.payments.*') ? 'active' : '' }}">
-            <a href="{{ route('publisher.payments.index') }}">
-                <i class="fas fa-credit-card"></i>
-                Thanh toán
-            </a>
-        </li>
-        
         <!-- Cài đặt -->
         <li class="{{ request()->routeIs('publisher.settings.*') ? 'active' : '' }}">
             <a href="{{ route('publisher.settings.index') }}">
@@ -99,7 +110,6 @@
                 Cài đặt
             </a>
         </li>
-        --}}
     </ul>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>
