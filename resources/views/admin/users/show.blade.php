@@ -116,7 +116,7 @@
             <div class="user-info-card-body">
                 <div class="user-avatar-display">
                     @if($user->avatar)
-                        <img src="{{ asset('storage/' . $user->avatar) }}" 
+                        <img src="{{ get_image_url($user->avatar) }}" 
                              alt="{{ $user->name }}" 
                              class="user-avatar-large">
                     @else
