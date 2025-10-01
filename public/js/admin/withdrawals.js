@@ -402,8 +402,8 @@ class AdminWithdrawalsManager {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({ 
-                    rejection_reason: reason,
-                    admin_notes: notes 
+                    reason: reason,
+                    notes: notes 
                 })
             });
 
