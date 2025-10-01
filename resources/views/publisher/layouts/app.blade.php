@@ -71,10 +71,6 @@
 
     <!-- Toast Notification System -->
     <script src="{{ asset('js/components/toast.js') }}"></script>
-
-
-    <!-- Toast Notification System -->
-    <script src="{{ asset('js/components/toast.js') }}"></script>
     
 
     <!-- Real-time Notifications Script -->

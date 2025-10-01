@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
+    ->withProviders([
+        \App\Providers\RateLimitServiceProvider::class,
+    ])
     ->withMiddleware(function (Middleware $middleware): void {
         // Enable web middleware group with session support
         $middleware->web(append: [
@@ -20,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'withdrawal.rate.limit' => \App\Http\Middleware\WithdrawalRateLimiter::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

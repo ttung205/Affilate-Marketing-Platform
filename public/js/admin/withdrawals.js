@@ -39,16 +39,43 @@ class AdminWithdrawalsManager {
     }
 
     async loadWithdrawals() {
+        this.showLoading('withdrawals-tbody');
+        
         try {
             const response = await fetch('/admin/withdrawals/api/list');
             const data = await response.json();
 
+            console.log('Admin withdrawals API response:', data); // Debug log
+            
             if (data.success) {
-                this.updateWithdrawalsTable(data.withdrawals);
-                this.updateStats(data.stats);
+                this.updateWithdrawalsTable(data.data || []);
+                if (data.stats) {
+                    this.updateStats(data.stats);
+                }
+                if (data.pagination) {
+                    this.updatePagination(data.pagination);
+                }
+            } else {
+                this.showError('Không thể tải danh sách yêu cầu rút tiền');
             }
         } catch (error) {
             console.error('Error loading withdrawals:', error);
+            this.showError('Có lỗi xảy ra khi tải dữ liệu');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    async loadStats() {
+        try {
+            const response = await fetch('/admin/withdrawals/api/stats');
+            const data = await response.json();
+
+            if (data.success) {
+                this.updateStats(data.data);
+            }
+        } catch (error) {
+            console.error('Error loading stats:', error);
         }
     }
 
@@ -95,13 +122,13 @@ class AdminWithdrawalsManager {
                 </td>
                 <td>
                     <div class="payment-method">
-                        <i class="${withdrawal.payment_method.icon}"></i>
-                        <span>${withdrawal.payment_method.type_label}</span>
+                        <i class="${withdrawal.payment_method?.icon || 'fas fa-credit-card'}"></i>
+                        <span>${this.getPaymentMethodLabel(withdrawal)}</span>
                     </div>
                 </td>
                 <td>
                     <span class="status-badge status-${withdrawal.status}">
-                        ${withdrawal.status_label}
+                        ${withdrawal.status_label || this.getStatusLabel(withdrawal.status)}
                     </span>
                 </td>
                 <td>
@@ -163,6 +190,18 @@ class AdminWithdrawalsManager {
         if (totalAmount) {
             totalAmount.textContent = this.formatCurrency(stats.total_amount || 0) + ' VNĐ';
         }
+    }
+
+    updatePagination(pagination) {
+        // Update pagination info
+        const paginationInfo = document.querySelector('.pagination-info');
+        if (paginationInfo) {
+            const start = ((pagination.current_page - 1) * pagination.per_page) + 1;
+            const end = Math.min(pagination.current_page * pagination.per_page, pagination.total);
+            paginationInfo.textContent = `Hiển thị ${start}-${end} trong tổng số ${pagination.total} kết quả`;
+        }
+
+        console.log('Pagination updated:', pagination);
     }
 
     toggleSelectAll() {
@@ -607,6 +646,35 @@ class AdminWithdrawalsManager {
         });
     }
 
+    getStatusLabel(status) {
+        const statusLabels = {
+            'pending': 'Chờ duyệt',
+            'approved': 'Đã duyệt',
+            'completed': 'Hoàn thành',
+            'rejected': 'Từ chối',
+            'cancelled': 'Đã hủy'
+        };
+        return statusLabels[status] || status;
+    }
+
+    getPaymentMethodLabel(withdrawal) {
+        // Try payment_method relationship first
+        if (withdrawal.payment_method?.type_label) {
+            return withdrawal.payment_method.type_label;
+        }
+        
+        // Fallback to payment_method_type
+        const typeLabels = {
+            'bank_transfer': 'Chuyển khoản ngân hàng',
+            'momo': 'Ví MoMo',
+            'zalopay': 'Ví ZaloPay',
+            'vnpay': 'Ví VNPay',
+            'phone_card': 'Thẻ cào điện thoại'
+        };
+        
+        return typeLabels[withdrawal.payment_method_type] || withdrawal.payment_method_type || 'Chưa xác định';
+    }
+
     formatDateTime(dateString) {
         const date = new Date(dateString);
         return date.toLocaleString('vi-VN', {
@@ -639,6 +707,60 @@ class AdminWithdrawalsManager {
                 alertDiv.remove();
             }, 5000);
         }
+    }
+
+    showLoading(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.innerHTML = `
+                <tr>
+                    <td colspan="8" class="loading-state">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <span>Đang tải dữ liệu...</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    hideLoading() {
+        const loadingElements = document.querySelectorAll('.loading-state');
+        loadingElements.forEach(element => {
+            element.remove();
+        });
+    }
+
+    showError(message) {
+        const tbody = document.getElementById('withdrawals-tbody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="error-state">
+                        <div class="error-content">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>${message}</span>
+                            <button class="btn btn-outline-primary btn-sm" onclick="adminWithdrawalsManager.loadWithdrawals()">
+                                <i class="fas fa-redo"></i> Thử lại
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
 }
 

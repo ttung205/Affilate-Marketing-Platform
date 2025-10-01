@@ -239,7 +239,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="withdrawalForm" method="POST" action="{{ route('publisher.withdrawal.store') }}">
+                <form id="withdrawalForm" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-md-6">
@@ -289,7 +289,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="submit" form="withdrawalForm" class="btn btn-primary">Tạo yêu cầu</button>
+                <button type="button" class="btn btn-primary" onclick="submitWithdrawal()">Tạo yêu cầu</button>
             </div>
         </div>
     </div>
@@ -320,5 +320,5 @@
 @endpush
 
 @push('scripts')
-<script src="{{ asset('js/publisher/wallet-unified.js') }}"></script>
+<script src="{{ asset('js/publisher/withdrawal.js') }}"></script>
 @endpush
