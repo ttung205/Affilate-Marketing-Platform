@@ -160,14 +160,17 @@ class User extends Authenticatable
     // Wallet helper methods
     public function getOrCreateWallet(): PublisherWallet
     {
-        return $this->wallet ?: $this->wallet()->create([
-            'balance' => 0,
-            'pending_balance' => 0,
-            'total_earned' => 0,
-            'total_withdrawn' => 0,
-            'hold_period_days' => 30,
-            'is_active' => true,
-        ]);
+        return $this->wallet ?: PublisherWallet::firstOrCreate(
+            ['publisher_id' => $this->id],
+            [
+                'balance' => 0,
+                'pending_balance' => 0,
+                'total_earned' => 0,
+                'total_withdrawn' => 0,
+                'hold_period_days' => 30,
+                'is_active' => true,
+            ]
+        );
     }
 
     public function getAvailableBalance(): float
