@@ -266,7 +266,11 @@
             <button class="user-btn" onclick="toggleUserMenu()">
                 <div class="user-avatar">
                     @if(Auth::user()->avatar)
-                        <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                        @if(str_starts_with(Auth::user()->avatar, 'http'))
+                            <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="user-avatar-img">
+                        @else
+                            <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                        @endif
                     @else
                         <i class="fas fa-user-circle fa-lg"></i>
                     @endif
@@ -279,7 +283,11 @@
                     <div class="user-info">
                         <div class="user-avatar">
                             @if(Auth::user()->avatar)
-                                <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                                @if(str_starts_with(Auth::user()->avatar, 'http'))
+                                    <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="user-avatar-img">
+                                @else
+                                    <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="Avatar" class="user-avatar-img">
+                                @endif
                             @else
                                 <i class="fas fa-user-circle fa-2x"></i>
                             @endif

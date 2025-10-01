@@ -13,8 +13,20 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        if (!in_array(Auth::user()->role, $roles)) {
-            abort(403, 'Bạn không có quyền truy cập.');
+        $user = Auth::user();
+        
+        if (!in_array($user->role, $roles)) {
+            // Instead of aborting, redirect to appropriate dashboard
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'publisher':
+                    return redirect()->route('publisher.dashboard');
+                case 'shop':
+                    return redirect()->route('shop.dashboard');
+                default:
+                    return redirect()->route('home');
+            }
         }
 
         return $next($request);

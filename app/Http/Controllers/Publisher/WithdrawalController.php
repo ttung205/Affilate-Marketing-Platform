@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Publisher;
 
 use App\Http\Controllers\Controller;
 use App\Services\PublisherService;
+use App\Services\TwoFactorAuthService;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\Log;
 class WithdrawalController extends Controller
 {
     public function __construct(
-        private PublisherService $publisherService
+        private PublisherService $publisherService,
+        private TwoFactorAuthService $twoFactorService
     ) {}
 
     /**
@@ -53,30 +55,89 @@ class WithdrawalController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info('Withdrawal request started', [
-            'user_id' => Auth::id(),
-            'request_data' => $request->all()
-        ]);
+        $publisher = Auth::user();
+        
+        // Custom rate limiting - check only for successful withdrawals
+        $rateLimitKey = 'successful_withdrawals:' . $publisher->id;
+        $attempts = \Illuminate\Support\Facades\Cache::get($rateLimitKey, 0);
+        
+        // If this is OTP verification and we're about to create withdrawal, check rate limit
+        if ($request->has('otp') && $request->has('withdrawal_session_key')) {
+            if ($attempts >= 3) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bạn đã vượt quá giới hạn 3 giao dịch rút tiền trong 10 phút. Vui lòng thử lại sau.',
+                    'retry_after' => 600
+                ], 429);
+            }
+        }
 
-        $request->validate([
-            'amount' => 'required|numeric|min:10000|max:5000000',
-            'payment_method_id' => 'required|exists:payment_methods,id',
-        ], [
-            'amount.min' => 'Số tiền rút tối thiểu là 10,000 VNĐ',
-            'amount.max' => 'Số tiền rút tối đa là 5,000,000 VNĐ',
-            'payment_method_id.required' => 'Vui lòng chọn phương thức thanh toán',
-            'payment_method_id.exists' => 'Phương thức thanh toán không hợp lệ',
-        ]);
-
-        Log::info('Withdrawal validation passed', [
-            'user_id' => Auth::id(),
-            'amount' => $request->amount,
-            'payment_method_id' => $request->payment_method_id
-        ]);
+        // Different validation rules for OTP verification vs initial request
+        if ($request->has('otp') && $request->has('withdrawal_session_key')) {
+            // OTP verification - only validate OTP and session key
+            $request->validate([
+                'otp' => 'required|string|size:6',
+                'withdrawal_session_key' => 'required|string',
+            ], [
+                'otp.required' => 'Vui lòng nhập mã OTP',
+                'otp.size' => 'Mã OTP phải có 6 chữ số',
+                'withdrawal_session_key.required' => 'Thiếu thông tin yêu cầu rút tiền',
+            ]);
+        } else {
+            // Initial withdrawal request
+            $request->validate([
+                'amount' => 'required|numeric|min:100000|max:5000000',
+                'payment_method_id' => 'required|exists:payment_methods,id',
+            ], [
+                'amount.min' => 'Số tiền rút tối thiểu là 100,000 VNĐ',
+                'amount.max' => 'Số tiền rút tối đa là 5,000,000 VNĐ',
+                'payment_method_id.required' => 'Vui lòng chọn phương thức thanh toán',
+                'payment_method_id.exists' => 'Phương thức thanh toán không hợp lệ',
+            ]);
+        }
 
         try {
             $publisher = Auth::user();
             
+            // Check if this is OTP verification or initial request
+            if ($request->has('otp') && $request->has('withdrawal_session_key')) {
+                // OTP Verification Flow
+                $sessionKey = $request->withdrawal_session_key;
+                $withdrawalData = session($sessionKey);
+                
+                // Check if session data exists and belongs to current user
+                if (!$withdrawalData || $withdrawalData['publisher_id'] !== $publisher->id) {
+                    throw new \Exception('Phiên rút tiền không hợp lệ hoặc đã hết hạn');
+                }
+                
+                // Verify OTP
+                if (!$this->twoFactorService->verifyWithdrawalOTPForSession($publisher, $sessionKey, $request->otp)) {
+                    throw new \Exception('Mã OTP không đúng hoặc đã hết hạn');
+                }
+                
+                // OTP correct - now create the actual withdrawal in DB
+                $withdrawal = $this->publisherService->createWithdrawal($publisher, $withdrawalData);
+                
+                // Increment successful withdrawal counter
+                \Illuminate\Support\Facades\Cache::put($rateLimitKey, $attempts + 1, now()->addMinutes(10));
+                
+                // Clear session data
+                session()->forget($sessionKey);
+
+
+                if ($request->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Yêu cầu rút tiền đã được gửi thành công',
+                        'data' => $withdrawal
+                    ]);
+                }
+
+                return redirect()->route('publisher.withdrawal.index')
+                    ->with('success', 'Yêu cầu rút tiền đã được gửi thành công');
+            }
+            
+            // Initial Withdrawal Request Flow
             // Kiểm tra quyền sở hữu payment method
             $paymentMethod = \App\Models\PaymentMethod::find($request->payment_method_id);
             if (!$paymentMethod || $paymentMethod->publisher_id !== $publisher->id) {
@@ -88,32 +149,35 @@ class WithdrawalController extends Controller
                 throw new \Exception('Phương thức thanh toán không hợp lệ');
             }
 
-            Log::info('Payment method ownership verified', [
-                'user_id' => $publisher->id,
-                'payment_method_id' => $paymentMethod->id
-            ]);
 
-            $withdrawal = $this->publisherService->createWithdrawal(
-                $publisher,
-                $request->only(['amount', 'payment_method_id'])
-            );
-
-            Log::info('Withdrawal created successfully', [
-                'withdrawal_id' => $withdrawal->id,
-                'user_id' => $publisher->id,
-                'amount' => $withdrawal->amount
-            ]);
-
+            // Store withdrawal data in session (don't create in DB yet)
+            $withdrawalData = [
+                'amount' => $request->amount,
+                'payment_method_id' => $request->payment_method_id,
+                'publisher_id' => $publisher->id,
+                'created_at' => now()->toISOString()
+            ];
+            
+            // Generate unique session key for this withdrawal request
+            $sessionKey = 'withdrawal_pending_' . $publisher->id . '_' . time();
+            session([$sessionKey => $withdrawalData]);
+            
+            // Generate OTP for this session-based withdrawal
+            $this->twoFactorService->generateWithdrawalOTPForSession($publisher, $sessionKey);
+            
+            $response = [
+                'success' => true,
+                'requires_otp' => true,
+                'withdrawal_session_key' => $sessionKey,
+                'message' => 'Để bảo mật, mọi yêu cầu rút tiền đều cần xác thực OTP. Mã OTP đã được gửi đến email của bạn.'
+            ];
+            
             if ($request->ajax()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Yêu cầu rút tiền đã được gửi thành công',
-                    'data' => $withdrawal
-                ]);
+                return response()->json($response);
             }
 
             return redirect()->route('publisher.withdrawal.index')
-                ->with('success', 'Yêu cầu rút tiền đã được gửi thành công');
+                ->with('info', $response['message']);
                 
         } catch (\Exception $e) {
             Log::error('Withdrawal creation failed', [
@@ -328,6 +392,50 @@ class WithdrawalController extends Controller
         return response()->json([
             'success' => true,
             'data' => $stats
+        ]);
+    }
+
+    /**
+     * Get 2FA info for withdrawal (always mandatory)
+     */
+    public function get2FAInfo()
+    {
+        $publisher = Auth::user();
+        $info = $this->twoFactorService->get2FAInfo($publisher);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $info
+        ]);
+    }
+
+    /**
+     * Resend OTP for withdrawal (session-based)
+     */
+    public function resendOTP(Request $request)
+    {
+        $request->validate([
+            'withdrawal_session_key' => 'required|string'
+        ]);
+
+        $publisher = Auth::user();
+        $sessionKey = $request->withdrawal_session_key;
+        $withdrawalData = session($sessionKey);
+
+        // Check if session data exists and belongs to current user
+        if (!$withdrawalData || $withdrawalData['publisher_id'] !== $publisher->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Phiên rút tiền không hợp lệ hoặc đã hết hạn'
+            ], 400);
+        }
+
+        // Resend OTP
+        $this->twoFactorService->generateWithdrawalOTPForSession($publisher, $sessionKey);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Mã OTP mới đã được gửi đến email của bạn'
         ]);
     }
 }

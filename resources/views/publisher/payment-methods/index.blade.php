@@ -139,10 +139,6 @@
                         <i class="fas fa-credit-card"></i>
                         <h3>Chưa có phương thức thanh toán nào</h3>
                         <p>Thêm phương thức thanh toán để có thể rút tiền</p>
-                        <button class="btn btn-primary" onclick="openPaymentMethodModal()">
-                            <i class="fas fa-plus"></i>
-                            Thêm phương thức đầu tiên
-                        </button>
                     </div>
                 @endforelse
             </div>

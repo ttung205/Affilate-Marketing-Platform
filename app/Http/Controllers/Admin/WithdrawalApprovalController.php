@@ -157,10 +157,18 @@ class WithdrawalApprovalController extends Controller
     {
         $filters = $request->only(['status', 'date_from', 'date_to', 'amount_min', 'amount_max']);
         $withdrawals = $this->publisherService->getWithdrawalsForAdmin($filters);
+        $stats = $this->publisherService->getWithdrawalStats();
         
         return response()->json([
             'success' => true,
-            'data' => $withdrawals
+            'data' => $withdrawals->items(), // Get array from paginated data
+            'pagination' => [
+                'current_page' => $withdrawals->currentPage(),
+                'last_page' => $withdrawals->lastPage(),
+                'per_page' => $withdrawals->perPage(),
+                'total' => $withdrawals->total(),
+            ],
+            'stats' => $stats
         ]);
     }
 

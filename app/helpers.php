@@ -10,6 +10,11 @@ if (!function_exists('get_image_url')) {
             return $fallback ?: asset('images/placeholder.svg');
         }
         
+        // Kiểm tra xem có phải URL từ Google/external không
+        if (str_starts_with($imagePath, 'http')) {
+            return $imagePath;
+        }
+        
         // Kiểm tra xem có phải ảnh mặc định không
         if (str_starts_with($imagePath, 'images/default-')) {
             return asset($imagePath);

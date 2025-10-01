@@ -1,0 +1,15 @@
+/* Override Bootstrap breadcrumb separators */
+.breadcrumb-item::before {
+    content: none !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: none !important;
+}
+
+/* Custom breadcrumb separator if needed */
+.breadcrumb-separator {
+    margin: 0 8px;
+    color: #6c757d;
+    font-size: 14px;
+}

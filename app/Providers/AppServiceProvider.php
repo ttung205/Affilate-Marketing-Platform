@@ -19,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Set remember me duration to 5 years
+        config(['auth.remember_duration' => config('auth.remember_duration', 2628000)]);
     }
 }

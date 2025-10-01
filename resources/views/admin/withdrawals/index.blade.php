@@ -8,7 +8,6 @@
     <div class="withdrawals-header">
         <div class="header-content">
             <h1 class="withdrawals-title">
-                <i class="fas fa-money-bill-wave"></i>
                 Quản lý rút tiền
             </h1>
             <p class="withdrawals-subtitle">Phê duyệt và quản lý yêu cầu rút tiền từ publishers</p>
@@ -379,4 +378,175 @@
 
 @push('scripts')
 <script src="{{ asset('js/admin/withdrawals.js') }}"></script>
+<script>
+// Real-time updates
+window.Echo.private('admin.withdrawals')
+    .listen('.withdrawal.status.updated', (e) => {
+        console.log('Withdrawal status updated:', e);
+        
+        // Update the specific row in table
+        updateWithdrawalRow(e.withdrawal);
+        
+        // Update stats
+        refreshStats();
+        
+        // Show notification
+        showRealtimeNotification(e);
+    });
+
+function updateWithdrawalRow(withdrawal) {
+    const row = document.querySelector(`tr[data-withdrawal-id="${withdrawal.id}"]`);
+    if (row) {
+        // Update status badge
+        const statusBadge = row.querySelector('.status-badge');
+        if (statusBadge) {
+            statusBadge.className = `status-badge status-${withdrawal.status}`;
+            statusBadge.textContent = getStatusLabel(withdrawal.status);
+        }
+        
+        // Update action buttons
+        const actionButtons = row.querySelector('.action-buttons');
+        if (actionButtons) {
+            actionButtons.innerHTML = generateActionButtons(withdrawal);
+        }
+        
+        // Add highlight effect
+        row.classList.add('updated-row');
+        setTimeout(() => {
+            row.classList.remove('updated-row');
+        }, 3000);
+    }
+}
+
+function refreshStats() {
+    if (window.adminWithdrawalsManager) {
+        window.adminWithdrawalsManager.loadStats();
+    }
+}
+
+function showRealtimeNotification(event) {
+    const withdrawal = event.withdrawal;
+    const message = `Yêu cầu rút tiền #${withdrawal.id} đã được cập nhật thành "${getStatusLabel(withdrawal.status)}"`;
+    
+    // Create notification
+    const notification = document.createElement('div');
+    notification.className = 'realtime-notification';
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-bell"></i>
+            <span>${message}</span>
+            <button class="close-notification" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+function getStatusLabel(status) {
+    const labels = {
+        'pending_otp': 'Chờ OTP',
+        'pending': 'Chờ duyệt',
+        'approved': 'Đã duyệt',
+        'processing': 'Đang xử lý',
+        'completed': 'Hoàn thành',
+        'rejected': 'Từ chối',
+        'cancelled': 'Đã hủy'
+    };
+    return labels[status] || status;
+}
+
+function generateActionButtons(withdrawal) {
+    let buttons = `
+        <button class="btn btn-sm btn-outline-primary" 
+                onclick="adminWithdrawalsManager.viewWithdrawal(${withdrawal.id})"
+                title="Xem chi tiết">
+            <i class="fas fa-eye"></i>
+        </button>
+    `;
+    
+    if (withdrawal.status === 'pending') {
+        buttons += `
+            <button class="btn btn-sm btn-success" 
+                    onclick="adminWithdrawalsManager.approveWithdrawal(${withdrawal.id})"
+                    title="Duyệt">
+                <i class="fas fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" 
+                    onclick="adminWithdrawalsManager.rejectWithdrawal(${withdrawal.id})"
+                    title="Từ chối">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+    } else if (withdrawal.status === 'approved') {
+        buttons += `
+            <button class="btn btn-sm btn-primary" 
+                    onclick="adminWithdrawalsManager.completeWithdrawal(${withdrawal.id})"
+                    title="Hoàn thành">
+                <i class="fas fa-check-double"></i>
+            </button>
+        `;
+    }
+    
+    return buttons;
+}
+</script>
+
+<style>
+.updated-row {
+    background-color: #fef3cd !important;
+    animation: highlight 3s ease-out;
+}
+
+@keyframes highlight {
+    0% { background-color: #fef3cd; }
+    100% { background-color: transparent; }
+}
+
+.realtime-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 9999;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-notification {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: auto;
+}
+
+.close-notification:hover {
+    opacity: 0.7;
+}
+</style>
 @endpush

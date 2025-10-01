@@ -478,52 +478,32 @@ class PublisherService
      * ========================================
      */
 
+
+
     /**
-     * Tạo yêu cầu rút tiền
+     * Create withdrawal after OTP verification (from session data)
      */
     public function createWithdrawal(User $publisher, array $data): Withdrawal
     {
-        Log::info('Creating withdrawal in PublisherService', [
-            'publisher_id' => $publisher->id,
-            'amount' => $data['amount'],
-            'payment_method_id' => $data['payment_method_id']
-        ]);
-
         // Validate withdrawal
         $validation = $this->canWithdraw($publisher, $data['amount']);
-        Log::info('Withdrawal validation result', [
-            'publisher_id' => $publisher->id,
-            'can_withdraw' => $validation['can_withdraw'],
-            'errors' => $validation['errors'] ?? []
-        ]);
-        
         if (!$validation['can_withdraw']) {
-            Log::error('Withdrawal validation failed', [
-                'publisher_id' => $publisher->id,
-                'errors' => $validation['errors']
-            ]);
             throw new \Exception(implode(', ', $validation['errors']));
         }
 
         $paymentMethod = PaymentMethod::findOrFail($data['payment_method_id']);
-        Log::info('Payment method found', [
-            'payment_method_id' => $paymentMethod->id,
-            'type' => $paymentMethod->type,
-            'publisher_id' => $paymentMethod->publisher_id
-        ]);
         
         // Tính phí
-        $fee = $paymentMethod->calculateFee($data['amount']);
-        $netAmount = $data['amount'] - $fee;
-        
-        Log::info('Withdrawal fee calculated', [
-            'amount' => $data['amount'],
-            'fee' => $fee,
-            'net_amount' => $netAmount
-        ]);
+        $fee = $paymentMethod->calculateFee((float) $data['amount']);
+        $netAmount = (float) $data['amount'] - $fee;
 
         return DB::transaction(function () use ($publisher, $data, $paymentMethod, $fee, $netAmount) {
-            // Tạo withdrawal record
+            // Trừ tiền từ ví
+            $wallet = $publisher->getOrCreateWallet();
+            $wallet->balance -= (float) $data['amount'];
+            $wallet->save();
+
+            // Tạo withdrawal record với status pending (chờ admin duyệt)
             $withdrawal = Withdrawal::create([
                 'publisher_id' => $publisher->id,
                 'payment_method_id' => $paymentMethod->id,
@@ -545,25 +525,17 @@ class PublisherService
             Transaction::create([
                 'publisher_id' => $publisher->id,
                 'type' => 'withdrawal',
-                'amount' => $data['amount'],
-                'status' => 'pending',
-                'description' => "Rút tiền qua {$paymentMethod->type_label}",
-                'reference_type' => 'withdrawal',
+                'amount' => -(float) $data['amount'],
+                'description' => "Rút tiền #{$withdrawal->id}",
                 'reference_id' => $withdrawal->id,
-                'metadata' => [
-                    'fee' => $fee,
-                    'net_amount' => $netAmount,
-                    'payment_method' => $paymentMethod->type,
-                ],
+                'reference_type' => 'withdrawal',
             ]);
 
-            // Cập nhật wallet balance
-            $publisher->getOrCreateWallet()->deductBalance($data['amount']);
+            // Gửi thông báo cho admin
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new WithdrawalRequestNotification($withdrawal));
 
-            // Gửi thông báo
-            $this->sendWithdrawalRequestNotification($withdrawal);
-
-            Log::info("Withdrawal request created", [
+            Log::info("Withdrawal created successfully after OTP verification", [
                 'withdrawal_id' => $withdrawal->id,
                 'publisher_id' => $publisher->id,
                 'amount' => $data['amount'],
@@ -572,6 +544,7 @@ class PublisherService
             return $withdrawal;
         });
     }
+
 
     /**
      * Phê duyệt yêu cầu rút tiền
@@ -789,6 +762,12 @@ class PublisherService
         $thisMonth = now()->startOfMonth();
 
         return [
+            'pending_count' => Withdrawal::where('status', 'pending')->count(),
+            'approved_count' => Withdrawal::where('status', 'approved')->count(),
+            'completed_count' => Withdrawal::where('status', 'completed')->count(),
+            'rejected_count' => Withdrawal::where('status', 'rejected')->count(),
+            'total_amount' => Withdrawal::sum('amount'),
+            'pending_amount' => Withdrawal::where('status', 'pending')->sum('amount'),
             'today' => [
                 'count' => Withdrawal::whereDate('created_at', $today)->count(),
                 'amount' => Withdrawal::whereDate('created_at', $today)->sum('amount'),
@@ -796,14 +775,6 @@ class PublisherService
             'this_month' => [
                 'count' => Withdrawal::where('created_at', '>=', $thisMonth)->count(),
                 'amount' => Withdrawal::where('created_at', '>=', $thisMonth)->sum('amount'),
-            ],
-            'pending' => [
-                'count' => Withdrawal::where('status', 'pending')->count(),
-                'amount' => Withdrawal::where('status', 'pending')->sum('amount'),
-            ],
-            'total' => [
-                'count' => Withdrawal::count(),
-                'amount' => Withdrawal::sum('amount'),
             ],
         ];
     }

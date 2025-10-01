@@ -3,6 +3,58 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Modal Centering for All Modals */
+.modal.show {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show .modal-dialog {
+    margin: 1rem !important;
+    width: 600px !important;
+    max-width: 95vw !important;
+    min-height: 400px;
+    max-height: 90vh;
+}
+
+.modal-content {
+    height: 100%;
+    min-height: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 2rem;
+    font-size: 1rem;
+}
+
+.modal-footer {
+    flex-shrink: 0;
+    padding: 1.5rem;
+}
+
+/* Form elements in modals */
+.modal .form-control,
+.modal .form-select {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    min-height: 45px;
+}
+
+.modal .btn {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    min-height: 45px;
+}
+
 .payment-methods-container {
     padding: 2rem;
     max-width: 1800px;

@@ -37,7 +37,11 @@
                 <div class="publisher-profile-avatar-section">
                     <div class="publisher-profile-avatar-preview">
                         @if($user->avatar)
-                            <img src="{{ Storage::url($user->avatar) }}" alt="Avatar" id="avatarPreview" class="publisher-profile-avatar-image">
+                            @if(str_starts_with($user->avatar, 'http'))
+                                <img src="{{ $user->avatar }}" alt="Avatar" id="avatarPreview" class="publisher-profile-avatar-image">
+                            @else
+                                <img src="{{ Storage::url($user->avatar) }}" alt="Avatar" id="avatarPreview" class="publisher-profile-avatar-image">
+                            @endif
                         @else
                             <div class="publisher-profile-avatar-placeholder" id="avatarPreview">
                                 <i class="fas fa-user"></i>

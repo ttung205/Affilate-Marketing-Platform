@@ -16,6 +16,20 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\ChatbotController;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        // Redirect to appropriate dashboard based on role
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'publisher':
+                return redirect()->route('publisher.dashboard');
+            case 'shop':
+                return redirect()->route('shop.dashboard');
+            default:
+                return redirect()->route('dashboard');
+        }
+    }
     return view('home');
 })->name('home');
 
@@ -33,13 +47,28 @@ Route::get('auth/google/registration', [GoogleRegistrationController::class, 'sh
 Route::post('auth/google/registration', [GoogleRegistrationController::class, 'completeRegistration'])->name('google.registration.post');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+    // Redirect to appropriate dashboard based on role
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'publisher':
+            return redirect()->route('publisher.dashboard');
+        case 'shop':
+            return redirect()->route('shop.dashboard');
+        default:
+            // If role doesn't match, redirect to home
+            return redirect()->route('home');
+    }
 })->middleware('auth')->name('dashboard');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Chatbot demo route
-Route::post('/chat/send', [ChatbotController::class, 'send'])->name('chat.send');
+Route::get('/chatbot/demo', function () {
+    return view('chatbot.demo');
+})->name('chatbot.demo');
+
 
 // Affiliate tracking routes
 Route::get('/track/{trackingCode}', [TrackingController::class, 'redirectByTrackingCode'])->name('tracking.track');
@@ -115,12 +144,36 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
 
     // Withdrawal routes
     Route::resource('withdrawal', App\Http\Controllers\Publisher\WithdrawalController::class);
+    
+        // Wallet routes
+        Route::get('/wallet', [App\Http\Controllers\Publisher\WalletController::class, 'index'])->name('wallet.index');
+        Route::get('/wallet/data', [App\Http\Controllers\Publisher\WalletController::class, 'getWalletData'])->name('wallet.data');
+        Route::post('/wallet/sync', [App\Http\Controllers\Publisher\WalletController::class, 'syncWallet'])->name('wallet.sync');
+        Route::post('/wallet/check-withdrawal', [App\Http\Controllers\Publisher\WalletController::class, 'checkWithdrawal'])->name('wallet.check-withdrawal');
+        Route::get('/wallet/stats', [App\Http\Controllers\Publisher\WalletController::class, 'getStats'])->name('wallet.stats');
+        Route::get('/wallet/transactions', [App\Http\Controllers\Publisher\WalletController::class, 'getTransactions'])->name('wallet.transactions');
+        Route::get('/wallet/earnings-chart', [App\Http\Controllers\Publisher\WalletController::class, 'getEarningsChart'])->name('wallet.earnings-chart');
+    
+    // Withdrawal routes - rate limiting applied in controller for successful withdrawals only
+    Route::post('/withdrawal', [App\Http\Controllers\Publisher\WithdrawalController::class, 'store'])->name('withdrawal.store');
+    
+    // OTP resend with separate rate limiting
+    Route::middleware(['throttle:withdrawal-otp'])->group(function () {
+        Route::post('/withdrawal/otp/resend', [App\Http\Controllers\Publisher\WithdrawalController::class, 'resendOTP'])->name('withdrawal.otp.resend');
+    });
+    
+    Route::resource('withdrawal', App\Http\Controllers\Publisher\WithdrawalController::class)->except(['store']);
     Route::post('/withdrawal/{withdrawal}/cancel', [App\Http\Controllers\Publisher\WithdrawalController::class, 'cancel'])->name('withdrawal.cancel');
     Route::get('/withdrawal/api/list', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getWithdrawals'])->name('withdrawal.api.list');
     Route::get('/withdrawal/api/{withdrawal}', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getWithdrawal'])->name('withdrawal.api.show');
+    Route::get('/withdrawal/api/stats', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getStats'])->name('withdrawal.api.stats');
     Route::post('/withdrawal/api/calculate-fee', [App\Http\Controllers\Publisher\WithdrawalController::class, 'calculateFee'])->name('withdrawal.api.calculate-fee');
     Route::get('/withdrawal/api/stats', [App\Http\Controllers\Publisher\WithdrawalController::class, 'getStats'])->name('withdrawal.api.stats');
 
+    
+    // 2FA routes (mandatory for withdrawals)
+    Route::get('/withdrawal/2fa/info', [App\Http\Controllers\Publisher\WithdrawalController::class, 'get2FAInfo'])->name('withdrawal.2fa.info');
+    
     // Payment Methods routes
     Route::resource('payment-methods', App\Http\Controllers\Publisher\PaymentMethodController::class);
     Route::post('/payment-methods/{paymentMethod}/set-default', [App\Http\Controllers\Publisher\PaymentMethodController::class, 'setDefault'])->name('payment-methods.set-default');

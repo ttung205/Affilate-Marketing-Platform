@@ -17,6 +17,7 @@
     <!-- Dashboard CSS chung -->
     <link rel="stylesheet" href="{{ asset('css/dashboard/sidebar.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dashboard/header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/breadcrumb-override.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
     
