@@ -202,16 +202,16 @@
 }
 
 .chatbot-message-bot .chatbot-message-avatar {
-    background: #f3f4f6;
+    background: #4c82f0;
 }
 
 .chatbot-message-bot .chatbot-message-bubble {
-    background: #3b82f6;
-    color: white;
+    background: RGB(173, 191, 196);
+    color: black;
 }
 
 .chatbot-message-user .chatbot-message-avatar {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    background: linear-gradient(135deg, #a47ef0, #162243);
     color: white;
 }
 
@@ -229,8 +229,8 @@
 }
 
 .chatbot-message-user .chatbot-message-bubble {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
+    background: RGB(202, 188, 186);
+    color: black;
 }
 
 .chatbot-message-bubble p {

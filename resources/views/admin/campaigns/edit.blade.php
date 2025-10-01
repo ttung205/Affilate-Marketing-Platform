@@ -10,13 +10,13 @@
             <h1 class="campaigns-title">Chỉnh sửa Campaign</h1>
             <nav class="campaigns-breadcrumb">
                 <a href="{{ route('admin.dashboard') }}">Admin</a>
-                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                <i class="fa-solid fa-chevron-right breadcrumb-arrow"></i>
                 <span class="breadcrumb-current">Quản lý Affiliate</span>
-                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                <i class="fa-solid fa-chevron-right breadcrumb-arrow"></i>
                 <a href="{{ route('admin.campaigns.index') }}">Campaigns</a>
-                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                <i class="fa-solid fa-chevron-right breadcrumb-arrow"></i>
                 <span class="breadcrumb-current">{{ $campaign->name }}</span>
-            </nav>
+            </nav>            
         </div>
         <div class="campaigns-header-right">
             <a href="{{ route('admin.campaigns.index') }}" class="campaigns-btn campaigns-btn-secondary">

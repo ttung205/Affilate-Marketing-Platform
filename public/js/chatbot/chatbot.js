@@ -253,12 +253,41 @@ class AffiliateChatbot {
     }
 
     processMessage(message) {
-        const response = this.getResponseForMessage(message.toLowerCase());
-        this.addBotMessage(response);
+        // Gọi API Laravel thay vì sử dụng response mặc định
+        this.callGeminiAPI(message);
         
         // Update message count and badge
         this.messageCount++;
         this.showBadge();
+    }
+
+    callGeminiAPI(message) {
+        // Lấy CSRF token từ meta
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+        
+        if (!csrfToken) {
+            this.addBotMessage("⚠️ Lỗi: Không tìm thấy CSRF token");
+            return;
+        }
+
+        // Gửi request đến Laravel API
+        fetch("/chat/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": csrfToken,
+            },
+            body: JSON.stringify({ message: message }),
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            // Hiển thị tin nhắn bot từ Gemini
+            this.addBotMessage(data.bot);
+        })
+        .catch((err) => {
+            console.error("Chatbot API error:", err);
+            this.addBotMessage("⚠️ Lỗi kết nối API. Vui lòng thử lại sau.");
+        });
     }
 
     getResponseForMessage(message) {
@@ -420,3 +449,9 @@ if (window.userRole === 'guest' && !localStorage.getItem('chatbot_shown')) {
         localStorage.setItem('chatbot_shown', 'true');
     }, 3000);
 }
+
+// Phần logic trùng lặp đã được tích hợp vào class AffiliateChatbot
+
+
+
+

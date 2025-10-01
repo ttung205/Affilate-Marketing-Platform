@@ -16,7 +16,7 @@
 
 <body>
     <!-- Header -->
-    <header class="header">
+    <header class="header"></header>
         <nav class="navbar">
             <div class="nav-brand" data-aos="fade-right">
                 <i class="fas fa-chart-line"></i>

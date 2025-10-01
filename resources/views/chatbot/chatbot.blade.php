@@ -88,4 +88,12 @@
     // Pass user role to JavaScript
     window.userRole = '{{ Auth::user()->role ?? "guest" }}';
     window.userName = '{{ Auth::user()->name ?? "Khách" }}';
+
+    // Add CSRF token to head if not exists
+    if (!document.querySelector('meta[name="csrf-token"]')) {
+        const meta = document.createElement('meta');
+        meta.name = 'csrf-token';
+        meta.content = '{{ csrf_token() }}';
+        document.head.appendChild(meta);
+    }
 </script>
