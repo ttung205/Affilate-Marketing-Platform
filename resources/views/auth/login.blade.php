@@ -84,7 +84,7 @@
 
                     <div class="form-options">
                         <label class="checkbox-wrapper">
-                            <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                            <input type="checkbox" name="remember" id="remember" {{ old('remember', true) ? 'checked' : '' }}>
                             <span class="checkmark"></span>
                             <span class="checkbox-label">Ghi nhớ đăng nhập</span>
                         </label>

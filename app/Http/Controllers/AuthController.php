@@ -21,23 +21,29 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
+        $credentials = $request->only('email', 'password');
+        $remember = $request->boolean('remember', true); // Default to true for persistent session
+
+        if (Auth::attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            
+            $user = Auth::user();
             //Chuyển hướng theo từng role
             switch ($user->role) {
                 case 'admin':
-                    return redirect()->route('admin.dashboard');
+                    return redirect()->intended(route('admin.dashboard'));
                 case 'publisher':
-                    return redirect()->route('publisher.dashboard');
+                    return redirect()->intended(route('publisher.dashboard'));
                 case 'shop':
-                    return redirect()->route('shop.dashboard');
+                    return redirect()->intended(route('shop.dashboard'));
                 default:
+                    return redirect()->intended(route('home'));
             }
         }
+
         return back()->withErrors([
-            'email' => 'Email hoac mat khau khong dung',
-        ]);
+            'email' => 'Email hoặc mật khẩu không đúng',
+        ])->withInput($request->except('password'));
     }
 
 
@@ -61,7 +67,9 @@ class AuthController extends Controller
             'role' => $request->role ?? 'publisher',
         ]);
 
-        Auth::login($user);
+        // Auto login with remember me enabled
+        Auth::login($user, true);
+        $request->session()->regenerate();
 
         //Chuyển hướng theo từng role
         switch ($user->role) {
@@ -72,12 +80,17 @@ class AuthController extends Controller
             case 'shop':
                 return redirect()->route('shop.dashboard');
             default:
+                return redirect()->route('home');
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/');
+        
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect()->route('home');
     }
 }

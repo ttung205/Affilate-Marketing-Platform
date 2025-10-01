@@ -15,6 +15,20 @@ use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\TrackingController;
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        // Redirect to appropriate dashboard based on role
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'publisher':
+                return redirect()->route('publisher.dashboard');
+            case 'shop':
+                return redirect()->route('shop.dashboard');
+            default:
+                return redirect()->route('dashboard');
+        }
+    }
     return view('home');
 })->name('home');
 
@@ -32,7 +46,19 @@ Route::get('auth/google/registration', [GoogleRegistrationController::class, 'sh
 Route::post('auth/google/registration', [GoogleRegistrationController::class, 'completeRegistration'])->name('google.registration.post');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+    // Redirect to appropriate dashboard based on role
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'publisher':
+            return redirect()->route('publisher.dashboard');
+        case 'shop':
+            return redirect()->route('shop.dashboard');
+        default:
+            // If role doesn't match, redirect to home
+            return redirect()->route('home');
+    }
 })->middleware('auth')->name('dashboard');
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
