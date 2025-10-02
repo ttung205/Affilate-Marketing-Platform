@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+@extends('components.dashboard.layout')
 
 @section('title', 'Quản lý rút tiền')
 
