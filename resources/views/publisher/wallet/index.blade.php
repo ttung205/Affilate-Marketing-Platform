@@ -14,15 +14,6 @@
         </div>
     </div>
 
-    <!-- Sync Wallet Button -->
-    <div class="sync-wallet-section">
-        <button class="btn btn-outline-primary" onclick="syncWallet()" id="sync-wallet-btn">
-            <i class="fas fa-sync-alt"></i>
-            Đồng bộ số dư
-        </button>
-        <small class="text-muted">Đồng bộ số dư từ giao dịch hoa hồng</small>
-    </div>
-
     <!-- Wallet Stats Cards -->
     <div class="wallet-stats">
         <div class="stat-card available-balance">
