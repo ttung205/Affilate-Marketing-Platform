@@ -210,7 +210,7 @@ class AffiliateChatbot {
             ${avatar}
             <div class="chatbot-message-content">
                 <div class="chatbot-message-bubble">
-                    <p>${this.escapeHtml(message)}</p>
+                    <p>${type === 'bot' ? this.formatBotMessage(message) : this.escapeHtml(message)}</p>
                     <div class="chatbot-message-time">${time}</div>
                 </div>
             </div>
@@ -433,6 +433,44 @@ class AffiliateChatbot {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+
+    formatBotMessage(message) {
+        // Chuyển đổi các ký tự đặc biệt thành HTML entities trước
+        let formatted = this.escapeHtml(message);
+        
+        // Hỗ trợ basic markdown formatting
+        formatted = formatted
+            // Bold text: **text** hoặc __text__
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/__(.*?)__/g, '<strong>$1</strong>')
+            
+            // Italic text: *text* hoặc _text_
+            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+            .replace(/_(.*?)_/g, '<em>$1</em>')
+            
+            // Code: `code`
+            .replace(/`(.*?)`/g, '<code>$1</code>')
+            
+            // Line breaks: \n
+            .replace(/\n/g, '<br>')
+            
+            // Emoji enhancement
+            .replace(/:\)/g, '😊')
+            .replace(/:\(/g, '😢')
+            .replace(/:D/g, '😄')
+            .replace(/:\|/g, '😐')
+            .replace(/<3/g, '❤️')
+            
+            // Highlight important info với emoji
+            .replace(/⚠️/g, '<span class="emoji">⚠️</span>')
+            .replace(/✅/g, '<span class="emoji">✅</span>')
+            .replace(/❌/g, '<span class="emoji">❌</span>')
+            .replace(/💰/g, '<span class="emoji">💰</span>')
+            .replace(/🔗/g, '<span class="emoji">🔗</span>')
+            .replace(/📊/g, '<span class="emoji">📊</span>');
+        
+        return formatted;
     }
 }
 

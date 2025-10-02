@@ -408,6 +408,59 @@
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
+/* Custom text formatting for bot messages */
+.chatbot-message-bot .chatbot-message-bubble {
+    /* Hỗ trợ markdown-style formatting */
+}
+
+.chatbot-message-bot .chatbot-message-bubble strong,
+.chatbot-message-bot .chatbot-message-bubble b {
+    font-weight: 600;
+    color: #0d47a1;
+}
+
+.chatbot-message-bot .chatbot-message-bubble em,
+.chatbot-message-bot .chatbot-message-bubble i {
+    font-style: italic;
+    color: #1976d2;
+}
+
+.chatbot-message-bot .chatbot-message-bubble code {
+    background: rgba(33, 150, 243, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    color: #0d47a1;
+}
+
+.chatbot-message-bot .chatbot-message-bubble ul,
+.chatbot-message-bot .chatbot-message-bubble ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.chatbot-message-bot .chatbot-message-bubble li {
+    margin: 4px 0;
+    line-height: 1.5;
+}
+
+.chatbot-message-bot .chatbot-message-bubble a {
+    color: #1976d2;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.chatbot-message-bot .chatbot-message-bubble a:hover {
+    color: #0d47a1;
+}
+
+/* Emoji và icon styling */
+.chatbot-message-bot .chatbot-message-bubble .emoji {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
 /* Responsive Design */
 @media (max-width: 480px) {
     .chatbot-widget {
