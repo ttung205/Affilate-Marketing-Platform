@@ -73,43 +73,6 @@
                 </li>
             </ul>
         </li>
-        
-        <!-- Báo cáo & Analytics -->
-        <li class="sidebar-menu-item {{ request()->routeIs('publisher.reports.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
-                <i class="fas fa-chart-bar"></i>
-                <span>Báo cáo</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
-            </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('publisher.reports.performance') ? 'active' : '' }}">
-                    <a href="{{ route('publisher.reports.performance') }}">
-                        <i class="fas fa-chart-line"></i>
-                        Hiệu suất
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('publisher.reports.commissions') ? 'active' : '' }}">
-                    <a href="{{ route('publisher.reports.commissions') }}">
-                        <i class="fas fa-dollar-sign"></i>
-                        Hoa hồng
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('publisher.reports.clicks') ? 'active' : '' }}">
-                    <a href="{{ route('publisher.reports.clicks') }}">
-                        <i class="fas fa-mouse-pointer"></i>
-                        Lượt click
-                    </a>
-                </li>
-            </ul>
-        </li>
-        
-        <!-- Cài đặt -->
-        <li class="{{ request()->routeIs('publisher.settings.*') ? 'active' : '' }}">
-            <a href="{{ route('publisher.settings.index') }}">
-                <i class="fas fa-cog"></i>
-                Cài đặt
-            </a>
-        </li>
     </ul>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>

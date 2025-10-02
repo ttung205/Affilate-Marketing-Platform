@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="{{ asset('css/shop/header.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shop/profile.css') }}">
     <link rel="stylesheet" href="{{ asset('css/notifications/modal.css') }}">
+    <!-- Chatbot CSS -->
+    <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
     
     @stack('styles')
 </head>
@@ -46,6 +48,9 @@
         </div>
     </div>
     
+    <!-- Chatbot Widget -->
+    @include('chatbot.chatbot')
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -59,6 +64,8 @@
         window.userId = {{ Auth::id() }};
     </script>
     <script src="{{ asset('js/notifications/realtime.js') }}"></script>
+    <!-- Chatbot JS -->
+    <script src="{{ asset('js/chatbot/chatbot.js') }}"></script>
     
     @stack('scripts')
 </body>
