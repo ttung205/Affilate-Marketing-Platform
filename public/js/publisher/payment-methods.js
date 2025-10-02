@@ -172,39 +172,26 @@ class PaymentMethodManager {
                 if (e.target.value === 'bank_transfer') {
                     bankNameField.style.display = 'block';
                     bankDetailsFields.style.display = 'block';
-                    this.loadBanks();
+                    // Reset dropdown when switching to bank transfer
+                    if (window.bankDropdown) {
+                        window.bankDropdown.reset();
+                    }
                 } else {
                     bankNameField.style.display = 'none';
                     bankDetailsFields.style.display = 'none';
+                    // Clear bank fields when not using bank transfer
+                    if (window.bankDropdown) {
+                        window.bankDropdown.reset();
+                    }
+                    const bankCodeInput = document.getElementById('bankCode');
+                    if (bankCodeInput) {
+                        bankCodeInput.value = '';
+                    }
                 }
             });
         }
     }
 
-    async loadBanks() {
-        try {
-            const response = await fetch('/publisher/payment-methods/api/banks');
-            const data = await response.json();
-
-            if (data.success) {
-                const bankSelect = document.getElementById('bankName');
-                if (bankSelect) {
-                    bankSelect.innerHTML = '<option value="">Chọn ngân hàng</option>' +
-                        data.banks.map(bank => `<option value="${bank.name}" data-code="${bank.code}">${bank.name}</option>`).join('');
-                    
-                    // Add event listener for bank selection
-                    bankSelect.addEventListener('change', (e) => {
-                        const selectedOption = e.target.selectedOptions[0];
-                        if (selectedOption) {
-                            document.getElementById('bankCode').value = selectedOption.dataset.code || '';
-                        }
-                    });
-                }
-            }
-        } catch (error) {
-            console.error('Error loading banks:', error);
-        }
-    }
 
     resetPaymentMethodForm() {
         const form = document.getElementById('paymentMethodForm');
@@ -306,3 +293,232 @@ function refreshList() {
 }
 
 // Function savePaymentMethod đã được thay thế bằng form submit tự động
+
+// Custom Dropdown with Search functionality
+class CustomDropdown {
+    constructor(dropdownId) {
+        this.dropdown = document.getElementById(dropdownId);
+        if (!this.dropdown) return;
+        
+        this.trigger = this.dropdown.querySelector('.dropdown-trigger');
+        this.search = this.dropdown.querySelector('.dropdown-search');
+        this.panel = this.dropdown.querySelector('.dropdown-panel');
+        this.items = this.dropdown.querySelector('.dropdown-items');
+        this.hiddenInput = this.dropdown.querySelector('input[type="hidden"]');
+        this.arrow = this.dropdown.querySelector('.dropdown-arrow');
+        
+        this.allItems = Array.from(this.items.querySelectorAll('.dropdown-item'));
+        this.filteredItems = [...this.allItems];
+        this.selectedIndex = -1;
+        this.isOpen = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.bindEvents();
+    }
+    
+    bindEvents() {
+        // Click on trigger to toggle dropdown
+        this.trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggle();
+        });
+        
+        // Search input
+        this.search.addEventListener('input', (e) => {
+            this.filterItems(e.target.value);
+        });
+        
+        // Keyboard navigation
+        this.search.addEventListener('keydown', (e) => {
+            this.handleKeydown(e);
+        });
+        
+        // Click on items
+        this.items.addEventListener('click', (e) => {
+            const item = e.target.closest('.dropdown-item');
+            if (item) {
+                this.selectItem(item);
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!this.dropdown.contains(e.target)) {
+                this.close();
+            }
+        });
+        
+        // Prevent form submission on Enter in search
+        this.search.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+    
+    toggle() {
+        if (this.isOpen) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+    
+    open() {
+        this.isOpen = true;
+        this.dropdown.classList.add('active');
+        this.search.focus();
+        this.selectedIndex = -1;
+        this.updateHighlight();
+    }
+    
+    close() {
+        this.isOpen = false;
+        this.dropdown.classList.remove('active');
+        this.selectedIndex = -1;
+        this.updateHighlight();
+    }
+    
+    filterItems(searchTerm) {
+        const term = searchTerm.toLowerCase().trim();
+        
+        this.filteredItems = this.allItems.filter(item => {
+            const text = item.textContent.toLowerCase();
+            const match = text.includes(term);
+            item.style.display = match ? 'block' : 'none';
+            return match;
+        });
+        
+        // Show no results message if needed
+        this.showNoResults(this.filteredItems.length === 0 && term !== '');
+        
+        // Reset selection
+        this.selectedIndex = -1;
+        this.updateHighlight();
+    }
+    
+    showNoResults(show) {
+        let noResultsEl = this.items.querySelector('.dropdown-no-results');
+        
+        if (show) {
+            if (!noResultsEl) {
+                noResultsEl = document.createElement('div');
+                noResultsEl.className = 'dropdown-no-results';
+                noResultsEl.textContent = 'Không tìm thấy ngân hàng nào';
+                this.items.appendChild(noResultsEl);
+            }
+            noResultsEl.style.display = 'block';
+        } else if (noResultsEl) {
+            noResultsEl.style.display = 'none';
+        }
+    }
+    
+    handleKeydown(e) {
+        if (!this.isOpen) return;
+        
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                this.selectedIndex = Math.min(this.selectedIndex + 1, this.filteredItems.length - 1);
+                this.updateHighlight();
+                this.scrollToSelected();
+                break;
+                
+            case 'ArrowUp':
+                e.preventDefault();
+                this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+                this.updateHighlight();
+                this.scrollToSelected();
+                break;
+                
+            case 'Enter':
+                e.preventDefault();
+                if (this.selectedIndex >= 0 && this.filteredItems[this.selectedIndex]) {
+                    this.selectItem(this.filteredItems[this.selectedIndex]);
+                }
+                break;
+                
+            case 'Escape':
+                e.preventDefault();
+                this.close();
+                break;
+        }
+    }
+    
+    updateHighlight() {
+        // Remove all highlights
+        this.allItems.forEach(item => {
+            item.classList.remove('highlighted');
+        });
+        
+        // Add highlight to selected item
+        if (this.selectedIndex >= 0 && this.filteredItems[this.selectedIndex]) {
+            this.filteredItems[this.selectedIndex].classList.add('highlighted');
+        }
+    }
+    
+    scrollToSelected() {
+        if (this.selectedIndex >= 0 && this.filteredItems[this.selectedIndex]) {
+            const item = this.filteredItems[this.selectedIndex];
+            const container = this.items;
+            const itemTop = item.offsetTop;
+            const itemBottom = itemTop + item.offsetHeight;
+            const containerTop = container.scrollTop;
+            const containerBottom = containerTop + container.offsetHeight;
+            
+            if (itemTop < containerTop) {
+                container.scrollTop = itemTop;
+            } else if (itemBottom > containerBottom) {
+                container.scrollTop = itemBottom - container.offsetHeight;
+            }
+        }
+    }
+    
+    selectItem(item) {
+        // Remove previous selection
+        this.allItems.forEach(i => i.classList.remove('selected'));
+        
+        // Add selection to clicked item
+        item.classList.add('selected');
+        
+        // Update search input and hidden input
+        const bankName = item.dataset.value;
+        const bankCode = item.dataset.code;
+        
+        this.search.value = bankName;
+        this.hiddenInput.value = bankName;
+        
+        // Update bank code field if exists
+        const bankCodeInput = document.getElementById('bankCode');
+        if (bankCodeInput) {
+            bankCodeInput.value = bankCode;
+        }
+        
+        // Close dropdown
+        this.close();
+        
+        // Trigger change event for form validation
+        this.hiddenInput.dispatchEvent(new Event('change'));
+    }
+    
+    reset() {
+        this.search.value = '';
+        this.hiddenInput.value = '';
+        this.allItems.forEach(item => {
+            item.classList.remove('selected');
+            item.style.display = 'block';
+        });
+        this.filteredItems = [...this.allItems];
+        this.showNoResults(false);
+        this.close();
+    }
+}
+
+// Initialize custom dropdown when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize bank dropdown
+    window.bankDropdown = new CustomDropdown('bankDropdown');
+});

@@ -37,7 +37,6 @@
         <div class="payment-methods-header">
             <div class="header-content">
                 <h1 class="payment-methods-title">
-                    <i class="fas fa-credit-card"></i>
                     Phương thức thanh toán
                 </h1>
                 <p class="payment-methods-subtitle">Quản lý các phương thức nhận tiền của bạn</p>
@@ -191,14 +190,28 @@
                             <div class="col-md-6" id="bankNameField" style="display: none;">
                                 <div class="mb-3">
                                     <label class="form-label">Ngân hàng</label>
-                                    <select class="form-select" id="bankName" name="bank_name">
-                                        <option value="">Chọn ngân hàng</option>
-                                        @foreach($supportedBanks as $bank)
-                                            <option value="{{ $bank['name'] }}" data-code="{{ $bank['code'] }}">
-                                                {{ $bank['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <div class="custom-dropdown" id="bankDropdown">
+                                        <div class="dropdown-trigger" id="bankDropdownTrigger">
+                                            <input type="text" 
+                                                   class="form-control dropdown-search" 
+                                                   id="bankSearch" 
+                                                   placeholder="Tìm kiếm ngân hàng..."
+                                                   autocomplete="off">
+                                            <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                        </div>
+                                        <div class="dropdown-panel" id="bankDropdownPanel">
+                                            <div class="dropdown-items" id="bankDropdownItems">
+                                                @foreach($supportedBanks as $bank)
+                                                    <div class="dropdown-item" 
+                                                         data-value="{{ $bank['name'] }}" 
+                                                         data-code="{{ $bank['code'] }}">
+                                                        <span class="bank-name">{{ $bank['name'] }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="bankName" name="bank_name" value="">
+                                    </div>
                                 </div>
                             </div>
                         </div>

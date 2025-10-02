@@ -91,31 +91,26 @@ body{
 }
 
 .wallet-actions .btn-primary {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #64748b;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: 1px solid white;
+    color: white;
 }
 
 .wallet-actions .btn-primary:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     transform: translateY(-1px);
 }
 
 .wallet-actions .btn-outline-primary {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #64748b;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: 1px solid white;
+    color: white;
 }
 
 .wallet-actions .btn-outline-primary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-color: white;
     transform: translateY(-1px);
-}
-
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .stat-icon {

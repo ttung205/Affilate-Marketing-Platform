@@ -8,7 +8,6 @@
     <div class="wallet-header">
         <div class="header-content">
             <h1 class="wallet-title">
-                <i class="fas fa-wallet"></i>
                 Ví của tôi
             </h1>
             <p class="wallet-subtitle">Quản lý số dư và rút tiền</p>

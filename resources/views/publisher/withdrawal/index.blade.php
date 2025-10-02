@@ -36,7 +36,6 @@
     <div class="withdrawal-header">
         <div class="header-content">
             <h1 class="withdrawal-title">
-                <i class="fas fa-money-bill-wave"></i>
                 Rút tiền
             </h1>
             <p class="withdrawal-subtitle">Quản lý yêu cầu rút tiền của bạn</p>
