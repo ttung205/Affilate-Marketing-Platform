@@ -242,10 +242,6 @@
                 </div>
                 <h3>Chưa có affiliate link nào</h3>
                 <p>Bắt đầu tạo affiliate link đầu tiên của bạn để kiếm commission!</p>
-                <a href="{{ route('publisher.affiliate-links.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i>
-                    Tạo Link Đầu Tiên
-                </a>
             </div>
         @endif
     </div>

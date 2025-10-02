@@ -142,9 +142,63 @@
                 </table>
             </div>
             
-            <!-- Pagination -->
-            <div class="pagination-container">
-                {{ $products->links() }}
+            <!-- Custom Pagination -->
+            <div class="custom-pagination-container">
+                @if($products->hasPages())
+                    <nav class="custom-pagination-nav" aria-label="Product navigation">
+                        <ul class="custom-pagination-list">
+                            {{-- Previous Page Link --}}
+                            @if($products->onFirstPage())
+                                <li class="custom-pagination-item custom-pagination-disabled">
+                                    <span class="custom-pagination-link custom-pagination-arrow">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                </li>
+                            @else
+                                <li class="custom-pagination-item">
+                                    <a href="{{ $products->appends(request()->query())->previousPageUrl() }}" class="custom-pagination-link custom-pagination-arrow" rel="prev">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            @endif
+
+                            {{-- Pagination Elements --}}
+                            @foreach($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                @if($page == $products->currentPage())
+                                    <li class="custom-pagination-item custom-pagination-active">
+                                        <span class="custom-pagination-link">{{ $page }}</span>
+                                    </li>
+                                @else
+                                    <li class="custom-pagination-item">
+                                        <a href="{{ $products->appends(request()->query())->url($page) }}" class="custom-pagination-link">{{ $page }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            @if($products->hasMorePages())
+                                <li class="custom-pagination-item">
+                                    <a href="{{ $products->appends(request()->query())->nextPageUrl() }}" class="custom-pagination-link custom-pagination-arrow" rel="next">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="custom-pagination-item custom-pagination-disabled">
+                                    <span class="custom-pagination-link custom-pagination-arrow">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
+                        
+                        <div class="custom-pagination-info">
+                            <span class="custom-pagination-text">
+                                Hiển thị {{ $products->firstItem() ?? 0 }} - {{ $products->lastItem() ?? 0 }} 
+                                trong tổng số {{ $products->total() }} sản phẩm
+                            </span>
+                        </div>
+                    </nav>
+                @endif
             </div>
         @else
             @if(request()->hasAny(['search', 'category', 'status']))

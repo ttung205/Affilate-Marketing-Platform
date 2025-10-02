@@ -8,20 +8,10 @@
     <div class="wallet-header">
         <div class="header-content">
             <h1 class="wallet-title">
-                <i class="fas fa-wallet"></i>
                 Ví của tôi
             </h1>
             <p class="wallet-subtitle">Quản lý số dư và rút tiền</p>
         </div>
-    </div>
-
-    <!-- Sync Wallet Button -->
-    <div class="sync-wallet-section">
-        <button class="btn btn-outline-primary" onclick="syncWallet()" id="sync-wallet-btn">
-            <i class="fas fa-sync-alt"></i>
-            Đồng bộ số dư
-        </button>
-        <small class="text-muted">Đồng bộ số dư từ giao dịch hoa hồng</small>
     </div>
 
     <!-- Wallet Stats Cards -->

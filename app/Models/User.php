@@ -84,7 +84,11 @@ class User extends Authenticatable
 
     public function getTotalCommissionAttribute(): float
     {
-        return $this->conversions()->sum('commission');
+        // Tính hoa hồng từ transactions thay vì từ conversions
+        return $this->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'conversion_commission')
+            ->sum('amount');
     }
 
     public function getConversionRateAttribute(): float
@@ -98,9 +102,11 @@ class User extends Authenticatable
     // New methods for CPC-based commission calculation
     public function getClickCommissionAttribute(): float
     {
-        $totalClicks = $this->getTotalClicksAttribute();
-        $cpc = $this->getDefaultCostPerClickAttribute();
-        return $totalClicks * $cpc;
+        // Tính hoa hồng từ transactions thay vì tính lại từ clicks
+        return $this->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'click_commission')
+            ->sum('amount');
     }
 
     public function getCombinedCommissionAttribute(): float

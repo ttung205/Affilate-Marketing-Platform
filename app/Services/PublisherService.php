@@ -125,8 +125,17 @@ class PublisherService
         // Sync dữ liệu từ transactions vào wallet trước
         $this->syncWalletFromTransactions($publisher);
         
-        $clickCommission = $publisher->getClickCommissionAttribute();
-        $conversionCommission = $publisher->getTotalCommissionAttribute();
+        // Tính hoa hồng từ transactions (chính xác)
+        $clickCommission = $publisher->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'click_commission')
+            ->sum('amount');
+            
+        $conversionCommission = $publisher->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'conversion_commission')
+            ->sum('amount');
+            
         $totalEarnings = $clickCommission + $conversionCommission;
 
         return [
@@ -145,10 +154,30 @@ class PublisherService
      */
 
     /**
+     * Đảm bảo tính toán hoa hồng chính xác
+     */
+    public function ensureAccurateCommissionCalculation(User $publisher): void
+    {
+        // Sync wallet từ transactions để đảm bảo dữ liệu chính xác
+        $this->syncWalletFromTransactions($publisher);
+        
+        // Log để debug
+        Log::info('Commission calculation ensured', [
+            'publisher_id' => $publisher->id,
+            'click_commission' => $publisher->getClickCommissionAttribute(),
+            'conversion_commission' => $publisher->getTotalCommissionAttribute(),
+            'wallet_balance' => $publisher->getAvailableBalance()
+        ]);
+    }
+
+    /**
      * Lấy dữ liệu ví cho publisher
      */
     public function getWalletData(User $publisher): array
     {
+        // Đảm bảo tính toán chính xác trước khi lấy dữ liệu
+        $this->ensureAccurateCommissionCalculation($publisher);
+        
         $wallet = $publisher->getOrCreateWallet();
         $earnings = $this->getTotalEarnings($publisher);
         
@@ -981,16 +1010,35 @@ class PublisherService
     public function getSupportedBanks(): array
     {
         return [
+            ['code' => 'AGRIBANK', 'name' => 'Agribank'],
             ['code' => 'VCB', 'name' => 'Vietcombank'],
             ['code' => 'BIDV', 'name' => 'BIDV'],
+            ['code' => 'VTB', 'name' => 'VietinBank'],
+            ['code' => 'MBB', 'name' => 'MBBank'],
             ['code' => 'TCB', 'name' => 'Techcombank'],
-            ['code' => 'ACB', 'name' => 'ACB'],
-            ['code' => 'VIB', 'name' => 'VIB'],
-            ['code' => 'TPB', 'name' => 'TPBank'],
-            ['code' => 'MSB', 'name' => 'MSB'],
             ['code' => 'VPB', 'name' => 'VPBank'],
+            ['code' => 'ACB', 'name' => 'ACB'],
+            ['code' => 'STB', 'name' => 'Sacombank'],
+            ['code' => 'VIB', 'name' => 'VIB'],
             ['code' => 'HDB', 'name' => 'HDBank'],
+            ['code' => 'TPB', 'name' => 'TPBank'],
+            ['code' => 'SEAB', 'name' => 'SeABank'],
+            ['code' => 'EIB', 'name' => 'Eximbank'],
+            ['code' => 'NAB', 'name' => 'Nam A Bank'],
+            ['code' => 'NCB', 'name' => 'NCB'],
+            ['code' => 'BAB', 'name' => 'Bac A Bank'],
+            ['code' => 'BAOVIET', 'name' => 'Baoviet Bank'],
+            ['code' => 'VAB', 'name' => 'VietABank'],
+            ['code' => 'KLB', 'name' => 'Kienlongbank'],
+            ['code' => 'SGICB', 'name' => 'Saigonbank'],
+            ['code' => 'PVCB', 'name' => 'PVcomBank'],
+            ['code' => 'BVB', 'name' => 'BVBank'],
+            ['code' => 'ABB', 'name' => 'ABBANK'],
             ['code' => 'OCB', 'name' => 'OCB'],
+            ['code' => 'SCB', 'name' => 'SCB'],
+            ['code' => 'VIETBANK', 'name' => 'VietBank'],
+            ['code' => 'PGB', 'name' => 'PGBank'],
+            ['code' => 'LPB', 'name' => 'LPBank'],
         ];
     }
 

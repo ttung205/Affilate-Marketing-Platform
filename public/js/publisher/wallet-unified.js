@@ -539,43 +539,6 @@ class WalletManager {
         }
     }
 
-    async syncWallet() {
-        const btn = document.getElementById('sync-wallet-btn');
-        if (btn) {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đồng bộ...';
-        }
-
-        try {
-            const response = await fetch('/publisher/wallet/sync', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                this.showAlert('Wallet đã được đồng bộ thành công!', 'success');
-                // Reload page to show updated data
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                this.showAlert(data.message || 'Có lỗi xảy ra khi đồng bộ wallet', 'error');
-            }
-        } catch (error) {
-            console.error('Error syncing wallet:', error);
-            this.showAlert('Có lỗi xảy ra khi đồng bộ wallet', 'error');
-        } finally {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-sync-alt"></i> Đồng bộ số dư';
-            }
-        }
-    }
 }
 
 // Initialize when DOM is loaded

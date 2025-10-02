@@ -87,15 +87,33 @@ class AffiliateLink extends Model
 
     public function getTotalCommissionAttribute(): float
     {
-        return $this->conversions()->sum('commission');
+        // Tính hoa hồng từ transactions liên quan đến conversions của affiliate link này
+        $conversionIds = $this->conversions()->pluck('id')->toArray();
+        if (empty($conversionIds)) {
+            return 0.0;
+        }
+        
+        return $this->publisher->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'conversion_commission')
+            ->whereIn('reference_id', $conversionIds)
+            ->sum('amount');
     }
 
     // New methods for CPC-based commission calculation
     public function getClickCommissionAttribute(): float
     {
-        $totalClicks = $this->getTotalClicksAttribute();
-        $cpc = $this->getCostPerClickAttribute();
-        return $totalClicks * $cpc;
+        // Tính hoa hồng từ transactions liên quan đến affiliate link này
+        $clickIds = $this->clicks()->pluck('id')->toArray();
+        if (empty($clickIds)) {
+            return 0.0;
+        }
+        
+        return $this->publisher->transactions()
+            ->where('type', 'commission_earned')
+            ->where('reference_type', 'click_commission')
+            ->whereIn('reference_id', $clickIds)
+            ->sum('amount');
     }
 
     public function getCombinedCommissionAttribute(): float
