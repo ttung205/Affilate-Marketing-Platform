@@ -88,27 +88,27 @@
 }
 
 .campaigns-stat-primary .campaigns-stat-icon {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-success .campaigns-stat-icon {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-warning .campaigns-stat-icon {
-    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-info .campaigns-stat-icon {
-    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-secondary .campaigns-stat-icon {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-danger .campaigns-stat-icon {
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
 }
 
 .campaigns-stat-content h3 {

@@ -70,7 +70,7 @@ Route::get('/chatbot/demo', function () {
 })->name('chatbot.demo');
 
 // Chatbot route
-Route::post('/chat/send', [ChatbotControlletr::class, 'send'])->name('chat.send');
+Route::post('/chat/send', [ChatbotController::class, 'send'])->name('chat.send');
 
 
 // Affiliate tracking routes
