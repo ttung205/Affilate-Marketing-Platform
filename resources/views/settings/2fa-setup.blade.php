@@ -2,7 +2,7 @@
     $user = Auth::user();
     // Determine which layout to use based on user role
     if ($user->role === 'admin') {
-        $layout = 'admin.layouts.app';
+        $layout = 'components.dashboard.layout';
         $breadcrumbRoute = 'admin.dashboard';
     } elseif ($user->role === 'publisher') {
         $layout = 'publisher.layouts.app';
