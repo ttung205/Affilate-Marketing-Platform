@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực 2FA - Affiliate Marketing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/auth/login.css') }}">
+    <style>
+        .verification-icon {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .verification-icon i {
+            font-size: 80px;
+            color: #2196f3;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        .otp-input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .otp-digit {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .otp-digit:focus {
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+            outline: none;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .info-box i {
+            color: #2196f3;
+            margin-right: 10px;
+        }
+        .help-text {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-wrapper">
+        <div class="bg-pattern"></div>
+
+        <div class="auth-container">
+            <div class="auth-branding">
+                <div class="brand-content">
+                    <div class="brand-logo">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h1 class="brand-title">Xác thực 2 bước</h1>
+                    <p class="brand-subtitle">Bảo vệ tài khoản của bạn</p>
+                    <div class="brand-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>An toàn</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Nhanh chóng</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Bảo mật</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-form-container">
+                <div class="verification-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+
+                <div class="form-header">
+                    <h2>Xác thực 2 bước</h2>
+                    <p>Nhập mã 6 chữ số từ Google Authenticator</p>
+                </div>
+
+                @if($errors->any())
+                    <div class="alert alert-danger" style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <i class="fas fa-exclamation-circle"></i> 
+                        @foreach($errors->all() as $error)
+                            {{ $error }}
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    Mở ứng dụng <strong>Google Authenticator</strong> trên điện thoại của bạn và nhập mã 6 chữ số.
+                </div>
+
+                <form method="POST" action="{{ route('2fa.verify.post') }}" class="auth-form" id="verifyForm">
+                    @csrf
+
+                    <div class="form-group">
+                        <label for="one_time_password" class="form-label">Mã xác thực</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-key input-icon"></i>
+                            <input type="text" 
+                                   id="one_time_password" 
+                                   name="one_time_password" 
+                                   class="form-input @error('one_time_password') error @enderror" 
+                                   placeholder="Nhập mã 6 chữ số"
+                                   maxlength="6"
+                                   pattern="[0-9]{6}"
+                                   required 
+                                   autocomplete="off"
+                                   autofocus>
+                        </div>
+                        @error('one_time_password')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <span>Xác thực</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+
+                    <div class="help-text">
+                        <p>Không nhận được mã?</p>
+                        <p style="margin-top: 10px;">
+                            <a href="{{ route('login') }}" style="color: #2196f3; text-decoration: none;">
+                                <i class="fas fa-arrow-left"></i> Quay lại đăng nhập
+                            </a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('one_time_password');
+            
+            // Auto-focus
+            input.focus();
+            
+            // Only allow numbers
+            input.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // Auto-submit when 6 digits entered
+                if (this.value.length === 6) {
+                    setTimeout(() => {
+                        document.getElementById('verifyForm').submit();
+                    }, 300);
+                }
+            });
+            
+            // Prevent paste of non-numeric
+            input.addEventListener('paste', function(e) {
+                const pasteData = e.clipboardData.getData('text');
+                if (!/^\d+$/.test(pasteData)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

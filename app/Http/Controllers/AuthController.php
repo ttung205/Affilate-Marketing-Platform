@@ -24,10 +24,26 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember', true); // Default to true for persistent session
 
-        if (Auth::attempt($credentials, $remember)) {
+        // Attempt to authenticate
+        if (Auth::attempt($credentials, false)) { // Don't login yet if 2FA is enabled
+            $user = Auth::user();
+            Auth::logout(); // Logout immediately
+            
+            // Check if user has 2FA enabled
+            if ($user->google2fa_enabled) {
+                // Store user ID and remember preference in session for 2FA verification
+                session([
+                    '2fa:user:id' => $user->id,
+                    '2fa:remember' => $remember
+                ]);
+                
+                return redirect()->route('2fa.verify');
+            }
+
+            // If 2FA is not enabled, login normally
+            Auth::login($user, $remember);
             $request->session()->regenerate();
             
-            $user = Auth::user();
             //Chuyển hướng theo từng role
             switch ($user->role) {
                 case 'admin':

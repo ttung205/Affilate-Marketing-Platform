@@ -6,6 +6,7 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GoogleRegistrationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\TwoFactorController;
 
 // Basic authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -27,3 +28,15 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPass
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+// Two-Factor Authentication routes
+Route::middleware('guest')->group(function () {
+    Route::get('/2fa/verify', [TwoFactorController::class, 'showVerify'])->name('2fa.verify');
+    Route::post('/2fa/verify', [TwoFactorController::class, 'verify'])->name('2fa.verify.post');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/2fa/setup', [TwoFactorController::class, 'showSetup'])->name('2fa.setup');
+    Route::post('/2fa/enable', [TwoFactorController::class, 'enableTwoFactor'])->name('2fa.enable');
+    Route::post('/2fa/disable', [TwoFactorController::class, 'disableTwoFactor'])->name('2fa.disable');
+});

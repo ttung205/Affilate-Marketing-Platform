@@ -102,6 +102,23 @@
                 <span>Quản lý Thông báo</span>
             </a>
         </li>
+        
+        <!-- Bảo mật -->
+        <li class="{{ request()->routeIs('2fa.*') ? 'active' : '' }}">
+            <a href="{{ route('2fa.setup') }}">
+                <i class="fas fa-shield-alt"></i>
+                <span>Xác thực 2 bước</span>
+                @if(auth()->user()->google2fa_enabled)
+                    <span style="color: #4caf50; margin-left: 8px;" title="Đã bật">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                @else
+                    <span style="color: #ff9800; margin-left: 8px;" title="Chưa bật">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                @endif
+            </a>
+        </li>
     </ul>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>
