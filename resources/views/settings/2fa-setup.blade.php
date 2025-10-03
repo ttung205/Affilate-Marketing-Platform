@@ -37,6 +37,7 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/settings/2fa-setup.css') }}">
+<link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
 @endpush
 
 @section('content')
@@ -147,7 +148,7 @@
                     <p>Tài khoản của bạn đang được bảo vệ bởi xác thực 2 bước.</p>
                 </div>
 
-                <form method="POST" action="{{ route('2fa.disable') }}" onsubmit="return confirm('Bạn có chắc muốn tắt Google 2FA? Điều này sẽ giảm bảo mật tài khoản của bạn.')">
+                <form method="POST" action="{{ route('2fa.disable') }}" id="disable-2fa-form">
                     @csrf
                     <div class="form-group" style="max-width: 400px; margin: 0 auto;">
                         <label for="password" class="form-label">
@@ -165,7 +166,7 @@
                     </div>
 
                     <div class="btn-group" style="justify-content: center;">
-                        <button type="submit" class="btn btn-danger">
+                        <button type="button" class="btn btn-danger" onclick="confirmDisable2FA()">
                             <i class="fas fa-times"></i> Tắt 2FA
                         </button>
                     </div>
@@ -177,6 +178,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/components/confirm-popup.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const otpInputs = document.querySelectorAll('.otp-input');
@@ -261,6 +263,27 @@
             });
         });
     });
+    
+    // Confirm disable 2FA
+    function confirmDisable2FA() {
+        const passwordInput = document.getElementById('password');
+        
+        if (!passwordInput.value) {
+            passwordInput.focus();
+            return;
+        }
+        
+        showConfirmPopup({
+            title: 'Tắt xác thực 2 bước',
+            message: 'Bạn có chắc muốn tắt Google 2FA? Điều này sẽ giảm bảo mật tài khoản của bạn.',
+            type: 'danger',
+            confirmText: 'Tắt 2FA',
+            cancelText: 'Hủy bỏ',
+            onConfirm: function() {
+                document.getElementById('disable-2fa-form').submit();
+            }
+        });
+    }
 </script>
 @endpush
 
