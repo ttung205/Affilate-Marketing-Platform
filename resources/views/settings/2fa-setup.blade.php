@@ -58,12 +58,6 @@
         @endif
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-        </div>
-    @endif
-
     <div class="twofa-card">
         @if(!$user->google2fa_enabled)
             <div class="info-box">
