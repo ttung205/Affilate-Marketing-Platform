@@ -304,10 +304,6 @@
                         <i class="fas fa-user-edit"></i>
                         Chỉnh sửa hồ sơ
                     </a>
-                    <a href="#" class="user-menu-item">
-                        <i class="fas fa-cog"></i>
-                        Cài đặt
-                    </a>
                     <div class="user-menu-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" class="d-inline">
                         @csrf

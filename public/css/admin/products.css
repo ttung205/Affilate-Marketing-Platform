@@ -118,7 +118,7 @@
 
 /* Commission Rate Badge */
 .commission-rate-badge {
-    background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     padding: 6px 12px;
     border-radius: 20px;
@@ -173,7 +173,7 @@
     padding: 16px 12px;
     border-bottom: 1px solid #e9ecef;
     vertical-align: middle;
-    font-size: 14px;
+    font-size: 15px;
     color: #495057;
 }
 
@@ -276,7 +276,7 @@
 
 /* Category Badge */
 .category-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     padding: 4px 12px;
     border-radius: 20px;
