@@ -1,0 +1,362 @@
+.twofa-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 200px);
+}
+
+.twofa-header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.twofa-header-content h1 {
+    margin: 0 0 5px 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.twofa-header-content p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 14px;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-enabled {
+    background: #4caf50;
+    color: white;
+}
+
+.status-disabled {
+    background: #ff9800;
+    color: white;
+}
+
+.twofa-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 0;
+}
+
+.twofa-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 25px;
+}
+
+.info-box {
+    background: #e3f2fd;
+    border-left: 4px solid #2196f3;
+    padding: 15px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.info-box.success {
+    background: #d4edda;
+    border-left-color: #4caf50;
+}
+
+.info-box i {
+    color: #2196f3;
+    margin-right: 10px;
+}
+
+.info-box.success i {
+    color: #4caf50;
+}
+
+.info-box p {
+    margin: 5px 0 0 0;
+}
+
+.steps-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.steps-list li {
+    padding: 12px 0;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+}
+
+.step-number {
+    background: #3b82f6;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.app-links {
+    margin-top: 8px;
+    font-size: 15px;
+}
+
+.app-links a {
+    color: #3b82f6;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.app-links a:hover {
+    text-decoration: none;
+}
+
+.qr-section {
+    text-align: center;
+}
+
+.qr-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.qr-code-wrapper {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.qr-code-wrapper svg {
+    max-width: 200px;
+    height: auto;
+    display: block;
+}
+
+.secret-key-section {
+    margin-top: 15px;
+}
+
+.secret-key-section p {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #666;
+}
+
+.secret-key {
+    background: #fff;
+    border: 2px dashed #e0e0e0;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 15px;
+    word-break: break-all;
+    color: #333;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.verify-section {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.otp-input-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.otp-input {
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background: #fff;
+}
+
+.otp-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: scale(1.05);
+}
+
+.otp-input:not(:placeholder-shown) {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-control.is-invalid {
+    border-color: #f44336;
+}
+
+.invalid-feedback {
+    color: #f44336;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.disabled-section {
+    text-align: center;
+    padding: 20px;
+}
+
+.disabled-section .info-box {
+    text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .twofa-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .twofa-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .otp-input-group {
+        gap: 8px;
+    }
+    
+    .otp-input {
+        width: 45px;
+        height: 55px;
+        font-size: 20px;
+    }
+}
+

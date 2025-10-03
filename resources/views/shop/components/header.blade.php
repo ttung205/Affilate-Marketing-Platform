@@ -145,6 +145,19 @@
                         <i class="fas fa-user-edit"></i>
                         Chỉnh sửa hồ sơ
                     </a>
+                    <a href="{{ route('2fa.setup') }}" class="user-menu-item">
+                        <i class="fas fa-shield-alt"></i>
+                        Xác thực 2 bước
+                        @if(auth()->user()->google2fa_enabled)
+                            <span style="color: #4caf50; margin-left: auto;">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                        @else
+                            <span style="color: #ff9800; margin-left: auto;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                        @endif
+                    </a>
                     <div class="user-menu-divider"></div>
                     <form method="POST" action="{{ route('logout') }}" class="d-inline">
                         @csrf

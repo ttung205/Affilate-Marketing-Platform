@@ -42,7 +42,7 @@ class TwoFactorController extends Controller
         $writer = new Writer($renderer);
         $qrCodeSvg = $writer->writeString($qrCodeUrl);
 
-        return view('auth.2fa-setup', [
+        return view('settings.2fa-setup', [
             'qrCodeSvg' => $qrCodeSvg,
             'secret' => $user->google2fa_secret,
             'user' => $user

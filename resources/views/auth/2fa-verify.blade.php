@@ -26,24 +26,30 @@
         }
         .otp-input-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             margin: 20px 0;
         }
-        .otp-digit {
+        .otp-input {
             width: 50px;
             height: 60px;
             text-align: center;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 600;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             transition: all 0.3s;
+            background: #fff;
         }
-        .otp-digit:focus {
-            border-color: #2196f3;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        .otp-input:focus {
+            border-color: #3b82f6;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: scale(1.05);
+        }
+        .otp-input:not(:placeholder-shown) {
+            border-color: #3b82f6;
+            background: #eff6ff;
         }
         .info-box {
             background: #e3f2fd;
@@ -121,20 +127,16 @@
                     @csrf
 
                     <div class="form-group">
-                        <label for="one_time_password" class="form-label">Mã xác thực</label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-key input-icon"></i>
-                            <input type="text" 
-                                   id="one_time_password" 
-                                   name="one_time_password" 
-                                   class="form-input @error('one_time_password') error @enderror" 
-                                   placeholder="Nhập mã 6 chữ số"
-                                   maxlength="6"
-                                   pattern="[0-9]{6}"
-                                   required 
-                                   autocomplete="off"
-                                   autofocus>
+                        <label class="form-label">Mã xác thực</label>
+                        <div class="otp-input-group">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="0">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="1">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="2">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="3">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="4">
+                            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="off" data-index="5">
                         </div>
+                        <input type="hidden" name="one_time_password" id="one_time_password" value="">
                         @error('one_time_password')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -160,29 +162,86 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const input = document.getElementById('one_time_password');
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const hiddenInput = document.getElementById('one_time_password');
+            const form = document.getElementById('verifyForm');
             
-            // Auto-focus
-            input.focus();
+            if (otpInputs.length === 0) return;
             
-            // Only allow numbers
-            input.addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^0-9]/g, '');
+            // Auto-focus first input
+            otpInputs[0].focus();
+            
+            // Update hidden input value
+            function updateHiddenInput() {
+                const otp = Array.from(otpInputs).map(input => input.value).join('');
+                hiddenInput.value = otp;
                 
-                // Auto-submit when 6 digits entered
-                if (this.value.length === 6) {
-                    setTimeout(() => {
-                        document.getElementById('verifyForm').submit();
-                    }, 300);
+                // Auto-submit when all 6 digits are entered
+                if (otp.length === 6 && form) {
+                    setTimeout(() => form.submit(), 300);
                 }
-            });
+            }
             
-            // Prevent paste of non-numeric
-            input.addEventListener('paste', function(e) {
-                const pasteData = e.clipboardData.getData('text');
-                if (!/^\d+$/.test(pasteData)) {
+            otpInputs.forEach((input, index) => {
+                // Handle input
+                input.addEventListener('input', function(e) {
+                    // Only allow numbers
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    
+                    if (this.value) {
+                        // Move to next input
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                        }
+                    }
+                    
+                    updateHiddenInput();
+                });
+                
+                // Handle keydown
+                input.addEventListener('keydown', function(e) {
+                    // Backspace: move to previous input if current is empty
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                    
+                    // Arrow left
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                    
+                    // Arrow right
+                    if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                
+                // Handle paste
+                input.addEventListener('paste', function(e) {
                     e.preventDefault();
-                }
+                    const pastedData = e.clipboardData.getData('text').trim();
+                    const digits = pastedData.replace(/[^0-9]/g, '').slice(0, 6);
+                    
+                    if (digits.length > 0) {
+                        // Fill inputs with pasted digits
+                        digits.split('').forEach((digit, i) => {
+                            if (otpInputs[i]) {
+                                otpInputs[i].value = digit;
+                            }
+                        });
+                        
+                        // Focus on next empty input or last input
+                        const nextIndex = Math.min(digits.length, otpInputs.length - 1);
+                        otpInputs[nextIndex].focus();
+                        
+                        updateHiddenInput();
+                    }
+                });
+                
+                // Select all on focus
+                input.addEventListener('focus', function() {
+                    this.select();
+                });
             });
         });
     </script>
