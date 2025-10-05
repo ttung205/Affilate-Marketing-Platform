@@ -1,6 +1,6 @@
 @extends('publisher.layouts.app')
 
-@section('title', 'Phương thức thanh toán')
+@section('title', 'Tài khoản thanh toán')
 
 @section('content')
 
@@ -37,14 +37,14 @@
         <div class="payment-methods-header">
             <div class="header-content">
                 <h1 class="payment-methods-title">
-                    Phương thức thanh toán
+                    Tài khoản thanh toán
                 </h1>
-                <p class="payment-methods-subtitle">Quản lý các phương thức nhận tiền của bạn</p>
+                <p class="payment-methods-subtitle">Quản lý tài khoản ngân hàng nhận tiền của bạn</p>
             </div>
             <div class="header-actions">
                 <button class="btn btn-primary" onclick="openPaymentMethodModal()">
                     <i class="fas fa-plus"></i>
-                    Thêm phương thức
+                    Thêm tài khoản
                 </button>
             </div>
         </div>
@@ -52,7 +52,7 @@
         <!-- Payment Methods List -->
         <div class="payment-methods-list">
             <div class="list-header">
-                <h3 class="section-title">Danh sách phương thức thanh toán</h3>
+                <h3 class="section-title">Danh sách tài khoản thanh toán</h3>
                 <div class="list-actions">
                     <button class="btn btn-outline-primary" onclick="refreshList()">
                         <i class="fas fa-sync-alt"></i>
@@ -136,8 +136,8 @@
                 @empty
                     <div class="empty-state">
                         <i class="fas fa-credit-card"></i>
-                        <h3>Chưa có phương thức thanh toán nào</h3>
-                        <p>Thêm phương thức thanh toán để có thể rút tiền</p>
+                        <h3>Chưa có tài khoản thanh toán nào</h3>
+                        <p>Thêm tài khoản ngân hàng để có thể rút tiền</p>
                     </div>
                 @endforelse
             </div>
@@ -149,7 +149,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Thêm phương thức thanh toán</h5>
+                    <h5 class="modal-title" id="modalTitle">Thêm tài khoản thanh toán</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -160,15 +160,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label class="form-label">Loại phương thức</label>
-                                    <select class="form-select" id="methodType" name="type" required>
-                                        <option value="">Chọn loại</option>
-                                        <option value="bank_transfer">Chuyển khoản ngân hàng</option>
-                                        <option value="momo">Ví MoMo</option>
-                                        <option value="zalopay">Ví ZaloPay</option>
-                                        <option value="vnpay">Ví VNPay</option>
-                                        <option value="phone_card">Thẻ cào điện thoại</option>
+                                    <label class="form-label">Loại tài khoản</label>
+                                    <select class="form-select" id="methodType" name="type" required readonly disabled style="background-color: #f8f9fa;">
+                                        <option value="bank_transfer" selected>Tài khoản ngân hàng</option>
                                     </select>
+                                    <input type="hidden" name="type" value="bank_transfer">
+                                    <small class="text-muted">Hiện tại chỉ hỗ trợ tài khoản ngân hàng</small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -187,7 +184,7 @@
                                         required>
                                 </div>
                             </div>
-                            <div class="col-md-6" id="bankNameField" style="display: none;">
+                            <div class="col-md-6" id="bankNameField">
                                 <div class="mb-3">
                                     <label class="form-label">Ngân hàng</label>
                                     <div class="custom-dropdown" id="bankDropdown">
@@ -216,7 +213,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="bankDetailsFields" style="display: none;">
+                        <div class="row" id="bankDetailsFields">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label class="form-label">Mã ngân hàng</label>
@@ -235,7 +232,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="isDefault" name="is_default">
                                 <label class="form-check-label" for="isDefault">
-                                    Đặt làm phương thức mặc định
+                                    Đặt làm tài khoản mặc định
                                 </label>
                             </div>
                         </div>
@@ -247,7 +244,7 @@
                                     <i id="previewIcon" class="fas fa-credit-card"></i>
                                 </div>
                                 <div class="preview-content">
-                                    <h5 id="previewTitle">Phương thức thanh toán</h5>
+                                    <h5 id="previewTitle">Tài khoản thanh toán</h5>
                                     <p id="previewSubtitle">Tên chủ tài khoản</p>
                                     <p id="previewDetails">Chi tiết</p>
                                 </div>

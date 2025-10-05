@@ -12,7 +12,6 @@
 
 .modal.show .modal-dialog {
     margin: 1rem !important;
-    width: 700px !important;
     max-width: 95vw !important;
     min-height: 500px;
     max-height: 90vh;
@@ -46,6 +45,66 @@
     width: 900px !important;
     max-width: 95vw !important;
     min-height: 600px;
+}
+
+/* Extra large modal for QR code */
+.modal-xl .modal-dialog {
+    width: 1200px !important;
+    max-width: 95vw !important;
+}
+
+/* QR Code Section Styles */
+.qr-code-container {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.qr-code-header h6 {
+    color: #495057;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.qr-code-image {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.transfer-info {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.info-group {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-group:last-child {
+    border-bottom: none;
+}
+
+.info-group label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-group .fw-bold {
+    font-size: 1rem;
+}
+
+.qr-code-container .alert {
+    margin-bottom: 0;
+    border-left: 4px solid #0dcaf0;
 }
 
 .modal-lg .modal-body {

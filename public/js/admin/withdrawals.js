@@ -305,7 +305,7 @@ class AdminWithdrawalsManager {
                 </div>
 
                 <div class="detail-section">
-                    <h6>Phương thức thanh toán</h6>
+                    <h6>Tài khoản thanh toán</h6>
                     <div class="detail-row">
                         <span class="detail-label">Loại:</span>
                         <span class="detail-value">${withdrawal.payment_method.type_label}</span>
@@ -388,10 +388,91 @@ class AdminWithdrawalsManager {
         modal.show();
     }
 
-    completeWithdrawal(withdrawalId) {
-        document.getElementById('completeWithdrawalId').value = withdrawalId;
-        const modal = new bootstrap.Modal(document.getElementById('completeModal'));
-        modal.show();
+    async completeWithdrawal(withdrawalId) {
+        // Hiển thị loading
+        this.showAlert('Đang tạo mã QR...', 'info');
+        
+        try {
+            // Gọi API để lấy QR code
+            const response = await fetch(`/admin/withdrawals/api/${withdrawalId}/qr-code`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Set withdrawal ID
+                document.getElementById('completeWithdrawalId').value = withdrawalId;
+                
+                // Hiển thị QR code và thông tin
+                this.displayQRCode(data.data);
+                
+                // Hiển thị modal
+                const modal = new bootstrap.Modal(document.getElementById('completeModal'));
+                modal.show();
+            } else {
+                this.showAlert(data.message || 'Không thể tạo mã QR', 'error');
+            }
+        } catch (error) {
+            console.error('Error generating QR code:', error);
+            this.showAlert('Có lỗi xảy ra khi tạo mã QR', 'error');
+        }
+    }
+    
+    displayQRCode(qrData) {
+        // Tạo HTML cho QR code section
+        const qrSection = document.getElementById('qrCodeSection');
+        if (!qrSection) {
+            console.error('QR code section not found');
+            return;
+        }
+        
+        qrSection.innerHTML = `
+            <div class="qr-code-container">
+                <div class="qr-code-header">
+                    <h6 class="mb-3"><i class="fas fa-qrcode"></i> Quét mã QR để chuyển tiền</h6>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="qr-code-image text-center">
+                            <img src="${qrData.qr_url}" alt="QR Code" class="img-fluid" style=" border: 2px solid #dee2e6; border-radius: 8px; padding: 10px;">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="transfer-info">
+                            <h6 class="mb-3">Thông tin chuyển khoản:</h6>
+                            
+                            <div class="info-group mb-3">
+                                <label class="text-muted small">Ngân hàng:</label>
+                                <div class="fw-bold">${qrData.bank_name} (${qrData.bank_code})</div>
+                            </div>
+                            
+                            <div class="info-group mb-3">
+                                <label class="text-muted small">Số tài khoản:</label>
+                                <div class="fw-bold">${qrData.account_no}</div>
+                            </div>
+                            
+                            <div class="info-group mb-3">
+                                <label class="text-muted small">Tên tài khoản:</label>
+                                <div class="fw-bold">${qrData.account_name}</div>
+                            </div>
+                            
+                            <div class="info-group mb-3">
+                                <label class="text-muted small">Số tiền:</label>
+                                <div class="fw-bold text-success fs-5">${this.formatCurrency(qrData.amount)} VNĐ</div>
+                            </div>
+                            
+                            <div class="info-group mb-3">
+                                <label class="text-muted small">Nội dung chuyển khoản:</label>
+                                <div class="fw-bold text-primary">${qrData.description}</div>
+                                <small class="text-muted">Vui lòng giữ nguyên nội dung này</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        qrSection.style.display = 'block';
     }
 
     async confirmApprove() {

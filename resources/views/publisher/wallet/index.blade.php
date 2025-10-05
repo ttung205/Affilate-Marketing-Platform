@@ -124,7 +124,7 @@
             </a>
             <a href="{{ route('publisher.payment-methods.index') }}" class="action-btn">
                 <i class="fas fa-credit-card"></i>
-                <span>Phương thức thanh toán</span>
+                <span>Tài khoản thanh toán</span>
             </a>
             <a href="{{ route('publisher.withdrawal.index') }}" class="action-btn">
                 <i class="fas fa-history"></i>

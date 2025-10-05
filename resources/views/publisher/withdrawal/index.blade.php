@@ -255,9 +255,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Phương thức thanh toán</label>
+                                <label class="form-label">Tài khoản thanh toán</label>
                                 <select class="form-select" id="paymentMethod" name="payment_method_id" required>
-                                    <option value="">Chọn phương thức</option>
+                                    <option value="">Chọn tài khoản</option>
                                     @foreach($paymentMethods as $method)
                                         <option value="{{ $method['id'] }}" 
                                                 data-type="{{ $method['type'] }}"

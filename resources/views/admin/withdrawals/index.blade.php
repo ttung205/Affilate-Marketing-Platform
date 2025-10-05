@@ -341,19 +341,32 @@
 
 <!-- Complete Modal -->
 <div id="completeModal" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Hoàn thành yêu cầu rút tiền</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+                <!-- QR Code Section -->
+                <div id="qrCodeSection" style="display: none;" class="mb-4">
+                    <!-- QR code will be injected here by JavaScript -->
+                </div>
+                
+                <!-- Always visible notice -->
+                <div class="alert alert-info mb-4">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Lưu ý:</strong> Sau khi chuyển tiền thành công, vui lòng nhập mã giao dịch bên dưới và nhấn "Hoàn thành".
+                </div>
+                
+                <!-- Transaction Reference Form -->
                 <form id="completeForm">
                     <input type="hidden" id="completeWithdrawalId">
                     <div class="mb-3">
                         <label class="form-label">Mã giao dịch <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="transactionReference" 
-                               placeholder="Nhập mã giao dịch từ ngân hàng..." required>
+                               placeholder="Nhập mã giao dịch từ ngân hàng sau khi chuyển tiền..." required>
+                        <small class="text-muted">Mã giao dịch có thể tìm thấy trong lịch sử giao dịch ngân hàng</small>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Ghi chú (tùy chọn)</label>
@@ -364,7 +377,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                <button type="button" class="btn btn-primary" onclick="confirmComplete()">Hoàn thành</button>
+                <button type="button" class="btn btn-primary" onclick="confirmComplete()">
+                    <i class="fas fa-check-double"></i> Xác nhận hoàn thành
+                </button>
             </div>
         </div>
     </div>

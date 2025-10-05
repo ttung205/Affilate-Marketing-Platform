@@ -16,7 +16,7 @@ class PaymentMethodController extends Controller
     ) {}
 
     /**
-     * Hiển thị danh sách phương thức thanh toán
+     * Hiển thị danh sách tài khoản thanh toán
      */
     public function index()
     {
@@ -28,7 +28,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Hiển thị form tạo phương thức thanh toán
+     * Hiển thị form tạo tài khoản thanh toán
      */
     public function create()
     {
@@ -38,7 +38,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Tạo phương thức thanh toán mới
+     * Tạo tài khoản thanh toán mới
      */
     public function store(Request $request)
     {
@@ -56,18 +56,19 @@ class PaymentMethodController extends Controller
         ]);
 
         $request->validate([
-            'type' => 'required|in:bank_transfer,momo,zalopay,vnpay,phone_card',
+            'type' => 'required|in:bank_transfer',
             'account_name' => 'required|string|max:255',
             'account_number' => 'required|string|max:50',
-            'bank_name' => 'required_if:type,bank_transfer|nullable|string|max:255',
+            'bank_name' => 'required|string|max:255',
             'bank_code' => 'nullable|string|max:10',
             'branch_name' => 'nullable|string|max:255',
             'is_default' => 'nullable|boolean',
         ], [
-            'type.required' => 'Vui lòng chọn loại phương thức thanh toán',
+            'type.required' => 'Vui lòng chọn loại tài khoản thanh toán',
+            'type.in' => 'Hiện tại chỉ hỗ trợ tài khoản ngân hàng',
             'account_name.required' => 'Vui lòng nhập tên chủ tài khoản',
             'account_number.required' => 'Vui lòng nhập số tài khoản',
-            'bank_name.required_if' => 'Vui lòng chọn ngân hàng',
+            'bank_name.required' => 'Vui lòng chọn ngân hàng',
         ]);
 
         Log::info('Payment method validation passed', [
@@ -108,7 +109,7 @@ class PaymentMethodController extends Controller
             ]);
 
             return redirect()->route('publisher.payment-methods.index')
-                ->with('success', 'Phương thức thanh toán đã được thêm thành công');
+                ->with('success', 'Tài khoản thanh toán đã được thêm thành công');
                 
         } catch (\Exception $e) {
             Log::error('Payment method creation failed', [
@@ -124,7 +125,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Hiển thị form chỉnh sửa phương thức thanh toán
+     * Hiển thị form chỉnh sửa tài khoản thanh toán
      */
     public function edit(PaymentMethod $paymentMethod)
     {
@@ -139,7 +140,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Cập nhật phương thức thanh toán
+     * Cập nhật tài khoản thanh toán
      */
     public function update(Request $request, PaymentMethod $paymentMethod)
     {
@@ -157,14 +158,14 @@ class PaymentMethodController extends Controller
         $request->validate([
             'account_name' => 'required|string|max:255',
             'account_number' => 'required|string|max:50',
-            'bank_name' => 'required_if:type,bank_transfer|string|max:255',
+            'bank_name' => 'required|string|max:255',
             'bank_code' => 'nullable|string|max:10',
             'branch_name' => 'nullable|string|max:255',
             'is_default' => 'boolean',
         ], [
             'account_name.required' => 'Vui lòng nhập tên chủ tài khoản',
             'account_number.required' => 'Vui lòng nhập số tài khoản',
-            'bank_name.required_if' => 'Vui lòng chọn ngân hàng',
+            'bank_name.required' => 'Vui lòng chọn ngân hàng',
         ]);
 
         try {
@@ -173,12 +174,12 @@ class PaymentMethodController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Phương thức thanh toán đã được cập nhật thành công'
+                    'message' => 'Tài khoản thanh toán đã được cập nhật thành công'
                 ]);
             }
 
             return redirect()->route('publisher.payment-methods.index')
-                ->with('success', 'Phương thức thanh toán đã được cập nhật thành công');
+                ->with('success', 'Tài khoản thanh toán đã được cập nhật thành công');
                 
         } catch (\Exception $e) {
             if ($request->ajax()) {
@@ -195,7 +196,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Xóa phương thức thanh toán
+     * Xóa tài khoản thanh toán
      */
     public function destroy(PaymentMethod $paymentMethod)
     {
@@ -212,7 +213,7 @@ class PaymentMethodController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Phương thức thanh toán đã được xóa thành công'
+                'message' => 'Tài khoản thanh toán đã được xóa thành công'
             ]);
                 
         } catch (\Exception $e) {
@@ -225,7 +226,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Đặt làm phương thức mặc định
+     * Đặt làm tài khoản mặc định
      */
     public function setDefault(PaymentMethod $paymentMethod)
     {
@@ -239,7 +240,7 @@ class PaymentMethodController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Đã đặt làm phương thức mặc định'
+                'message' => 'Đã đặt làm tài khoản mặc định'
             ]);
                 
         } catch (\Exception $e) {
@@ -251,7 +252,7 @@ class PaymentMethodController extends Controller
     }
 
     /**
-     * Lấy danh sách phương thức thanh toán (API)
+     * Lấy danh sách tài khoản thanh toán (API)
      */
     public function getPaymentMethods()
     {
@@ -266,13 +267,13 @@ class PaymentMethodController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Có lỗi xảy ra khi tải danh sách phương thức thanh toán: ' . $e->getMessage()
+                'message' => 'Có lỗi xảy ra khi tải danh sách tài khoản thanh toán: ' . $e->getMessage()
             ], 500);
         }
     }
 
     /**
-     * Lấy phương thức thanh toán mặc định (API)
+     * Lấy tài khoản thanh toán mặc định (API)
      */
     public function getDefaultPaymentMethod()
     {
@@ -301,7 +302,7 @@ class PaymentMethodController extends Controller
         if ($paymentMethod->publisher_id !== Auth::id()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Phương thức thanh toán không hợp lệ'
+                'message' => 'Tài khoản thanh toán không hợp lệ'
             ], 403);
         }
 

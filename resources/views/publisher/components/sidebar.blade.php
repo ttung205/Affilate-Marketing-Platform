@@ -68,7 +68,7 @@
                 <li class="{{ request()->routeIs('publisher.payment-methods.*') ? 'active' : '' }}">
                     <a href="{{ route('publisher.payment-methods.index') }}">
                         <i class="fas fa-credit-card"></i>
-                        Phương thức thanh toán
+                        Tài khoản thanh toán
                     </a>
                 </li>
             </ul>

@@ -271,9 +271,9 @@ class WithdrawalManager {
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Phương thức thanh toán</label>
+                                <label class="form-label">Tài khoản thanh toán</label>
                                 <select class="form-select" id="paymentMethod" name="payment_method_id" required>
-                                    <option value="">Chọn phương thức</option>
+                                    <option value="">Chọn tài khoản</option>
                                 </select>
                             </div>
                         </div>
@@ -646,7 +646,7 @@ class WithdrawalManager {
                 </div>
 
                 <div class="detail-section">
-                    <h6>Phương thức thanh toán</h6>
+                    <h6>Tài khoản thanh toán</h6>
                     <div class="detail-row">
                         <span class="detail-label">Loại:</span>
                         <span class="detail-value">${withdrawal.payment_method.type_label}</span>

@@ -38,11 +38,11 @@ class PaymentMethodManager {
             if (data.success) {
                 this.updatePaymentMethodsGrid(data.payment_methods || []);
             } else {
-                showError(data.message || 'Không thể tải danh sách phương thức thanh toán');
+                showError(data.message || 'Không thể tải danh sách tài khoản thanh toán');
             }
         } catch (error) {
             console.error('Error loading payment methods:', error);
-            showError('Có lỗi xảy ra khi tải danh sách phương thức thanh toán');
+            showError('Có lỗi xảy ra khi tải danh sách tài khoản thanh toán');
         }
     }
 
@@ -57,11 +57,11 @@ class PaymentMethodManager {
             grid.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-credit-card"></i>
-                    <h3>Chưa có phương thức thanh toán</h3>
-                    <p>Thêm phương thức thanh toán đầu tiên để bắt đầu rút tiền</p>
+                    <h3>Chưa có tài khoản thanh toán</h3>
+                    <p>Thêm tài khoản ngân hàng để bắt đầu rút tiền</p>
                     <button class="btn btn-primary" onclick="paymentMethodManager.openPaymentMethodModal()">
                         <i class="fas fa-plus"></i>
-                        Thêm phương thức
+                        Thêm tài khoản
                     </button>
                 </div>
             `;
@@ -163,32 +163,15 @@ class PaymentMethodManager {
 
 
     initPaymentMethodForm() {
-        const typeSelect = document.getElementById('methodType');
+        // Luôn hiển thị các trường ngân hàng vì chỉ hỗ trợ bank_transfer
         const bankNameField = document.getElementById('bankNameField');
         const bankDetailsFields = document.getElementById('bankDetailsFields');
-
-        if (typeSelect) {
-            typeSelect.addEventListener('change', (e) => {
-                if (e.target.value === 'bank_transfer') {
-                    bankNameField.style.display = 'block';
-                    bankDetailsFields.style.display = 'block';
-                    // Reset dropdown when switching to bank transfer
-                    if (window.bankDropdown) {
-                        window.bankDropdown.reset();
-                    }
-                } else {
-                    bankNameField.style.display = 'none';
-                    bankDetailsFields.style.display = 'none';
-                    // Clear bank fields when not using bank transfer
-                    if (window.bankDropdown) {
-                        window.bankDropdown.reset();
-                    }
-                    const bankCodeInput = document.getElementById('bankCode');
-                    if (bankCodeInput) {
-                        bankCodeInput.value = '';
-                    }
-                }
-            });
+        
+        if (bankNameField) {
+            bankNameField.style.display = 'block';
+        }
+        if (bankDetailsFields) {
+            bankDetailsFields.style.display = 'block';
         }
     }
 
@@ -198,10 +181,10 @@ class PaymentMethodManager {
         if (form) {
             form.reset();
             // Reset modal title
-            document.getElementById('modalTitle').textContent = 'Thêm phương thức thanh toán';
-            // Hide bank fields
-            document.getElementById('bankNameField').style.display = 'none';
-            document.getElementById('bankDetailsFields').style.display = 'none';
+            document.getElementById('modalTitle').textContent = 'Thêm tài khoản thanh toán';
+            // Luôn hiển thị bank fields vì chỉ hỗ trợ bank_transfer
+            document.getElementById('bankNameField').style.display = 'block';
+            document.getElementById('bankDetailsFields').style.display = 'block';
             // Hide preview
             document.getElementById('paymentMethodPreview').style.display = 'none';
         }
@@ -214,7 +197,7 @@ class PaymentMethodManager {
     }
 
     async setAsDefault(id) {
-        if (!confirm('Bạn có chắc chắn muốn đặt phương thức này làm mặc định?')) {
+        if (!confirm('Bạn có chắc chắn muốn đặt tài khoản này làm mặc định?')) {
             return;
         }
 
@@ -236,16 +219,16 @@ class PaymentMethodManager {
                     window.location.reload();
                 }, 1500);
             } else {
-                showError(result.message || 'Có lỗi xảy ra khi đặt phương thức mặc định');
+                showError(result.message || 'Có lỗi xảy ra khi đặt tài khoản mặc định');
             }
         } catch (error) {
             console.error('Error setting default payment method:', error);
-            showError('Có lỗi xảy ra khi đặt phương thức mặc định');
+            showError('Có lỗi xảy ra khi đặt tài khoản mặc định');
         }
     }
 
     async deletePaymentMethod(id) {
-        if (!confirm('Bạn có chắc chắn muốn xóa phương thức thanh toán này?')) {
+        if (!confirm('Bạn có chắc chắn muốn xóa tài khoản thanh toán này?')) {
             return;
         }
 
@@ -267,11 +250,11 @@ class PaymentMethodManager {
                     window.location.reload();
                 }, 1500);
             } else {
-                showError(result.message || 'Có lỗi xảy ra khi xóa phương thức thanh toán');
+                showError(result.message || 'Có lỗi xảy ra khi xóa tài khoản thanh toán');
             }
         } catch (error) {
             console.error('Error deleting payment method:', error);
-            showError('Có lỗi xảy ra khi xóa phương thức thanh toán');
+            showError('Có lỗi xảy ra khi xóa tài khoản thanh toán');
         }
     }
 }

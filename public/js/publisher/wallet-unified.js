@@ -352,7 +352,7 @@ class WalletManager {
                 </div>
 
                 <div class="detail-section">
-                    <h6>Phương thức thanh toán</h6>
+                    <h6>Tài khoản thanh toán</h6>
                     <div class="detail-row">
                         <span class="detail-label">Loại:</span>
                         <span class="detail-value">${withdrawal.payment_method.type_label}</span>

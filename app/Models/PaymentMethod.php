@@ -44,23 +44,14 @@ class PaymentMethod extends Model
     public function getTypeLabelAttribute(): string
     {
         return match($this->type) {
-            'bank_transfer' => 'Chuyển khoản ngân hàng',
-            'momo' => 'Ví MoMo',
-            'zalopay' => 'Ví ZaloPay',
-            'vnpay' => 'Ví VNPay',
-            'phone_card' => 'Thẻ cào điện thoại',
-            default => 'Không xác định'
+            'bank_transfer' => 'Tài khoản ngân hàng',
+            default => 'Tài khoản ngân hàng'
         };
     }
 
     public function getDisplayNameAttribute(): string
     {
-        return match($this->type) {
-            'bank_transfer' => "{$this->account_name} - {$this->bank_name} ({$this->account_number})",
-            'momo', 'zalopay', 'vnpay' => "{$this->account_name} - {$this->account_number}",
-            'phone_card' => "Thẻ cào - {$this->account_number}",
-            default => $this->account_name
-        };
+        return "{$this->account_name} - {$this->bank_name} ({$this->account_number})";
     }
 
     public function getMaskedAccountNumberAttribute(): string
@@ -74,12 +65,8 @@ class PaymentMethod extends Model
 
     public function getFeeRateAttribute(): float
     {
-        return match($this->type) {
-            'bank_transfer' => 0.0, // Miễn phí
-            'momo', 'zalopay', 'vnpay' => 0.01, // 1%
-            'phone_card' => 0.05, // 5%
-            default => 0.0
-        };
+        // Chuyển khoản ngân hàng miễn phí
+        return 0.0;
     }
 
     public function calculateFee(float $amount): float
@@ -89,25 +76,11 @@ class PaymentMethod extends Model
 
     public function getIconAttribute(): string
     {
-        return match($this->type) {
-            'bank_transfer' => 'fas fa-university',
-            'momo' => 'fas fa-wallet',
-            'zalopay' => 'fas fa-mobile-alt',
-            'vnpay' => 'fas fa-credit-card',
-            'phone_card' => 'fas fa-sim-card',
-            default => 'fas fa-credit-card'
-        };
+        return 'fas fa-university';
     }
 
     public function getColorAttribute(): string
     {
-        return match($this->type) {
-            'bank_transfer' => 'blue',
-            'momo' => 'pink',
-            'zalopay' => 'blue',
-            'vnpay' => 'green',
-            'phone_card' => 'orange',
-            default => 'gray'
-        };
+        return 'blue';
     }
 }

@@ -64,4 +64,5 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/withdrawals/api/{withdrawal}/approve', [WithdrawalApprovalController::class, 'approveWithdrawal'])->name('withdrawals.api.approve');
     Route::post('/withdrawals/api/{withdrawal}/reject', [WithdrawalApprovalController::class, 'rejectWithdrawal'])->name('withdrawals.api.reject');
     Route::post('/withdrawals/api/{withdrawal}/complete', [WithdrawalApprovalController::class, 'completeWithdrawal'])->name('withdrawals.api.complete');
+    Route::get('/withdrawals/api/{withdrawal}/qr-code', [WithdrawalApprovalController::class, 'generateQRCode'])->name('withdrawals.api.qr-code');
 });

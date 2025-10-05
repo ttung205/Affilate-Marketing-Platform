@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Services\PublisherService;
+use App\Services\VietQRService;
 use App\Models\Withdrawal;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,7 +13,8 @@ use Illuminate\Support\Facades\Auth;
 class WithdrawalApprovalController extends Controller
 {
     public function __construct(
-        private PublisherService $publisherService
+        private PublisherService $publisherService,
+        private VietQRService $vietQRService
     ) {}
 
     /**
@@ -281,6 +283,43 @@ class WithdrawalApprovalController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
+            ], 400);
+        }
+    }
+    
+    /**
+     * Generate QR code để chuyển tiền (API)
+     */
+    public function generateQRCode(Withdrawal $withdrawal)
+    {
+        try {
+            // Kiểm tra trạng thái
+            if ($withdrawal->status !== 'approved') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Chỉ có thể tạo QR cho yêu cầu đã được duyệt'
+                ], 400);
+            }
+            
+            // Generate QR code
+            $qrData = $this->vietQRService->generateQRForWithdrawal($withdrawal);
+            
+            if (!$qrData['success']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $qrData['message']
+                ], 400);
+            }
+            
+            return response()->json([
+                'success' => true,
+                'data' => $qrData
+            ]);
+                
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không thể tạo mã QR: ' . $e->getMessage()
             ], 400);
         }
     }
