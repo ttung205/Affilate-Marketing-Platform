@@ -18,6 +18,9 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     
 // routes/web.php
 Route::post('products/preview-import', [ProductController::class, 'previewImport'])->name('products.preview-import');
+Route::post('shop/products/import-excel', [ProductController::class, 'importExcel'])
+    ->name('shop.products.import-excel');
+
 
 
 

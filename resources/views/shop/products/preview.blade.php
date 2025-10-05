@@ -1,36 +1,41 @@
 @extends('shop.layouts.app')
 
-@section('title', 'Xem trước Import Sản phẩm')
+@section('title', 'Nhập Sản Phẩm')
 
 @section('content')
 <div class="products-container">
-    <h1>Xem trước sản phẩm từ Excel</h1>
+    <h2>Xác Nhận Thêm Sản Phẩm</h2>
     <form action="{{ route('shop.products.import-excel') }}" method="POST">
         @csrf
         <input type="hidden" name="file_path" value="{{ $filePath }}">
         <table class="products-table">
-            <thead>
-                <tr>
-                    <th>Tên</th>
-                    <th>Mô tả</th>
-                    <th>Giá</th>
-                    <th>Danh mục</th>
-                    <th>Tồn kho</th>
-                    <th>Hoa hồng</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($rows as $row)
-                    <tr>
-                        <td>{{ $row['Tên'] ?? '' }}</td>
-                        <td>{{ $row['Mô tả'] ?? '' }}</td>
-                        <td>{{ $row['Gía'] ?? '' }}</td>
-                        <td>{{ $row['Danh mục'] ?? '' }}</td>
-                        <td>{{ $row['Tồn Kho'] ?? '' }}</td>
-                        <td>{{ $row['Hoa hồng'] ?? '' }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+      <thead>
+       <tr>
+         <th>Tên sản phẩm</th>
+         <th>Mô tả</th>
+         <th>Giá</th>
+         <th>Tồn kho</th>
+         <th>Danh mục</th>
+         <th>Link Aff</th>
+         <th>Hoa hồng (%)</th>
+       </tr>
+      </thead>
+   <tbody>
+    @foreach($rows as $row)
+        <tr>
+            <tr>
+              <td>{{ $row['name'] ?? '' }}</td>
+              <td>{{ $row['description'] ?? '' }}</td>
+              <td>{{ $row['price'] ?? '' }}</td>
+              <td>{{ $row['stock'] ?? '' }}</td>
+              <td>{{ $row['category_id'] ?? '' }}</td>
+              <td>{{ $row['affiliate_link'] ?? '' }}</td>
+              <td>{{ $row['commission_rate'] ?? 0 }}</td>
+            </tr>
+        </tr>
+    @endforeach
+   </tbody>
+
         </table>
 
         <button type="submit" class="btn btn-success mt-3">Xác nhận nhập vào kho</button>
