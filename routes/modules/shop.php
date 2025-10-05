@@ -9,14 +9,19 @@ use App\Http\Controllers\Shop\ProfileController;
 Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    // Product management routes
+    //import-export excel
+    Route::get('products/export-excel', [ProductController::class, 'exportExcel'])
+        ->name('products.export-excel');
+
+    Route::post('products/import-excel', [ProductController::class, 'importExcel'])
+        ->name('products.import-excel');
+
+    // Product management
     Route::resource('products', ProductController::class);
-    Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggle-status');
-    Route::delete('/products/{product}/image', [ProductController::class, 'removeImage'])->name('products.remove-image');
-
-
-
-
+    Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])
+        ->name('products.toggle-status');
+    Route::delete('/products/{product}/image', [ProductController::class, 'removeImage'])
+        ->name('products.remove-image');
 
     // Profile routes
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -24,3 +29,4 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
 });
+

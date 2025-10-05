@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use App\Services\ImageService;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\ProductsExport;
+use App\Imports\ProductsImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -151,6 +154,26 @@ class ProductController extends Controller
         $product->update($data);
 
         return redirect()->route('shop.products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
+    }
+     // Xuất Excel
+public function exportExcel()
+{
+    // Tên file set theo tgian
+    $fileName = 'products_' . now()->format('Ymd_His') . '.xlsx';
+
+    return Excel::download(new ProductsExport, $fileName);
+}
+
+    // Nhập Excel
+    public function importExcel(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv'
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('file'));
+
+        return redirect()->back()->with('success', 'Nhập sản phẩm thành công!');
     }
 
     public function destroy(Product $product)
