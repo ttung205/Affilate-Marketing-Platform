@@ -24,10 +24,7 @@
     <!-- Import -->
     <form action="{{ route('shop.products.import-excel') }}" method="POST" enctype="multipart/form-data" style="display:inline-block;">
        @csrf
-    <!-- Ẩn input file -->
        <input type="file" name="file" id="fileInput" style="display: none;" accept=".xlsx,.csv" required>
-    
-    <!-- Nút bấm vẫn hiển thị -->
         <button type="button" class="btn btn-primary" id="importButton">
         <i class="fas fa-file-import"></i> Nhập Excel
     </button>
@@ -344,5 +341,4 @@ function deleteProduct(productId, productName) {
 
 </script>
 @endpush
-
 
