@@ -16,7 +16,25 @@
             <i class="fas fa-plus"></i>
             Thêm Sản phẩm
         </a>
+    <!-- Export -->
+    <a href="{{ route('shop.products.export-excel') }}" class="btn btn-success">
+    <i class="fas fa-file-export"></i> Xuất Excel
+    </a>
+
+    <!-- Import -->
+    <form action="{{ route('shop.products.import-excel') }}" method="POST" enctype="multipart/form-data" style="display:inline-block;">
+       @csrf
+    <!-- Ẩn input file -->
+       <input type="file" name="file" id="fileInput" style="display: none;" accept=".xlsx,.csv" required>
+    
+    <!-- Nút bấm vẫn hiển thị -->
+        <button type="button" class="btn btn-primary" id="importButton">
+        <i class="fas fa-file-import"></i> Nhập Excel
+    </button>
+    </form>
+
     </div>
+
 
     <!-- Search and Filter Section -->
     <div class="search-filter-section">
@@ -239,6 +257,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('status').addEventListener('change', function() {
         this.closest('form').submit();
     });
+        const importButton = document.getElementById('importButton');
+    const fileInput = document.getElementById('fileInput');
+
+    importButton.addEventListener('click', function() {
+        fileInput.click(); 
+    });
+
+    fileInput.addEventListener('change', function() {
+        if(fileInput.files.length > 0){
+            fileInput.closest('form').submit(); 
+        }
+    });
 });
 
 // Toggle product status with confirm popup
@@ -308,5 +338,11 @@ function deleteProduct(productId, productName) {
         }
     });
 }
+//click import excel
+
+
+
 </script>
 @endpush
+
+
