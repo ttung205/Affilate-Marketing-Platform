@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\ProductsExport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
+use Illuminate\Support\Collection;
+use App\Imports\ProductsImportPreview;
 
 class ProductController extends Controller
 {
@@ -165,16 +168,25 @@ public function exportExcel()
 }
 
     // Nhập Excel
-    public function importExcel(Request $request)
-    {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,csv'
-        ]);
+public function importExcel(Request $request)
+{
+    $filePath = $request->input('file_path');
 
-        Excel::import(new ProductsImport, $request->file('file'));
-
-        return redirect()->back()->with('success', 'Nhập sản phẩm thành công!');
+    if (!$filePath || !Storage::exists($filePath)) {
+        return redirect()->back()->with('error', 'File import không tồn tại!');
     }
+
+    $file = Storage::path($filePath);
+
+    // Import dữ liệu vào DB
+    Excel::import(new ProductsImport, $file);
+
+    Storage::delete($filePath);
+
+    return redirect()->route('shop.products.index')
+        ->with('success', 'Nhập sản phẩm thành công!');
+}
+
 
     public function destroy(Product $product)
     {
@@ -239,4 +251,25 @@ public function exportExcel()
             ], 500);
         }
     }
+public function previewImport(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv'
+    ]);
+
+    $file = $request->file('file');
+    $filePath = $file->store('temp'); 
+
+    $import = new ProductsImportPreview();
+    Excel::import($import, $file);
+    $rows = $import->getRows();
+
+    return view('shop.products.preview', [
+        'rows' => $rows,
+        'filePath' => $filePath
+    ]);
+}
+
+
+
 }
