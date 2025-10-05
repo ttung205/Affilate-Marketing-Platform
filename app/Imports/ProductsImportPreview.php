@@ -10,7 +10,6 @@ class ProductsImportPreview implements ToArray
 
     public function array(array $array)
     {
-        // Bỏ header
         $dataRows = array_slice($array, 1);
 
         foreach ($dataRows as $row) {

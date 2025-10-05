@@ -181,7 +181,6 @@ public function importExcel(Request $request)
     // Import dữ liệu vào DB
     Excel::import(new ProductsImport, $file);
 
-    // Xóa file tạm
     Storage::delete($filePath);
 
     return redirect()->route('shop.products.index')
@@ -258,16 +257,13 @@ public function previewImport(Request $request)
         'file' => 'required|mimes:xlsx,csv'
     ]);
 
-    // 1. Lưu file tạm
     $file = $request->file('file');
-    $filePath = $file->store('temp'); // lưu vào storage/app/temp
+    $filePath = $file->store('temp'); 
 
-    // 2. Đọc nội dung file
     $import = new ProductsImportPreview();
     Excel::import($import, $file);
     $rows = $import->getRows();
 
-    // 3. Chuyển sang view preview
     return view('shop.products.preview', [
         'rows' => $rows,
         'filePath' => $filePath
