@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\ProductsExport;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\HeadingRowImport;
+use Illuminate\Support\Collection;
+use App\Imports\ProductsImportPreview;
 
 class ProductController extends Controller
 {
@@ -239,4 +242,28 @@ public function exportExcel()
             ], 500);
         }
     }
+public function previewImport(Request $request)
+{
+    $request->validate([
+        'file' => 'required|mimes:xlsx,csv'
+    ]);
+
+    // 1. Lưu file tạm
+    $file = $request->file('file');
+    $filePath = $file->store('temp'); // lưu vào storage/app/temp
+
+    // 2. Đọc nội dung file
+    $import = new ProductsImportPreview();
+    Excel::import($import, $file);
+    $rows = $import->getRows();
+
+    // 3. Chuyển sang view preview
+    return view('shop.products.preview', [
+        'rows' => $rows,
+        'filePath' => $filePath
+    ]);
+}
+
+
+
 }

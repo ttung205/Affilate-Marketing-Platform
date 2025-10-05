@@ -261,11 +261,14 @@ document.addEventListener('DOMContentLoaded', function() {
         fileInput.click(); 
     });
 
-    fileInput.addEventListener('change', function() {
-        if(fileInput.files.length > 0){
-            fileInput.closest('form').submit(); 
-        }
-    });
+ fileInput.addEventListener('change', function() {
+    if(fileInput.files.length > 0){
+        const form = fileInput.closest('form');
+        form.action = "{{ route('shop.products.preview-import') }}"; // route preview
+        form.submit();
+    }
+});
+
 });
 
 // Toggle product status with confirm popup
