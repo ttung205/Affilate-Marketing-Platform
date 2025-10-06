@@ -21,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // First, delete records with NULL product_id before making column not nullable
+        \App\Models\Click::whereNull('product_id')->delete();
+        
         Schema::table('clicks', function (Blueprint $table) {
             $table->unsignedBigInteger('product_id')->nullable(false)->change();
         });
