@@ -20,7 +20,6 @@
     <div class="category-management-card">
         <div class="category-card-header">
             <div class="category-card-header-left">
-                <h3>Danh sách danh mục</h3>
                 <span class="category-total-count">{{ $categories->total() }} danh mục</span>
             </div>
         </div>
