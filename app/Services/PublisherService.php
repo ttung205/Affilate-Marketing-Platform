@@ -242,11 +242,11 @@ class PublisherService
             $conversionCommission = $publisher->getTotalCommissionAttribute();
             $totalEarned = $clickCommission + $conversionCommission;
             
-            // Tính tổng đã rút
-            $totalWithdrawn = Transaction::where('publisher_id', $publisher->id)
+            // Tính tổng đã rút (lấy giá trị tuyệt đối vì withdrawal đã được lưu là số âm)
+            $totalWithdrawn = abs(Transaction::where('publisher_id', $publisher->id)
                 ->where('type', 'withdrawal')
                 ->where('status', 'completed')
-                ->sum('amount');
+                ->sum('amount'));
             
             // Số dư khả dụng = Tổng hoa hồng - Tổng đã rút
             $availableBalance = max(0, $totalEarned - $totalWithdrawn);
