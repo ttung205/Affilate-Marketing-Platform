@@ -500,6 +500,5 @@ function generateActionButtons(withdrawal) {
     0% { background-color: #fef3cd; }
     100% { background-color: transparent; }
 }
-
 </style>
 @endpush
