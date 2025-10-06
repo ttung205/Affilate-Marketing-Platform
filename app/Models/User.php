@@ -12,7 +12,7 @@ use Illuminate\Notifications\HasDatabaseNotifications;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasDatabaseNotifications;
 
     /**
      * The attributes that are mass assignable.
@@ -197,5 +197,16 @@ class User extends Authenticatable
     public function canWithdraw(float $amount): bool
     {
         return $this->getOrCreateWallet()->canWithdraw($amount);
+    }
+
+    // Notification relationships
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
     }
 }
