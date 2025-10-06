@@ -69,6 +69,11 @@ class Product extends Model
         return $this->hasMany(Conversion::class, 'product_id');
     }
 
+    public function approvedConversions(): HasMany
+    {
+        return $this->hasMany(Conversion::class, 'product_id')->where('status', 'approved');
+    }
+
     // Helper methods for affiliate
     public function getTotalClicksAttribute(): int
     {

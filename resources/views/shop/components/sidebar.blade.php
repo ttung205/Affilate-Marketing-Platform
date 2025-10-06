@@ -37,6 +37,14 @@
             </ul>
         </li>
         
+        <!-- Quản lý đơn Publisher -->
+        <li class="{{ request()->routeIs('shop.conversions.*') ? 'active' : '' }}">
+            <a href="{{ route('shop.conversions.index') }}">
+                <i class="fas fa-random"></i>
+                Đơn Publisher
+            </a>
+        </li>
+
         <!-- Quản lý hồ sơ -->
         <li class="{{ request()->routeIs('shop.profile.*') ? 'active' : '' }}">
             <a href="{{ route('shop.profile.edit') }}">

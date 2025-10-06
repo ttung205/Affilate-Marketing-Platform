@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shop\DashboardController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
+use App\Http\Controllers\Shop\ConversionController as ShopConversionController;
 
 // Shop routes
 Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
@@ -15,15 +16,13 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
 
     Route::post('products/import-excel', [ProductController::class, 'importExcel'])
         ->name('products.import-excel');
-    
-// routes/web.php
-Route::post('products/preview-import', [ProductController::class, 'previewImport'])->name('products.preview-import');
-Route::post('shop/products/import-excel', [ProductController::class, 'importExcel'])
-    ->name('shop.products.import-excel');
+    Route::post('products/preview-import', [ProductController::class, 'previewImport'])
+        ->name('products.preview-import');
 
-
-
-
+    Route::get('conversions', [ShopConversionController::class, 'index'])
+        ->name('conversions.index');
+    Route::patch('conversions/{conversion}', [ShopConversionController::class, 'updateStatus'])
+        ->name('conversions.update-status');
     // Product management
     Route::resource('products', ProductController::class);
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])

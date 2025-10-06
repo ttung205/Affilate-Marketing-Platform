@@ -72,17 +72,30 @@ class PublisherService
      */
     public function processConversionCommission(Conversion $conversion): void
     {
+        if ($conversion->is_commission_processed) {
+            Log::warning('Conversion commission already processed', [
+                'conversion_id' => $conversion->id
+            ]);
+            return;
+        }
+
+        if (!$conversion->isApproved()) {
+            Log::info('Conversion commission skipped because conversion not approved', [
+                'conversion_id' => $conversion->id,
+                'status' => $conversion->status
+            ]);
+            return;
+        }
+
         try {
             DB::beginTransaction();
 
             $publisher = $conversion->publisher;
             $affiliateLink = $conversion->affiliateLink;
             
-            // Tính hoa hồng từ conversion (%)
             $conversionCommission = (float) $conversion->commission;
             
             if ($conversionCommission > 0) {
-                // Cộng vào ví
                 $this->addToWallet($publisher, $conversionCommission, 'commission_earned', [
                     'type' => 'conversion_commission',
                     'conversion_id' => $conversion->id,
@@ -90,6 +103,11 @@ class PublisherService
                     'order_amount' => $conversion->amount,
                     'commission_rate' => $conversion->getCommissionRateAttribute(),
                     'description' => "Hoa hồng từ conversion - Order: {$conversion->order_id}"
+                ]);
+
+                $conversion->update([
+                    'is_commission_processed' => true,
+                    'commission_processed_at' => now(),
                 ]);
             }
 
@@ -106,6 +124,7 @@ class PublisherService
                 'conversion_id' => $conversion->id,
                 'error' => $e->getMessage()
             ]);
+            throw $e;
         }
     }
 

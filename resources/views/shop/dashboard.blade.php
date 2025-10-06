@@ -63,6 +63,16 @@
 
         <div class="stat-card">
             <div class="stat-icon">
+                <i class="fas fa-history"></i>
+            </div>
+            <div class="stat-content">
+                <h3>Đơn chờ duyệt</h3>
+                <p class="stat-value">{{ $stats['pending_conversions'] }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
                 <i class="fas fa-box"></i>
             </div>
             <div class="stat-content">

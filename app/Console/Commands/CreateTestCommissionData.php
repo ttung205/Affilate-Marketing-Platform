@@ -134,11 +134,15 @@ class CreateTestCommissionData extends Command
             'affiliate_link_id' => $affiliateLink->id,
             'publisher_id' => $publisher->id,
             'product_id' => 1,
+            'shop_id' => $affiliateLink->product->user_id ?? null,
             'tracking_code' => $affiliateLink->tracking_code,
             'order_id' => 'ORDER_OLD_' . time(),
             'amount' => 1000000, // 1,000,000 VNĐ
             'commission' => 150000, // 15% = 150,000 VNĐ
             'converted_at' => Carbon::now()->subDays(40),
+            'status' => 'approved',
+            'is_commission_processed' => true,
+            'commission_processed_at' => Carbon::now()->subDays(39),
         ]);
         
         // Tạo transaction cũ cho conversion
@@ -167,11 +171,14 @@ class CreateTestCommissionData extends Command
             'affiliate_link_id' => $affiliateLink->id,
             'publisher_id' => $publisher->id,
             'product_id' => 1,
+            'shop_id' => $affiliateLink->product->user_id ?? null,
             'tracking_code' => $affiliateLink->tracking_code,
             'order_id' => 'ORDER_NEW_' . time(),
             'amount' => 2000000, // 2,000,000 VNĐ
             'commission' => 300000, // 15% = 300,000 VNĐ
             'converted_at' => Carbon::now()->subDays(10),
+            'status' => 'pending',
+            'is_commission_processed' => false,
         ]);
         
         // Tạo transaction mới cho conversion
