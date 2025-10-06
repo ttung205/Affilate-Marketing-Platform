@@ -65,9 +65,21 @@
 /* Header Section */
 .products-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: center; 
     margin-bottom: 1.5rem;
+    gap: 15px; 
+}
+.products-header .add-product-btn {
+    margin-left: auto;
+}
+.products-header .add-product-btn,
+.products-header .btn-success {
+
+    margin-right: 10px; 
+}
+.products-header form {
+    display: inline-block;
+    margin-right: 0; 
 }
 
 .products-header h1 {
