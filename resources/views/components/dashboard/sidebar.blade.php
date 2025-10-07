@@ -95,6 +95,14 @@
             </a>
         </li>
         
+        <!-- Quản lý Phí sàn -->
+        <li class="{{ request()->routeIs('admin.platform-fee.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.platform-fee.index') }}">
+                <i class="fas fa-percentage"></i>
+                <span>Quản lý Phí sàn</span>
+            </a>
+        </li>
+        
         <!-- Quản lý Thông báo -->
         <li class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
             <a href="{{ route('admin.notifications.index') }}">

@@ -44,6 +44,14 @@
                 Đơn Publisher
             </a>
         </li>
+        
+        <!-- Thanh toán phí sàn -->
+        <li class="{{ request()->routeIs('shop.platform-fee.*') ? 'active' : '' }}">
+            <a href="{{ route('shop.platform-fee.index') }}">
+                <i class="fas fa-percentage"></i>
+                Thanh toán phí sàn
+            </a>
+        </li>
 
         <!-- Quản lý hồ sơ -->
         <li class="{{ request()->routeIs('shop.profile.*') ? 'active' : '' }}">

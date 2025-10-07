@@ -5,6 +5,7 @@ use App\Http\Controllers\Shop\DashboardController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\ConversionController as ShopConversionController;
+use App\Http\Controllers\Shop\PlatformFeePaymentController;
 
 // Shop routes
 Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
@@ -35,5 +36,10 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+
+    // Platform Fee Payment routes
+    Route::get('/platform-fee', [PlatformFeePaymentController::class, 'index'])->name('platform-fee.index');
+    Route::post('/platform-fee/generate-qr', [PlatformFeePaymentController::class, 'generateQR'])->name('platform-fee.generate-qr');
+    Route::post('/platform-fee/confirm', [PlatformFeePaymentController::class, 'confirmPayment'])->name('platform-fee.confirm');
 });
 
