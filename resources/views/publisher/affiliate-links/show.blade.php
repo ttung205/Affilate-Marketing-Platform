@@ -207,18 +207,6 @@ function copyToClipboard(text) {
         showToast('Đã copy vào clipboard!', 'success');
     });
 }
-
-function showToast(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        if (document.body.contains(toast)) {
-            document.body.removeChild(toast);
-        }
-    }, 3000);
-}
 </script>
 @endsection
 
