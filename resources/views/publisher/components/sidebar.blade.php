@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <h4 class="mb-0">
             <i class="fas fa-share-alt text-primary"></i>
-            PublisherAdmin
+            Publisher
         </h4>
     </div>
     

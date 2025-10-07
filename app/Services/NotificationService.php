@@ -9,11 +9,13 @@ use App\Notifications\RealTimeNotification;
 
 class NotificationService
 {
+    /**
+     * Send notification to a user (database only, using polling for real-time updates)
+     */
     public function sendNotification(
         User $user,
         string $type,
-        array $data = [],
-        array $channels = ['database', 'broadcast']
+        array $data = []
     ): void {
         // Get notification template
         $template = NotificationTemplate::where('type', $type)
@@ -44,62 +46,65 @@ class NotificationService
 
         // Send notification
         try {
-            $user->notify(new RealTimeNotification($notificationData, $channels));
+            $user->notify(new RealTimeNotification($notificationData));
             \Log::info("Notification sent to user {$user->id} successfully");
         } catch (\Exception $e) {
             \Log::error("Failed to send notification: " . $e->getMessage());
         }
     }
 
+    /**
+     * Send notification to multiple users
+     */
     public function sendBulkNotification(
         array $userIds,
         string $type,
-        array $data = [],
-        array $channels = ['database', 'broadcast']
+        array $data = []
     ): void {
         $users = User::whereIn('id', $userIds)->get();
         
         foreach ($users as $user) {
-            $this->sendNotification($user, $type, $data, $channels);
+            $this->sendNotification($user, $type, $data);
         }
     }
 
     /**
-     * Gửi thông báo tùy chỉnh (không cần template)
+     * Send custom notification without template
      */
     public function sendCustomNotification(
         User $user,
-        array $data = [],
-        array $channels = ['database', 'broadcast']
+        array $data = []
     ): void {
         // Prepare notification data với giá trị mặc định
         $notificationData = [
             'type' => 'custom',
             'title' => $data['title'] ?? 'Thông báo',
             'message' => $data['message'] ?? 'Bạn có thông báo mới',
-            'icon' => 'fas fa-bell', // Icon mặc định
-            'color' => 'blue', // Màu mặc định
+            'icon' => $data['icon'] ?? 'fas fa-bell',
+            'color' => $data['color'] ?? 'blue',
             'data' => $data,
             'created_at' => now()->toISOString(),
         ];
 
         // Send notification
         try {
-            $user->notify(new RealTimeNotification($notificationData, $channels));
+            $user->notify(new RealTimeNotification($notificationData));
             \Log::info("Custom notification sent to user {$user->id} successfully");
         } catch (\Exception $e) {
             \Log::error("Failed to send custom notification: " . $e->getMessage());
         }
     }
 
+    /**
+     * Send notification to all users with a specific role
+     */
     public function sendToRole(
         string $role,
         string $type,
-        array $data = [],
-        array $channels = ['database', 'broadcast']
+        array $data = []
     ): void {
         $userIds = User::where('role', $role)->pluck('id')->toArray();
-        $this->sendBulkNotification($userIds, $type, $data, $channels);
+        $this->sendBulkNotification($userIds, $type, $data);
     }
 
     // Specific notification methods

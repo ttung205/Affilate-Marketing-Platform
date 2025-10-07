@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <h4 class="mb-0">
             <i class="fas fa-store text-primary"></i>
-            ShopAdmin
+            ShopManager
         </h4>
     </div>
     

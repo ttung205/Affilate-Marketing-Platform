@@ -3,49 +3,34 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
 class RealTimeNotification extends Notification
 {
     use Queueable;
 
+    /**
+     * Create a new notification instance.
+     * Simplified to only use database channel with polling.
+     */
     public function __construct(
-        private array $data,
-        private array $channels = ['database', 'broadcast']
+        private array $data
     ) {}
 
+    /**
+     * Get the notification's delivery channels.
+     * Only using database channel since we're using polling for real-time updates.
+     */
     public function via($notifiable): array
     {
-        return $this->channels;
+        return ['database'];
     }
 
+    /**
+     * Get the array representation of the notification for database.
+     */
     public function toDatabase($notifiable): array
     {
         return $this->data;
-    }
-
-    public function toBroadcast($notifiable): BroadcastMessage
-    {
-        return new BroadcastMessage([
-            'id' => $this->id,
-            'type' => $this->data['type'],
-            'title' => $this->data['title'],
-            'message' => $this->data['message'],
-            'icon' => $this->data['icon'],
-            'color' => $this->data['color'],
-            'data' => $this->data['data'],
-            'created_at' => $this->data['created_at'],
-            'read_at' => null,
-        ]);
-    }
-
-    public function broadcastOn(): array
-    {
-        return [
-            'user.' . $this->notifiable->id,
-            'notifications',
-        ];
     }
 }

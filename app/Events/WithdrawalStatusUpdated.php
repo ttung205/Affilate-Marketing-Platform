@@ -3,17 +3,16 @@
 namespace App\Events;
 
 use App\Models\Withdrawal;
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class WithdrawalStatusUpdated implements ShouldBroadcast
+/**
+ * Event fired when withdrawal status is updated
+ * Broadcasting disabled - using polling-based notifications instead
+ */
+class WithdrawalStatusUpdated
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, SerializesModels;
 
     public $withdrawal;
     public $previousStatus;
@@ -32,29 +31,9 @@ class WithdrawalStatusUpdated implements ShouldBroadcast
     }
 
     /**
-     * Get the channels the event should broadcast on.
+     * Get withdrawal data for notification
      */
-    public function broadcastOn(): array
-    {
-        return [
-            new PrivateChannel('withdrawal.' . $this->withdrawal->id),
-            new PrivateChannel('user.' . $this->withdrawal->publisher_id),
-            new PrivateChannel('admin.withdrawals'),
-        ];
-    }
-
-    /**
-     * The event's broadcast name.
-     */
-    public function broadcastAs(): string
-    {
-        return 'withdrawal.status.updated';
-    }
-
-    /**
-     * Get the data to broadcast.
-     */
-    public function broadcastWith(): array
+    public function getWithdrawalData(): array
     {
         return [
             'withdrawal' => [
