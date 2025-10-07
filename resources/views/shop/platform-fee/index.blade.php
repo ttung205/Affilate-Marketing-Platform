@@ -75,7 +75,6 @@
             <div class="payment-action-info">
                 <h3>Bạn có khoản phí sàn cần thanh toán</h3>
                 <p>Số tiền cần thanh toán: <strong>{{ number_format($totalDebt, 0, ',', '.') }} VND</strong></p>
-                <p class="payment-note">Nhấn nút bên dưới để tạo mã QR thanh toán qua MBBank</p>
             </div>
             <form action="{{ route('shop.platform-fee.generate-qr') }}" method="POST">
                 @csrf

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('total_products_value', 15, 2)->default(0); // Tổng giá trị sản phẩm
             $table->decimal('fee_percentage', 5, 2); // % phí áp dụng
             $table->decimal('fee_amount', 15, 2); // Số tiền phí
-            $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'paid', 'rejected'])->default('pending');
             $table->text('qr_code')->nullable(); // QR code thanh toán
             $table->timestamp('paid_at')->nullable(); // Thời gian thanh toán
             $table->text('note')->nullable();

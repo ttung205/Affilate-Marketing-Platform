@@ -95,12 +95,27 @@
             </a>
         </li>
         
-        <!-- Quản lý Phí sàn -->
-        <li class="{{ request()->routeIs('admin.platform-fee.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.platform-fee.index') }}">
+        <!-- Quản lý Phí sàn với submenu -->
+        <li class="sidebar-menu-item {{ request()->routeIs('admin.platform-fee.*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
                 <i class="fas fa-percentage"></i>
                 <span>Quản lý Phí sàn</span>
+                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
+            <ul class="sidebar-submenu">
+                <li class="{{ request()->routeIs('admin.platform-fee.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.platform-fee.index') }}">
+                        <i class="fas fa-cog"></i>
+                        Cài đặt phí sàn
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('admin.platform-fee.payments') ? 'active' : '' }}">
+                    <a href="{{ route('admin.platform-fee.payments', ['status' => 'pending']) }}">
+                        <i class="fas fa-check-circle"></i>
+                        Duyệt thanh toán
+                    </a>
+                </li>
+            </ul>
         </li>
         
         <!-- Quản lý Thông báo -->

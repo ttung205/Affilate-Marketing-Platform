@@ -6,11 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\PlatformFeeSetting;
 use App\Models\PlatformFeePayment;
 use App\Models\Product;
+use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PlatformFeePaymentController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     /**
      * Hiển thị trang thanh toán phí sàn
      */
@@ -161,6 +170,19 @@ class PlatformFeePaymentController extends Controller
             'qr_code' => $pendingPayment['qr_code'],
             'note' => 'Shop đã xác nhận thanh toán, chờ admin duyệt'
         ]);
+        
+        // Gửi thông báo cho tất cả admin
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $this->notificationService->sendCustomNotification($admin, [
+                'title' => ' Thanh toán phí sàn mới',
+                'message' => 'Shop ' . Auth::user()->name . ' đã xác nhận thanh toán phí sàn ' . number_format($pendingPayment['fee_amount'], 0, ',', '.') . ' VNĐ. Vui lòng kiểm tra và duyệt.',
+                'icon' => 'fas fa-money-bill-wave',
+                'color' => 'blue',
+                'action_url' => route('admin.platform-fee.payments', ['status' => 'pending']),
+                'action_text' => 'Xem và duyệt',
+            ]);
+        }
         
         // Xóa dữ liệu khỏi session
         $request->session()->forget('pending_payment');

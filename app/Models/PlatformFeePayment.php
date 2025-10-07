@@ -14,14 +14,18 @@ class PlatformFeePayment extends Model
         'status',
         'qr_code',
         'paid_at',
-        'note'
+        'note',
+        'admin_note',
+        'verified_by',
+        'verified_at'
     ];
 
     protected $casts = [
         'total_products_value' => 'decimal:2',
         'fee_percentage' => 'decimal:2',
         'fee_amount' => 'decimal:2',
-        'paid_at' => 'datetime'
+        'paid_at' => 'datetime',
+        'verified_at' => 'datetime'
     ];
 
     /**
@@ -30,5 +34,13 @@ class PlatformFeePayment extends Model
     public function shop()
     {
         return $this->belongsTo(User::class, 'shop_id');
+    }
+
+    /**
+     * Relationship với Admin (người duyệt)
+     */
+    public function verifier()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 }
