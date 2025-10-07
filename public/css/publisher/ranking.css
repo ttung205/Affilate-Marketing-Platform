@@ -1,0 +1,303 @@
+/* Publisher Ranking Pages Styles */
+
+.publisher-ranking-page,
+.publisher-leaderboard-page {
+    padding: 20px;
+    background-color: #f8fafc;
+    min-height: calc(100vh - 80px);
+}
+
+.page-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Ranking Card Styles */
+.ranking-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    position: relative;
+    overflow: hidden;
+}
+
+.ranking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 60%
+    );
+    transform: rotate(45deg);
+    transform-origin: top right;
+}
+
+.ranking-stats .stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Ranking Tier Cards */
+.ranking-tier-card {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.ranking-tier-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ranking-tier-card.current-tier {
+    border-width: 3px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.tier-header {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.tier-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.tier-name {
+    margin: 0;
+    font-weight: 600;
+    color: #495057;
+}
+
+.tier-body {
+    padding: 1rem;
+}
+
+.tier-requirements {
+    margin-bottom: 1rem;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.requirement i {
+    margin-right: 0.5rem;
+    width: 16px;
+    color: #6c757d;
+}
+
+.tier-bonus {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.tier-benefits {
+    color: #6c757d;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Progress Styles */
+.progress-item {
+    margin-bottom: 1rem;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar.bg-success {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+/* Leaderboard Styles */
+.leaderboard-card {
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.rank-number {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.avatar-placeholder {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.publisher-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.commission-amount {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.conversion-rate {
+    font-weight: 500;
+    color: #17a2b8;
+}
+
+.achievement-badges .badge {
+    margin-right: 2px;
+    font-size: 0.7rem;
+}
+
+.empty-state {
+    padding: 2rem;
+    text-align: center;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.empty-state h6 {
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.empty-state small {
+    color: #9ca3af;
+}
+
+/* Statistics Cards */
+.stat-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #495057;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Table Styles */
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.table td {
+    vertical-align: middle;
+    border-top: 1px solid #e9ecef;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .publisher-ranking-page,
+    .publisher-leaderboard-page {
+        padding: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .progress-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .stat-icon {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+}

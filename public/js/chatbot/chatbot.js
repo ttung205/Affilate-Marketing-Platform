@@ -28,6 +28,8 @@ class AffiliateChatbot {
         this.chatbotBadge = document.getElementById('chatbot-badge');
         this.chatbotLoading = document.getElementById('chatbot-loading');
         this.chatbotQuickActions = document.getElementById('chatbot-quick-actions');
+        this.chatbotQuickActionsToggle = document.getElementById('chatbot-quick-actions-toggle');
+        this.chatbotQuickActionsContent = document.getElementById('chatbot-quick-actions-content');
         this.chatbotRoleSubtitle = document.getElementById('chatbot-role-subtitle');
     }
 
@@ -40,6 +42,9 @@ class AffiliateChatbot {
                 this.sendMessage();
             }
         });
+
+        // Quick actions toggle
+        this.chatbotQuickActionsToggle.addEventListener('click', () => this.toggleQuickActions());
 
         // Close chat when clicking outside
         document.addEventListener('click', (e) => {
@@ -76,24 +81,23 @@ class AffiliateChatbot {
         const quickActions = this.getQuickActionsForRole(this.userRole);
         
         if (quickActions.length > 0) {
-            const quickActionsHTML = `
-                <div class="chatbot-quick-actions-title">Các câu hỏi thường gặp:</div>
-                <div class="chatbot-quick-actions-list">
-                    ${quickActions.map(action => 
-                        `<button class="chatbot-quick-action" data-action="${action.action}">${action.label}</button>`
-                    ).join('')}
-                </div>
-            `;
+            const quickActionsHTML = quickActions.map(action => 
+                `<button class="chatbot-quick-action" data-action="${action.action}">${action.label}</button>`
+            ).join('');
             
-            this.chatbotQuickActions.innerHTML = quickActionsHTML;
+            this.chatbotQuickActionsContent.innerHTML = quickActionsHTML;
             
             // Add event listeners to quick actions
-            this.chatbotQuickActions.querySelectorAll('.chatbot-quick-action').forEach(button => {
+            this.chatbotQuickActionsContent.querySelectorAll('.chatbot-quick-action').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const action = e.target.getAttribute('data-action');
-                    this.handleQuickAction(action);
+                    const label = e.target.textContent;
+                    this.handleQuickAction(action, label);
                 });
             });
+            
+            // Initialize quick actions as collapsed
+            this.chatbotQuickActionsContent.classList.add('collapsed');
         }
     }
 
@@ -370,7 +374,34 @@ class AffiliateChatbot {
         return responses[this.userRole] || responses['guest'];
     }
 
-    handleQuickAction(action) {
+    toggleQuickActions() {
+        const isCollapsed = this.chatbotQuickActionsContent.classList.contains('collapsed');
+        
+        if (isCollapsed) {
+            this.chatbotQuickActionsContent.classList.remove('collapsed');
+            this.chatbotQuickActionsContent.classList.add('expanded');
+            this.chatbotQuickActionsToggle.classList.add('rotated');
+        } else {
+            this.chatbotQuickActionsContent.classList.remove('expanded');
+            this.chatbotQuickActionsContent.classList.add('collapsed');
+            this.chatbotQuickActionsToggle.classList.remove('rotated');
+        }
+    }
+
+    handleQuickAction(action, label) {
+        // Add the quick action as a user message
+        this.addUserMessage(label);
+        
+        // Show typing indicator
+        this.showTypingIndicator();
+        
+        // Process the action after delay
+        setTimeout(() => {
+            this.processQuickAction(action);
+        }, 1000 + Math.random() * 1000);
+    }
+
+    processQuickAction(action) {
         const responses = {
             'admin_dashboard': 'Dashboard admin cung cấp tổng quan về toàn bộ hệ thống, bao gồm số liệu thống kê, biểu đồ và các chỉ số quan trọng.',
             'admin_users': 'Quản lý người dùng cho phép bạn thêm, chỉnh sửa, xóa tài khoản và phân quyền cho từng role.',

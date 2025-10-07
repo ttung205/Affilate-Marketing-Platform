@@ -8,6 +8,7 @@ use App\Http\Controllers\Publisher\WalletController;
 use App\Http\Controllers\Publisher\WithdrawalController;
 use App\Http\Controllers\Publisher\PaymentMethodController;
 use App\Http\Controllers\Publisher\ProfileController;
+use App\Http\Controllers\Publisher\RankingController;
 
 // Publisher routes
 Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publisher.')->group(function () {
@@ -63,4 +64,11 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+
+    // Ranking routes
+    Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index');
+    Route::get('/ranking/leaderboard', [RankingController::class, 'leaderboard'])->name('ranking.leaderboard');
+    Route::get('/ranking/api/current', [RankingController::class, 'getCurrentRanking'])->name('ranking.api.current');
+    Route::post('/ranking/api/update', [RankingController::class, 'updateRanking'])->name('ranking.update');
+    Route::get('/ranking/api/leaderboard', [RankingController::class, 'getLeaderboard'])->name('ranking.api.leaderboard');
 });

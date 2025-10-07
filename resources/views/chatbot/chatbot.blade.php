@@ -61,7 +61,18 @@
 
         <!-- Quick Actions -->
         <div id="chatbot-quick-actions" class="chatbot-quick-actions">
-            <!-- Quick actions sẽ được thêm động theo role -->
+            <div class="chatbot-quick-actions-header">
+                <span class="chatbot-quick-actions-title">Các câu hỏi thường gặp</span>
+                <button id="chatbot-quick-actions-toggle" class="chatbot-quick-actions-toggle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+            <div id="chatbot-quick-actions-content" class="chatbot-quick-actions-content">
+                <!-- Quick actions sẽ được thêm động theo role -->
+            </div>
         </div>
 
         <!-- Chat Input -->
