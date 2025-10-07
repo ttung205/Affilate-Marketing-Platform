@@ -13,6 +13,7 @@
 .modal.show .modal-dialog {
     margin: 1rem !important;
     max-width: 95vw !important;
+    min-width: 30vw !important;
     min-height: 500px;
     max-height: 90vh;
 }

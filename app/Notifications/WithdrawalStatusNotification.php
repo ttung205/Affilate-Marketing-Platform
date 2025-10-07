@@ -6,9 +6,10 @@ use App\Models\Withdrawal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-class WithdrawalStatusNotification extends Notification implements ShouldQueue
+class WithdrawalStatusNotification extends Notification // implements ShouldQueue
 {
     use Queueable;
 
@@ -63,6 +64,14 @@ class WithdrawalStatusNotification extends Notification implements ShouldQueue
         $mailMessage->action('Xem chi tiết', route('publisher.withdrawal.show', $this->withdrawal));
 
         return $mailMessage;
+    }
+
+    /**
+     * Get the broadcast representation of the notification.
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage($this->toArray($notifiable));
     }
 
     /**

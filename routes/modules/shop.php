@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Shop\DashboardController;
 use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
+use App\Http\Controllers\Shop\ConversionController as ShopConversionController;
+use App\Http\Controllers\Shop\PlatformFeePaymentController;
 
 // Shop routes
 Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
@@ -15,15 +17,13 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
 
     Route::post('products/import-excel', [ProductController::class, 'importExcel'])
         ->name('products.import-excel');
-    
-// routes/web.php
-Route::post('products/preview-import', [ProductController::class, 'previewImport'])->name('products.preview-import');
-Route::post('shop/products/import-excel', [ProductController::class, 'importExcel'])
-    ->name('shop.products.import-excel');
+    Route::post('products/preview-import', [ProductController::class, 'previewImport'])
+        ->name('products.preview-import');
 
-
-
-
+    Route::get('conversions', [ShopConversionController::class, 'index'])
+        ->name('conversions.index');
+    Route::patch('conversions/{conversion}', [ShopConversionController::class, 'updateStatus'])
+        ->name('conversions.update-status');
     // Product management
     Route::resource('products', ProductController::class);
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])
@@ -36,5 +36,10 @@ Route::post('shop/products/import-excel', [ProductController::class, 'importExce
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update-avatar');
     Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.remove-avatar');
+
+    // Platform Fee Payment routes
+    Route::get('/platform-fee', [PlatformFeePaymentController::class, 'index'])->name('platform-fee.index');
+    Route::post('/platform-fee/generate-qr', [PlatformFeePaymentController::class, 'generateQR'])->name('platform-fee.generate-qr');
+    Route::post('/platform-fee/confirm', [PlatformFeePaymentController::class, 'confirmPayment'])->name('platform-fee.confirm');
 });
 

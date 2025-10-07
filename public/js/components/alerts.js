@@ -165,8 +165,40 @@ document.addEventListener('DOMContentLoaded', () => {
 window.showAlert = AlertSystem.show;
 window.closeAlert = AlertSystem.closeAlert;
 
+// Compatibility functions for Toast.js (to maintain backward compatibility)
+window.showSuccess = function(message, title = 'Thành công!') {
+    return AlertSystem.show('success', title, message);
+};
+
+window.showError = function(message, title = 'Lỗi!') {
+    return AlertSystem.show('error', title, message);
+};
+
+window.showWarning = function(message, title = 'Cảnh báo!') {
+    return AlertSystem.show('warning', title, message);
+};
+
+window.showInfo = function(message, title = 'Thông tin!') {
+    return AlertSystem.show('info', title, message);
+};
+
+window.showToast = function(message, type = 'info', title = null, duration = 5000) {
+    const titles = {
+        success: 'Thành công!',
+        error: 'Lỗi!',
+        warning: 'Cảnh báo!',
+        info: 'Thông tin!'
+    };
+    return AlertSystem.show(type, title || titles[type] || titles.info, message, duration);
+};
+
 // Example usage:
 // showAlert('success', 'Thành công!', 'Sản phẩm đã được tạo thành công!');
 // showAlert('error', 'Lỗi!', 'Không thể tạo sản phẩm!');
 // showAlert('warning', 'Cảnh báo!', 'Vui lòng kiểm tra lại thông tin!');
 // showAlert('info', 'Thông tin!', 'Đang xử lý yêu cầu của bạn!');
+// 
+// Or use compatibility functions:
+// showSuccess('Tạo thành công!');
+// showError('Có lỗi xảy ra!');
+// showToast('Đã copy!', 'success');

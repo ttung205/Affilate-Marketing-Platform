@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Product;
-use App\Models\Order;
 use App\Models\Conversion;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +26,7 @@ class DashboardController extends Controller
             'month_revenue' => $this->getMonthRevenue($shop->id),
             'today_orders' => $this->getTodayOrders($shop->id),
             'month_orders' => $this->getMonthOrders($shop->id),
+            'pending_conversions' => $this->getPendingConversionsCount($shop->id),
             'total_products' => Product::where('user_id', $shop->id)->count(),
             'active_products' => Product::where('user_id', $shop->id)->where('is_active', true)->count(),
         ];
@@ -43,65 +43,67 @@ class DashboardController extends Controller
     private function getTodayRevenue($shopId)
     {
         // Lấy doanh thu hôm nay từ conversions
-        return Conversion::whereHas('product', function($query) use ($shopId) {
-            $query->where('user_id', $shopId);
-        })
-        ->whereDate('created_at', today())
-        ->sum('amount');
+        return Conversion::where('shop_id', $shopId)
+            ->where('status', 'approved')
+            ->whereDate('status_changed_at', today())
+            ->sum('amount');
     }
 
     private function getMonthRevenue($shopId)
     {
         // Lấy doanh thu tháng này
-        return Conversion::whereHas('product', function($query) use ($shopId) {
-            $query->where('user_id', $shopId);
-        })
-        ->whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->sum('amount');
+        return Conversion::where('shop_id', $shopId)
+            ->where('status', 'approved')
+            ->whereMonth('status_changed_at', now()->month)
+            ->whereYear('status_changed_at', now()->year)
+            ->sum('amount');
     }
 
     private function getTodayOrders($shopId)
     {
         // Lấy số đơn hàng hôm nay
-        return Conversion::whereHas('product', function($query) use ($shopId) {
-            $query->where('user_id', $shopId);
-        })
-        ->whereDate('created_at', today())
-        ->count();
+        return Conversion::where('shop_id', $shopId)
+            ->where('status', 'approved')
+            ->whereDate('status_changed_at', today())
+            ->count();
     }
 
     private function getMonthOrders($shopId)
     {
         // Lấy số đơn hàng tháng này
-        return Conversion::whereHas('product', function($query) use ($shopId) {
-            $query->where('user_id', $shopId);
-        })
-        ->whereMonth('created_at', now()->month)
-        ->whereYear('created_at', now()->year)
-        ->count();
+        return Conversion::where('shop_id', $shopId)
+            ->where('status', 'approved')
+            ->whereMonth('status_changed_at', now()->month)
+            ->whereYear('status_changed_at', now()->year)
+            ->count();
     }
 
     private function getRecentOrders($shopId, $limit = 5)
     {
         // Lấy đơn hàng gần đây
-        return Conversion::whereHas('product', function($query) use ($shopId) {
-            $query->where('user_id', $shopId);
-        })
-        ->with(['product', 'affiliateLink.publisher'])
-        ->orderBy('created_at', 'desc')
-        ->limit($limit)
-        ->get();
+        return Conversion::where('shop_id', $shopId)
+            ->with(['product', 'affiliateLink.publisher'])
+            ->orderBy('status_changed_at', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
     }
 
     private function getTopProducts($shopId, $limit = 5)
     {
         // Lấy top sản phẩm bán chạy
         return Product::where('user_id', $shopId)
-            ->withCount(['conversions as total_orders'])
-            ->withSum(['conversions as total_revenue'], 'amount')
+            ->withCount(['approvedConversions as total_orders'])
+            ->withSum(['approvedConversions as total_revenue'], 'amount')
             ->orderBy('total_orders', 'desc')
             ->limit($limit)
             ->get();
+    }
+
+    private function getPendingConversionsCount($shopId)
+    {
+        return Conversion::where('shop_id', $shopId)
+            ->where('status', 'pending')
+            ->count();
     }
 }

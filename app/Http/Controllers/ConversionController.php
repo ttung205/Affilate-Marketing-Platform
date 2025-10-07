@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\AffiliateLink;
 use App\Models\Conversion;
-use App\Services\PublisherService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -66,16 +65,15 @@ class ConversionController extends Controller
                 'affiliate_link_id' => $affiliateLink->id,
                 'publisher_id' => $affiliateLink->publisher_id,
                 'product_id' => $affiliateLink->product_id,
+                'shop_id' => $affiliateLink->product->user_id ?? null,
                 'tracking_code' => $request->tracking_code,
                 'order_id' => $request->order_id,
                 'amount' => $request->amount,
                 'commission' => $commission,
                 'converted_at' => now(),
+                'status' => 'pending',
+                'is_commission_processed' => false,
             ]);
-
-            // Xử lý hoa hồng từ conversion
-            $publisherService = new PublisherService();
-            $publisherService->processConversionCommission($conversion);
 
             DB::commit();
 
@@ -94,7 +92,8 @@ class ConversionController extends Controller
                     'publisher_id' => $affiliateLink->publisher_id,
                     'amount' => $request->amount,
                     'commission' => $commission,
-                    'commission_rate' => $commissionRate
+                    'commission_rate' => $commissionRate,
+                    'status' => $conversion->status
                 ]
             ]);
 

@@ -1,0 +1,376 @@
+.conversions-page {
+    padding: 2rem;
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2933;
+}
+
+.page-header p {
+    margin: 0.5rem 0 0;
+    color: #52606d;
+}
+
+.summary-cards {
+    display: flex;
+    gap: 1rem;
+}
+
+.summary-card {
+    min-width: 180px;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid #e4e7eb;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+}
+
+.summary-card .label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card .value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.summary-card .amount {
+    display: block;
+    margin-top: 0.25rem;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.summary-card.pending {
+    border-left: 4px solid #facc15;
+}
+
+.summary-card.approved {
+    border-left: 4px solid #22c55e;
+}
+
+.summary-card.rejected {
+    border-left: 4px solid #ef4444;
+}
+
+.filter-card {
+    padding: 1.5rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    box-shadow: 0 3px 15px rgba(15, 23, 42, 0.05);
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    align-items: end;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 0.5rem;
+}
+
+.filter-group input,
+.filter-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid #cbd5f5;
+    background: #f8fafc;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+.table-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+    padding: 1.5rem;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.table-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #1f2937;
+}
+
+.table-header .total-count {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.conversions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.conversions-table th {
+    text-align: left;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    font-weight: 700;
+    padding: 0.85rem 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+    background: #f8fafc;
+}
+
+.conversions-table td {
+    padding: 1rem 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+}
+
+.conversions-table tr:hover {
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.product-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.product-cell img {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+.product-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.publisher-cell .publisher-name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.sub-text {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.amount,
+.commission {
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.status-pending {
+    background: rgba(250, 204, 21, 0.12);
+    color: #a16207;
+}
+
+.status-badge.status-approved {
+    background: rgba(34, 197, 94, 0.15);
+    color: #15803d;
+}
+
+.status-badge.status-rejected {
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+}
+
+.status-note {
+    display: inline-block;
+    max-width: 220px;
+    color: #1f2937;
+}
+
+.status-note:hover {
+    color: #2563eb;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-buttons form {
+    display: inline;
+}
+
+.btn-sm {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.btn-success:hover,
+.btn-danger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(15, 118, 110, 0.25);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.badge-success {
+    background: rgba(34, 197, 94, 0.15);
+    color: #15803d;
+}
+
+.pagination-wrapper {
+    margin-top: 1.5rem;
+}
+
+.pagination-wrapper nav {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #94a3b8;
+}
+
+.empty-state img {
+    width: 220px;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 1200px) {
+    .summary-cards {
+        flex-wrap: wrap;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 992px) {
+    .conversions-table th,
+    .conversions-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

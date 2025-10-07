@@ -6,9 +6,10 @@ use App\Models\Withdrawal;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
 
-class WithdrawalRequestNotification extends Notification implements ShouldQueue
+class WithdrawalRequestNotification extends Notification // implements ShouldQueue
 {
     use Queueable;
 
@@ -46,6 +47,14 @@ class WithdrawalRequestNotification extends Notification implements ShouldQueue
             ->line('Thời gian: ' . $this->withdrawal->created_at->format('d/m/Y H:i'))
             ->action('Xem chi tiết', route('admin.withdrawals.show', $this->withdrawal))
             ->line('Vui lòng xem xét và xử lý yêu cầu này.');
+    }
+
+    /**
+     * Get the broadcast representation of the notification.
+     */
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        return new BroadcastMessage($this->toArray($notifiable));
     }
 
     /**

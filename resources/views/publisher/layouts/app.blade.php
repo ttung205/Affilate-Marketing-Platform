@@ -60,18 +60,10 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-
     <!-- Alert System JavaScript -->
     <script src="{{ asset('js/components/alerts.js') }}"></script>
     <!-- Confirm Popup JavaScript -->
     <script src="{{ asset('js/components/confirm-popup.js') }}"></script>
-
-    <!-- Toast Notification System -->
-    <script src="{{ asset('js/components/toast.js') }}"></script>
-    
 
     <!-- Real-time Notifications Script -->
     <script>

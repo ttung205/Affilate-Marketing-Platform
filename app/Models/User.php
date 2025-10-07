@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Notifications\HasDatabaseNotifications;
 
 class User extends Authenticatable
@@ -75,6 +76,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Conversion::class, 'publisher_id');
     }
+
 
     // Helper methods for affiliate
     public function getTotalClicksAttribute(): int

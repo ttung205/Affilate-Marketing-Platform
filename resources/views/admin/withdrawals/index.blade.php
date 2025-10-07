@@ -439,32 +439,7 @@ function refreshStats() {
     }
 }
 
-function showRealtimeNotification(event) {
-    const withdrawal = event.withdrawal;
-    const message = `Yêu cầu rút tiền #${withdrawal.id} đã được cập nhật thành "${getStatusLabel(withdrawal.status)}"`;
-    
-    // Create notification
-    const notification = document.createElement('div');
-    notification.className = 'realtime-notification';
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-bell"></i>
-            <span>${message}</span>
-            <button class="close-notification" onclick="this.parentElement.parentElement.remove()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
-}
+
 
 function getStatusLabel(status) {
     const labels = {
@@ -524,44 +499,6 @@ function generateActionButtons(withdrawal) {
 @keyframes highlight {
     0% { background-color: #fef3cd; }
     100% { background-color: transparent; }
-}
-
-.realtime-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 9999;
-    max-width: 400px;
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-.notification-content {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.close-notification {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-    margin-left: auto;
-}
-
-.close-notification:hover {
-    opacity: 0.7;
 }
 </style>
 @endpush

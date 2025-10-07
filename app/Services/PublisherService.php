@@ -52,11 +52,6 @@ class PublisherService
             }
 
             DB::commit();
-            Log::info("Click commission processed", [
-                'click_id' => $click->id,
-                'publisher_id' => $publisher->id,
-                'commission' => $clickCommission
-            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -72,17 +67,23 @@ class PublisherService
      */
     public function processConversionCommission(Conversion $conversion): void
     {
+        if ($conversion->is_commission_processed) {
+            return;
+        }
+
+        if (!$conversion->isApproved()) {
+            return;
+        }
+
         try {
             DB::beginTransaction();
 
             $publisher = $conversion->publisher;
             $affiliateLink = $conversion->affiliateLink;
             
-            // Tính hoa hồng từ conversion (%)
             $conversionCommission = (float) $conversion->commission;
             
             if ($conversionCommission > 0) {
-                // Cộng vào ví
                 $this->addToWallet($publisher, $conversionCommission, 'commission_earned', [
                     'type' => 'conversion_commission',
                     'conversion_id' => $conversion->id,
@@ -91,14 +92,14 @@ class PublisherService
                     'commission_rate' => $conversion->getCommissionRateAttribute(),
                     'description' => "Hoa hồng từ conversion - Order: {$conversion->order_id}"
                 ]);
+
+                $conversion->update([
+                    'is_commission_processed' => true,
+                    'commission_processed_at' => now(),
+                ]);
             }
 
             DB::commit();
-            Log::info("Conversion commission processed", [
-                'conversion_id' => $conversion->id,
-                'publisher_id' => $publisher->id,
-                'commission' => $conversionCommission
-            ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -106,6 +107,7 @@ class PublisherService
                 'conversion_id' => $conversion->id,
                 'error' => $e->getMessage()
             ]);
+            throw $e;
         }
     }
 
@@ -160,14 +162,6 @@ class PublisherService
     {
         // Sync wallet từ transactions để đảm bảo dữ liệu chính xác
         $this->syncWalletFromTransactions($publisher);
-        
-        // Log để debug
-        Log::info('Commission calculation ensured', [
-            'publisher_id' => $publisher->id,
-            'click_commission' => $publisher->getClickCommissionAttribute(),
-            'conversion_commission' => $publisher->getTotalCommissionAttribute(),
-            'wallet_balance' => $publisher->getAvailableBalance()
-        ]);
     }
 
     /**
@@ -220,13 +214,6 @@ class PublisherService
             'metadata' => $metadata,
             'processed_at' => now(),
         ]);
-
-        Log::info("Commission added to wallet", [
-            'publisher_id' => $publisher->id,
-            'amount' => $amount,
-            'type' => $type,
-            'metadata' => $metadata
-        ]);
     }
 
     /**
@@ -242,11 +229,11 @@ class PublisherService
             $conversionCommission = $publisher->getTotalCommissionAttribute();
             $totalEarned = $clickCommission + $conversionCommission;
             
-            // Tính tổng đã rút
-            $totalWithdrawn = Transaction::where('publisher_id', $publisher->id)
+            // Tính tổng đã rút (lấy giá trị tuyệt đối vì withdrawal đã được lưu là số âm)
+            $totalWithdrawn = abs(Transaction::where('publisher_id', $publisher->id)
                 ->where('type', 'withdrawal')
                 ->where('status', 'completed')
-                ->sum('amount');
+                ->sum('amount'));
             
             // Số dư khả dụng = Tổng hoa hồng - Tổng đã rút
             $availableBalance = max(0, $totalEarned - $totalWithdrawn);
@@ -257,15 +244,6 @@ class PublisherService
                 'total_withdrawn' => $totalWithdrawn,
                 'pending_balance' => 0, // Không cần hold period
                 'balance' => $availableBalance,
-            ]);
-            
-            Log::info("Wallet synced from transactions", [
-                'publisher_id' => $publisher->id,
-                'click_commission' => $clickCommission,
-                'conversion_commission' => $conversionCommission,
-                'total_earned' => $totalEarned,
-                'total_withdrawn' => $totalWithdrawn,
-                'available_balance' => $availableBalance
             ]);
             
         } catch (\Exception $e) {
@@ -323,23 +301,12 @@ class PublisherService
      */
     public function createPaymentMethod(User $publisher, array $data): PaymentMethod
     {
-        Log::info('Creating payment method in PublisherService', [
-            'publisher_id' => $publisher->id,
-            'type' => $data['type'],
-            'account_name' => $data['account_name'],
-            'is_default' => $data['is_default'] ?? false
-        ]);
-        
         $this->validatePaymentMethodData(array_merge($data, ['publisher_id' => $publisher->id]));
 
         return DB::transaction(function () use ($publisher, $data) {
             // Nếu đây là phương thức mặc định, bỏ mặc định của các phương thức khác
             if ($data['is_default'] ?? false) {
-                $updatedCount = $publisher->paymentMethods()->update(['is_default' => false]);
-                Log::info('Unset default payment methods', [
-                    'publisher_id' => $publisher->id,
-                    'updated_count' => $updatedCount
-                ]);
+                $publisher->paymentMethods()->update(['is_default' => false]);
             }
 
             $paymentMethod = PaymentMethod::create([
@@ -352,13 +319,6 @@ class PublisherService
                 'branch_name' => $data['branch_name'] ?? null,
                 'is_default' => $data['is_default'] ?? false,
                 'is_verified' => false,
-            ]);
-
-            Log::info("Payment method created successfully", [
-                'payment_method_id' => $paymentMethod->id,
-                'publisher_id' => $publisher->id,
-                'type' => $data['type'],
-                'is_default' => $paymentMethod->is_default
             ]);
 
             return $paymentMethod;
@@ -389,11 +349,6 @@ class PublisherService
                 'is_default' => $data['is_default'] ?? false,
             ]);
 
-            Log::info("Payment method updated", [
-                'payment_method_id' => $paymentMethod->id,
-                'publisher_id' => $paymentMethod->publisher_id,
-            ]);
-
             return $paymentMethod;
         });
     }
@@ -410,12 +365,6 @@ class PublisherService
 
         return DB::transaction(function () use ($paymentMethod) {
             $paymentMethod->delete();
-
-            Log::info("Payment method deleted", [
-                'payment_method_id' => $paymentMethod->id,
-                'publisher_id' => $paymentMethod->publisher_id,
-            ]);
-
             return true;
         });
     }
@@ -433,11 +382,6 @@ class PublisherService
 
             // Đặt làm mặc định
             $paymentMethod->update(['is_default' => true]);
-
-            Log::info("Payment method set as default", [
-                'payment_method_id' => $paymentMethod->id,
-                'publisher_id' => $paymentMethod->publisher_id,
-            ]);
 
             return $paymentMethod;
         });
@@ -561,14 +505,17 @@ class PublisherService
             ]);
 
             // Gửi thông báo cho admin
+            $withdrawal->load('publisher'); // Load relationship để tránh N+1 query
             $admins = User::where('role', 'admin')->get();
-            Notification::send($admins, new WithdrawalRequestNotification($withdrawal));
-
-            Log::info("Withdrawal created successfully after OTP verification", [
-                'withdrawal_id' => $withdrawal->id,
-                'publisher_id' => $publisher->id,
-                'amount' => $data['amount'],
-            ]);
+            
+            try {
+                Notification::send($admins, new WithdrawalRequestNotification($withdrawal));
+            } catch (\Exception $e) {
+                Log::error("Failed to send withdrawal notification to admins", [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
 
             return $withdrawal;
         });
@@ -611,11 +558,6 @@ class PublisherService
 
             // Gửi thông báo
             $this->sendWithdrawalStatusNotification($withdrawal, 'approved');
-
-            Log::info("Withdrawal approved", [
-                'withdrawal_id' => $withdrawal->id,
-                'admin_id' => $admin->id,
-            ]);
 
             return $withdrawal;
         });
@@ -661,12 +603,6 @@ class PublisherService
             // Gửi thông báo
             $this->sendWithdrawalStatusNotification($withdrawal, 'rejected');
 
-            Log::info("Withdrawal rejected", [
-                'withdrawal_id' => $withdrawal->id,
-                'admin_id' => $admin->id,
-                'reason' => $reason,
-            ]);
-
             return $withdrawal;
         });
     }
@@ -698,12 +634,6 @@ class PublisherService
 
             // Gửi thông báo
             $this->sendWithdrawalStatusNotification($withdrawal, 'completed');
-
-            Log::info("Withdrawal completed", [
-                'withdrawal_id' => $withdrawal->id,
-                'admin_id' => $admin->id,
-                'transaction_reference' => $transactionReference,
-            ]);
 
             return $withdrawal;
         });
@@ -739,11 +669,6 @@ class PublisherService
 
             // Gửi thông báo
             $this->sendWithdrawalStatusNotification($withdrawal, 'cancelled');
-
-            Log::info("Withdrawal cancelled", [
-                'withdrawal_id' => $withdrawal->id,
-                'user_id' => $user->id,
-            ]);
 
             return $withdrawal;
         });
@@ -887,8 +812,6 @@ class PublisherService
      */
     private function validatePaymentMethodData(array $data, ?int $excludeId = null): void
     {
-        Log::info('Validating payment method data:', $data);
-        
         $rules = [
             'type' => 'required|in:bank_transfer,momo,zalopay,vnpay,phone_card',
             'account_name' => 'required|string|max:255',
@@ -916,11 +839,6 @@ class PublisherService
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            Log::error('Payment method validation failed:', [
-                'data' => $data,
-                'rules' => $rules,
-                'errors' => $validator->errors()->toArray()
-            ]);
             throw new \Exception($validator->errors()->first());
         }
 
@@ -934,11 +852,6 @@ class PublisherService
         }
 
         if ($query->exists()) {
-            Log::error('Duplicate payment method detected', [
-                'account_number' => $data['account_number'],
-                'type' => $data['type'],
-                'publisher_id' => $data['publisher_id'] ?? null
-            ]);
             throw new \Exception('Phương thức thanh toán này đã tồn tại');
         }
     }
@@ -968,6 +881,12 @@ class PublisherService
     private function sendWithdrawalStatusNotification(Withdrawal $withdrawal, string $status): void
     {
         try {
+            // Load relationship nếu chưa được load
+            if (!$withdrawal->relationLoaded('publisher')) {
+                $withdrawal->load('publisher');
+            }
+            
+            // Gửi thông báo cho publisher
             $withdrawal->publisher->notify(new WithdrawalStatusNotification($withdrawal, $status));
         } catch (\Exception $e) {
             Log::error("Failed to send withdrawal status notification", [

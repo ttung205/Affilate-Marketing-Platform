@@ -1,7 +1,7 @@
 /* Category Management Styles */
 .category-management-content {
     padding: 20px;
-    max-width: 1000px;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -12,7 +12,9 @@
     margin-bottom: 24px;
     gap: 20px;
 }
-
+.category-card-body{
+    margin-top: 20px;
+}
 /* Header Left and Right */
 .header-left {
     flex: 1;
@@ -42,7 +44,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     border: 1px solid #e9ecef;
-    padding: 0 20px 20px 20px;
+    padding: 20px 20px 20px 20px;
 }
 
 .category-management-card-header {
@@ -384,6 +386,9 @@
 .btn-outline-secondary2:hover {
     background: #6c757d;
     color: white;
+}
+.category-header-right{
+    margin-top: 15px;
 }
 .category-btn-primary {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);  
