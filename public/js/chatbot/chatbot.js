@@ -10,6 +10,7 @@ class AffiliateChatbot {
         this.isOpen = false;
         this.messageCount = 0;
         this.conversationHistory = [];
+        this.sessionId = this.generateSessionId();
         
         this.initializeElements();
         this.setupEventListeners();
@@ -274,19 +275,30 @@ class AffiliateChatbot {
             return;
         }
 
-        // Gửi request đến Laravel API
+        // Gửi request đến Laravel API với session_id
         fetch("/chat/send", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": csrfToken,
             },
-            body: JSON.stringify({ message: message }),
+            body: JSON.stringify({ 
+                message: message,
+                session_id: this.sessionId
+            }),
         })
         .then((res) => res.json())
         .then((data) => {
-            // Hiển thị tin nhắn bot từ Gemini
-            this.addBotMessage(data.bot);
+            if (data.success) {
+                // Cập nhật session_id nếu server trả về mới
+                if (data.session_id) {
+                    this.sessionId = data.session_id;
+                }
+                // Hiển thị tin nhắn bot từ Gemini
+                this.addBotMessage(data.bot);
+            } else {
+                this.addBotMessage(data.bot || "⚠️ Lỗi xử lý tin nhắn. Vui lòng thử lại.");
+            }
         })
         .catch((err) => {
             console.error("Chatbot API error:", err);
@@ -395,10 +407,8 @@ class AffiliateChatbot {
         // Show typing indicator
         this.showTypingIndicator();
         
-        // Process the action after delay
-        setTimeout(() => {
-            this.processQuickAction(action);
-        }, 1000 + Math.random() * 1000);
+        // Send to server to save in database
+        this.callGeminiAPI(label);
     }
 
     processQuickAction(action) {
@@ -502,6 +512,13 @@ class AffiliateChatbot {
             .replace(/📊/g, '<span class="emoji">📊</span>');
         
         return formatted;
+    }
+
+    generateSessionId() {
+        // Generate a unique session ID
+        const timestamp = Date.now();
+        const random = Math.random().toString(36).substring(2, 15);
+        return `chat_${timestamp}_${random}`;
     }
 }
 
