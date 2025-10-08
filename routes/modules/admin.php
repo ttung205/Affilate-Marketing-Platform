@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\AffiliateLinkController;
 use App\Http\Controllers\Admin\CampaignController;
 use App\Http\Controllers\Admin\NotificationManagementController;
 use App\Http\Controllers\Admin\WithdrawalApprovalController;
+use App\Http\Controllers\Admin\PlatformFeeController;
+use App\Http\Controllers\Admin\PlatformFeePaymentController;
 
 // Admin dashboard route
 Route::get('/admin', function () {
@@ -65,4 +67,15 @@ Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(functi
     Route::post('/withdrawals/api/{withdrawal}/reject', [WithdrawalApprovalController::class, 'rejectWithdrawal'])->name('withdrawals.api.reject');
     Route::post('/withdrawals/api/{withdrawal}/complete', [WithdrawalApprovalController::class, 'completeWithdrawal'])->name('withdrawals.api.complete');
     Route::get('/withdrawals/api/{withdrawal}/qr-code', [WithdrawalApprovalController::class, 'generateQRCode'])->name('withdrawals.api.qr-code');
+
+    // Platform Fee management routes
+    Route::get('/platform-fee', [PlatformFeeController::class, 'index'])->name('platform-fee.index');
+    Route::post('/platform-fee', [PlatformFeeController::class, 'store'])->name('platform-fee.store');
+    Route::put('/platform-fee/{platformFee}', [PlatformFeeController::class, 'update'])->name('platform-fee.update');
+    Route::delete('/platform-fee/{platformFee}', [PlatformFeeController::class, 'destroy'])->name('platform-fee.destroy');
+    
+    // Platform Fee Payment approval routes
+    Route::get('/platform-fee/payments', [PlatformFeePaymentController::class, 'index'])->name('platform-fee.payments');
+    Route::patch('/platform-fee/payments/{payment}/approve', [PlatformFeePaymentController::class, 'approve'])->name('platform-fee.payments.approve');
+    Route::patch('/platform-fee/payments/{payment}/reject', [PlatformFeePaymentController::class, 'reject'])->name('platform-fee.payments.reject');
 });

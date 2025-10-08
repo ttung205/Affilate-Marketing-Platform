@@ -2,10 +2,10 @@
     <div class="sidebar-header">
         <h4 class="mb-0">
             <i class="fas fa-share-alt text-primary"></i>
-            PublisherAdmin
+            Publisher
         </h4>
     </div>
-    
+
     <ul class="sidebar-menu">
         <li class="{{ request()->routeIs('publisher.dashboard') ? 'active' : '' }}">
             <a href="{{ route('publisher.dashboard') }}">
@@ -13,7 +13,7 @@
                 Tổng Quan
             </a>
         </li>
-        
+
         <!-- Quản lý Affiliate Links -->
         <li class="sidebar-menu-item {{ request()->routeIs('publisher.affiliate-links.*') ? 'active' : '' }}">
             <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
@@ -36,7 +36,7 @@
                 </li>
             </ul>
         </li>
-        
+
         <!-- Quản lý Sản phẩm -->
         <li class="{{ request()->routeIs('publisher.products.*') ? 'active' : '' }}">
             <a href="{{ route('publisher.products.index') }}">
@@ -44,9 +44,33 @@
                 Sản phẩm
             </a>
         </li>
-        
+
+        <!-- Hệ thống Hạng -->
+        <li class="sidebar-menu-item {{ request()->routeIs('publisher.ranking.*') ? 'active' : '' }}">
+            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+                <i class="fas fa-trophy"></i>
+                <span>Hệ thống Hạng</span>
+                <i class="fas fa-chevron-down submenu-arrow"></i>
+            </a>
+            <ul class="sidebar-submenu">
+                <li class="{{ request()->routeIs('publisher.ranking.index') ? 'active' : '' }}">
+                    <a href="{{ route('publisher.ranking.index') }}">
+                        <i class="fas fa-medal"></i>
+                        Hạng của tôi
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('publisher.ranking.leaderboard') ? 'active' : '' }}">
+                    <a href="{{ route('publisher.ranking.leaderboard') }}">
+                        <i class="fas fa-crown"></i>
+                        Bảng xếp hạng
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <!-- Quản lý ví & Thanh toán -->
-        <li class="sidebar-menu-item {{ request()->routeIs('publisher.wallet.*') || request()->routeIs('publisher.withdrawal.*') || request()->routeIs('publisher.payment-methods.*') ? 'active' : '' }}">
+        <li
+            class="sidebar-menu-item {{ request()->routeIs('publisher.wallet.*') || request()->routeIs('publisher.withdrawal.*') || request()->routeIs('publisher.payment-methods.*') ? 'active' : '' }}">
             <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
                 <i class="fas fa-wallet"></i>
                 <span>Ví & Thanh toán</span>
@@ -76,5 +100,3 @@
     </ul>
     <script src="{{ asset('js/dashboard/sidebar.js') }}"></script>
 </div>
-
-

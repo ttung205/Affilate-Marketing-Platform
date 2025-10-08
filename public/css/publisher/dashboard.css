@@ -1,5 +1,5 @@
 /* Publisher Dashboard Styles */
-body{
+body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -47,6 +47,189 @@ body{
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+/* Ranking Card Special Styling */
+.ranking-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.ranking-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(
+        45deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 60%
+    );
+    transform: rotate(45deg);
+    transform-origin: top right;
+}
+
+.ranking-card .stat-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 8px 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ranking-actions .btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.ranking-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Ranking Progress Section */
+.ranking-progress-section {
+    margin-bottom: 30px;
+}
+
+.ranking-progress {
+    padding: 20px 0;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.next-ranking {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ranking-icon {
+    font-size: 2rem;
+}
+
+.ranking-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.progress-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.progress-stats .stat {
+    text-align: center;
+}
+
+.progress-stats .label {
+    display: block;
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.progress-stats .value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.progress {
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar.bg-success {
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+}
+
+/* Max Ranking */
+.max-ranking {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.max-ranking-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.max-ranking-icon {
+    font-size: 4rem;
+    margin-bottom: 10px;
+}
+
+.max-ranking h3 {
+    color: #1e293b;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.max-ranking p {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
 }
 
 /* Wallet Card Special Styling */
@@ -125,12 +308,24 @@ body{
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.stat-icon:nth-child(1) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.stat-icon:nth-child(2) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.stat-icon:nth-child(3) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.stat-icon:nth-child(4) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.stat-icon:nth-child(5) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-.stat-icon:nth-child(6) { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.stat-icon:nth-child(1) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.stat-icon:nth-child(2) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.stat-icon:nth-child(3) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.stat-icon:nth-child(4) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.stat-icon:nth-child(5) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.stat-icon:nth-child(6) {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
 
 .stat-content h3 {
     font-size: 0.9rem;
@@ -510,7 +705,7 @@ body{
     .dashboard-content {
         grid-template-columns: 1fr;
     }
-    
+
     .chart-card {
         grid-column: 1;
     }
@@ -520,25 +715,25 @@ body{
     .publisher-dashboard {
         padding: 15px;
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .time-stats-grid {
         grid-template-columns: 1fr;
         gap: 15px;
     }
-    
+
     .dashboard-header h1 {
         font-size: 2rem;
     }
-    
+
     .stat-card {
         padding: 20px;
     }
-    
+
     .product-item,
     .conversion-item,
     .link-item {
@@ -546,7 +741,7 @@ body{
         align-items: flex-start;
         gap: 16px;
     }
-    
+
     .product-stats,
     .conversion-amount,
     .link-details {
@@ -559,18 +754,18 @@ body{
     .publisher-dashboard {
         padding: 10px;
     }
-    
+
     .dashboard-header h1 {
         font-size: 1.8rem;
     }
-    
+
     .stat-card {
         padding: 16px;
         flex-direction: column;
         text-align: center;
         gap: 16px;
     }
-    
+
     .stat-icon {
         width: 50px;
         height: 50px;

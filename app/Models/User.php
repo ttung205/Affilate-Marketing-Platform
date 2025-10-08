@@ -13,7 +13,7 @@ use Illuminate\Notifications\HasDatabaseNotifications;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasDatabaseNotifications;
 
     /**
      * The attributes that are mass assignable.
@@ -101,8 +101,9 @@ class User extends Authenticatable
     public function getConversionRateAttribute(): float
     {
         $clicks = $this->getTotalClicksAttribute();
-        if ($clicks === 0) return 0;
-        
+        if ($clicks === 0)
+            return 0;
+
         return round(($this->getTotalConversionsAttribute() / $clicks) * 100, 2);
     }
 
@@ -125,12 +126,12 @@ class User extends Authenticatable
     {
         // Check if any affiliate links have campaigns with CPC
         $campaignCpc = $this->affiliateLinks()
-            ->whereHas('campaign', function($query) {
+            ->whereHas('campaign', function ($query) {
                 $query->whereNotNull('cost_per_click');
             })
             ->join('campaigns', 'affiliate_links.campaign_id', '=', 'campaigns.id')
             ->avg('campaigns.cost_per_click');
-        
+
         return $campaignCpc ?? 100.00; // Default 100 VND if no campaign CPC
     }
 
@@ -199,5 +200,80 @@ class User extends Authenticatable
     public function canWithdraw(float $amount): bool
     {
         return $this->getOrCreateWallet()->canWithdraw($amount);
+    }
+
+    // Notification relationships
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable');
+    }
+
+    public function unreadNotifications()
+    {
+        return $this->notifications()->whereNull('read_at');
+    }
+
+    // Publisher Ranking relationships
+    public function publisherRanking()
+    {
+        return $this->belongsTo(PublisherRanking::class, 'publisher_ranking_id');
+    }
+
+    // Publisher Ranking helper methods
+    public function getCurrentRankingAttribute(): ?PublisherRanking
+    {
+        return $this->publisherRanking;
+    }
+
+    public function getRankingLevelAttribute(): int
+    {
+        return $this->publisherRanking?->level ?? 0;
+    }
+
+    public function getRankingNameAttribute(): string
+    {
+        return $this->publisherRanking?->name ?? 'Chưa có hạng';
+    }
+
+    public function getRankingIconAttribute(): string
+    {
+        return $this->publisherRanking?->icon ?? '⭐';
+    }
+
+    public function getRankingColorAttribute(): string
+    {
+        return $this->publisherRanking?->color ?? '#6B7280';
+    }
+
+    public function getRankingProgressAttribute(): array
+    {
+        $currentRanking = $this->getCurrentRankingAttribute();
+        $nextRanking = $currentRanking ? PublisherRanking::getNextRanking($currentRanking) : PublisherRanking::getByLevel(1);
+
+        if (!$nextRanking) {
+            return [
+                'current_level' => $currentRanking?->level ?? 0,
+                'next_level' => null,
+                'links_progress' => 100,
+                'commission_progress' => 100,
+                'is_max_level' => true
+            ];
+        }
+
+        $totalLinks = $this->affiliateLinks()->count();
+        $totalCommission = $this->getCombinedCommissionAttribute();
+
+        $linksProgress = min(100, ($totalLinks / $nextRanking->min_links) * 100);
+        $commissionProgress = min(100, ($totalCommission / $nextRanking->min_commission) * 100);
+
+        return [
+            'current_level' => $currentRanking?->level ?? 0,
+            'next_level' => $nextRanking->level,
+            'links_progress' => round($linksProgress, 1),
+            'commission_progress' => round($commissionProgress, 1),
+            'links_needed' => max(0, $nextRanking->min_links - $totalLinks),
+            'commission_needed' => max(0, $nextRanking->min_commission - $totalCommission),
+            'is_max_level' => false
+        ];
     }
 }

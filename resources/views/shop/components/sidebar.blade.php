@@ -2,7 +2,7 @@
     <div class="sidebar-header">
         <h4 class="mb-0">
             <i class="fas fa-store text-primary"></i>
-            ShopAdmin
+            ShopManager
         </h4>
     </div>
     
@@ -42,6 +42,14 @@
             <a href="{{ route('shop.conversions.index') }}">
                 <i class="fas fa-random"></i>
                 Đơn Publisher
+            </a>
+        </li>
+        
+        <!-- Thanh toán phí sàn -->
+        <li class="{{ request()->routeIs('shop.platform-fee.*') ? 'active' : '' }}">
+            <a href="{{ route('shop.platform-fee.index') }}">
+                <i class="fas fa-percentage"></i>
+                Thanh toán phí sàn
             </a>
         </li>
 
