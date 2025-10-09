@@ -44,6 +44,12 @@
                 Đơn Publisher
             </a>
         </li>
+        <li class="{{ request()->routeIs('shop.vouchers.*') ? 'active' : '' }}">
+             <a href="{{ route('shop.vouchers.index') }}">
+             <i class="fas fa-gift"></i> Voucher cho Publisher
+             </a>
+        </li>
+
         
         <!-- Thanh toán phí sàn -->
         <li class="{{ request()->routeIs('shop.platform-fee.*') ? 'active' : '' }}">
