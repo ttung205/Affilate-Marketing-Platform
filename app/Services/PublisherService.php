@@ -318,7 +318,6 @@ class PublisherService
                 'bank_code' => $data['bank_code'] ?? null,
                 'branch_name' => $data['branch_name'] ?? null,
                 'is_default' => $data['is_default'] ?? false,
-                'is_verified' => false,
             ]);
 
             return $paymentMethod;
@@ -410,7 +409,6 @@ class PublisherService
                         'bank_code' => $method->bank_code,
                         'branch_name' => $method->branch_name,
                         'is_default' => $method->is_default,
-                        'is_verified' => $method->is_verified,
                         'icon' => $method->icon ?? 'fas fa-credit-card',
                         'color' => $method->color ?? 'gray',
                         'fee_rate' => $method->fee_rate,
@@ -842,17 +840,33 @@ class PublisherService
             throw new \Exception($validator->errors()->first());
         }
 
-        // Kiểm tra trùng lặp account_number trong cùng publisher
+        // Kiểm tra trùng lặp: chỉ báo lỗi khi trùng cả account_number và bank
+        // Đối với bank_transfer: kiểm tra trùng account_number + bank_code (hoặc bank_name nếu không có bank_code)
+        // Đối với loại khác: kiểm tra trùng account_number + type
         $query = PaymentMethod::where('account_number', $data['account_number'])
             ->where('type', $data['type'])
             ->where('publisher_id', $data['publisher_id'] ?? null);
+
+        // Nếu là bank_transfer, thêm điều kiện kiểm tra ngân hàng
+        if ($data['type'] === 'bank_transfer') {
+            // Ưu tiên kiểm tra theo bank_code nếu có, không thì dùng bank_name
+            if (!empty($data['bank_code'])) {
+                $query->where('bank_code', $data['bank_code']);
+            } elseif (!empty($data['bank_name'])) {
+                $query->where('bank_name', $data['bank_name']);
+            }
+        }
 
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
 
         if ($query->exists()) {
-            throw new \Exception('Phương thức thanh toán này đã tồn tại');
+            if ($data['type'] === 'bank_transfer') {
+                throw new \Exception('Số tài khoản này đã tồn tại tại ngân hàng ' . ($data['bank_name'] ?? 'này'));
+            } else {
+                throw new \Exception('Phương thức thanh toán này đã tồn tại');
+            }
         }
     }
 
@@ -967,7 +981,6 @@ class PublisherService
     public function getPaymentMethodStats(): array
     {
         $total = PaymentMethod::count();
-        $verified = PaymentMethod::where('is_verified', true)->count();
         $byType = PaymentMethod::selectRaw('type, COUNT(*) as count')
             ->groupBy('type')
             ->pluck('count', 'type')
@@ -975,9 +988,6 @@ class PublisherService
 
         return [
             'total' => $total,
-            'verified' => $verified,
-            'unverified' => $total - $verified,
-            'verification_rate' => $total > 0 ? round(($verified / $total) * 100, 2) : 0,
             'by_type' => $byType,
         ];
     }

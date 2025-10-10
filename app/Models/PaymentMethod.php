@@ -17,16 +17,10 @@ class PaymentMethod extends Model
         'bank_code',
         'branch_name',
         'is_default',
-        'is_verified',
-        'verified_at',
-        'verification_data',
     ];
 
     protected $casts = [
         'is_default' => 'boolean',
-        'is_verified' => 'boolean',
-        'verified_at' => 'datetime',
-        'verification_data' => 'array',
     ];
 
     // Relationships

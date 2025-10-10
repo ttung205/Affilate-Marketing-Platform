@@ -86,14 +86,6 @@
                                     <span class="detail-label">Phí rút tiền:</span>
                                     <span class="detail-value">{{ number_format($method['fee_rate'] * 100, 1) }}%</span>
                                 </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Trạng thái:</span>
-                                    <span class="detail-value">
-                                        <span class="status-badge {{ $method['is_verified'] ? 'verified' : 'pending' }}">
-                                            {{ $method['is_verified'] ? 'Đã xác minh' : 'Chờ xác minh' }}
-                                        </span>
-                                    </span>
-                                </div>
                             </div>
                         </div>
 
