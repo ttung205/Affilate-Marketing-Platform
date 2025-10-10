@@ -12,17 +12,18 @@
 
 .campaigns-header {
     margin-bottom: 24px;
+    text-align: center;
 }
 
 .campaigns-title h2 {
-    font-size: 1.75rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #1e293b;
     margin: 0 0 8px 0;
 }
 
 .campaigns-title p {
-    font-size: 0.938rem;
+    font-size: 1.1rem;
     color: #64748b;
     margin: 0;
 }
