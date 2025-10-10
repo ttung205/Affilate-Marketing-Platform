@@ -17,7 +17,6 @@
 - [Cài đặt](#-cài-đặt)
 - [Cấu trúc dự án](#️-cấu-trúc-dự-án)
 - [Workflow](#-workflow)
-- [API Documentation](#-api-documentation)
 - [Đóng góp](#-đóng-góp)
 - [License](#-license)
 - [Liên hệ](#-liên-hệ)
