@@ -10,7 +10,7 @@
 <div class="product-management-content">
     <div class="product-management-header">
         <div class="product-management-title">
-            <h2>🎯 Khám phá Chiến dịch</h2>
+            <h2>Khám phá Chiến dịch</h2>
             <p>Tham gia các chiến dịch tiếp thị và kiếm hoa hồng hấp dẫn</p>
         </div>
     </div>
@@ -94,9 +94,6 @@
                                 <span class="campaign-badge">
                                     <i class="fas fa-fire"></i> HOT
                                 </span>
-                                <div class="campaign-icon">
-                                    🎯
-                                </div>
                             </div>
                             
                             <div class="campaign-content">
