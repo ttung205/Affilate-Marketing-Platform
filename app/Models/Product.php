@@ -128,4 +128,9 @@ class Product extends Model
         
         return $campaignCpc ?? 100.00; // Default 100 VND if no campaign CPC
     }
+    public function vouchers()
+{
+    return $this->belongsToMany(\App\Models\Voucher::class, 'product_voucher');
+}
+
 }

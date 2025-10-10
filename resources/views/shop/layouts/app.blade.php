@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="{{ asset('css/notifications/modal.css') }}">
     <!-- Chatbot CSS -->
     <link rel="stylesheet" href="{{ asset('css/chatbot/chatbot.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('css/shop/vouchers.css') }}">
     
     @stack('styles')
 </head>

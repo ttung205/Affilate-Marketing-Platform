@@ -6,6 +6,7 @@ use App\Http\Controllers\Shop\ProductController;
 use App\Http\Controllers\Shop\ProfileController;
 use App\Http\Controllers\Shop\ConversionController as ShopConversionController;
 use App\Http\Controllers\Shop\PlatformFeePaymentController;
+use App\Http\Controllers\Shop\VoucherController;
 
 // Shop routes
 Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(function () {
@@ -41,5 +42,15 @@ Route::middleware(['auth', 'role:shop'])->prefix('shop')->name('shop.')->group(f
     Route::get('/platform-fee', [PlatformFeePaymentController::class, 'index'])->name('platform-fee.index');
     Route::post('/platform-fee/generate-qr', [PlatformFeePaymentController::class, 'generateQR'])->name('platform-fee.generate-qr');
     Route::post('/platform-fee/confirm', [PlatformFeePaymentController::class, 'confirmPayment'])->name('platform-fee.confirm');
+
+
+
+     Route::get('vouchers', [VoucherController::class,'index'])->name('vouchers.index');
+    Route::get('vouchers/create', [VoucherController::class,'create'])->name('vouchers.create');
+    Route::post('vouchers', [VoucherController::class,'store'])->name('vouchers.store');
+    Route::get('vouchers/{voucher}', [VoucherController::class,'show'])->name('vouchers.show');
+    Route::delete('vouchers/{voucher}', [VoucherController::class, 'destroy'])
+    ->name('vouchers.destroy');
+
 });
 
