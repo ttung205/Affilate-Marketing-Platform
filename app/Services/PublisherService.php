@@ -947,7 +947,7 @@ class PublisherService
             ['code' => 'VCB', 'name' => 'Vietcombank'],
             ['code' => 'BIDV', 'name' => 'BIDV'],
             ['code' => 'VTB', 'name' => 'VietinBank'],
-            ['code' => 'MBB', 'name' => 'MBBank'],
+            ['code' => 'MB', 'name' => 'MBBank'],
             ['code' => 'TCB', 'name' => 'Techcombank'],
             ['code' => 'VPB', 'name' => 'VPBank'],
             ['code' => 'ACB', 'name' => 'ACB'],
