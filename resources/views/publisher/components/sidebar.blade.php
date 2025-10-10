@@ -45,6 +45,14 @@
             </a>
         </li>
 
+        <!-- Chiến dịch -->
+        <li class="{{ request()->routeIs('publisher.campaigns.*') ? 'active' : '' }}">
+            <a href="{{ route('publisher.campaigns.index') }}">
+                <i class="fas fa-bullhorn"></i>
+                Chiến dịch
+            </a>
+        </li>
+
         <!-- Hệ thống Hạng -->
         <li class="sidebar-menu-item {{ request()->routeIs('publisher.ranking.*') ? 'active' : '' }}">
             <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">

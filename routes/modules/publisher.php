@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PublisherController;
 use App\Http\Controllers\Publisher\AffiliateLinkController;
 use App\Http\Controllers\Publisher\ProductController;
+use App\Http\Controllers\Publisher\CampaignController;
 use App\Http\Controllers\Publisher\WalletController;
 use App\Http\Controllers\Publisher\WithdrawalController;
 use App\Http\Controllers\Publisher\PaymentMethodController;
@@ -22,6 +23,9 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::resource('products', ProductController::class);
     Route::post('/products/{product}/affiliate-link', [ProductController::class, 'createAffiliateLink'])->name('products.create-affiliate-link');
 
+    // Campaigns routes
+    Route::resource('campaigns', CampaignController::class);
+    Route::post('/campaigns/{campaign}/affiliate-link', [CampaignController::class, 'createAffiliateLink'])->name('campaigns.create-affiliate-link');
 
     // Wallet routes
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
