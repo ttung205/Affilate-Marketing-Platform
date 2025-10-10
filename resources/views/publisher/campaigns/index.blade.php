@@ -7,39 +7,39 @@
 @endpush
 
 @section('content')
-<div class="product-management-content">
-    <div class="product-management-header">
-        <div class="product-management-title">
+<div class="campaigns-content">
+    <div class="campaigns-header">
+        <div class="campaigns-title">
             <h2>Khám phá Chiến dịch</h2>
             <p>Tham gia các chiến dịch tiếp thị và kiếm hoa hồng hấp dẫn</p>
         </div>
     </div>
 
     <!-- Filters Section -->
-    <div class="product-filters-card">
-        <div class="product-filters-header">
-            <h5 class="product-filters-title">Bộ lọc & Tìm kiếm</h5>
+    <div class="campaigns-filters-card">
+        <div class="campaigns-filters-header">
+            <h5 class="campaigns-filters-title">Bộ lọc & Tìm kiếm</h5>
         </div>
-        <div class="product-filters-body">
-            <form method="GET" action="{{ route('publisher.campaigns.index') }}" class="product-filters-form">
-                <div class="product-filters-row">
+        <div class="campaigns-filters-body">
+            <form method="GET" action="{{ route('publisher.campaigns.index') }}" class="campaigns-filters-form">
+                <div class="campaigns-filters-row">
                     
                     <!-- Search -->
-                    <div class="product-filter-group">
-                        <label class="product-filter-label">Tìm kiếm</label>
+                    <div class="campaigns-filter-group">
+                        <label class="campaigns-filter-label">Tìm kiếm</label>
                         <input type="text" 
                                name="search" 
-                               class="product-filter-input" 
+                               class="campaigns-filter-input" 
                                placeholder="Tên chiến dịch..."
                                value="{{ request('search') }}">
                     </div>
                     
                     <!-- Commission Rate -->
-                    <div class="product-filter-group">
-                        <label class="product-filter-label">Hoa hồng tối thiểu (%)</label>
+                    <div class="campaigns-filter-group">
+                        <label class="campaigns-filter-label">Hoa hồng tối thiểu (%)</label>
                         <input type="number" 
                                name="min_commission" 
-                               class="product-filter-input" 
+                               class="campaigns-filter-input" 
                                placeholder="0"
                                min="0"
                                step="0.1"
@@ -47,11 +47,11 @@
                     </div>
                     
                     <!-- Budget -->
-                    <div class="product-filter-group">
-                        <label class="product-filter-label">Ngân sách tối thiểu (VNĐ)</label>
+                    <div class="campaigns-filter-group">
+                        <label class="campaigns-filter-label">Ngân sách tối thiểu (VNĐ)</label>
                         <input type="number" 
                                name="min_budget" 
-                               class="product-filter-input" 
+                               class="campaigns-filter-input" 
                                placeholder="0"
                                min="0"
                                step="1000"
@@ -59,15 +59,18 @@
                     </div>
                     
                     <!-- Actions -->
-                    <div class="product-filter-actions">
-                        <button type="submit" class="product-filter-btn product-filter-btn-primary">
-                            <i class="fas fa-search"></i>
-                            Lọc
-                        </button>
-                        <a href="{{ route('publisher.campaigns.index') }}" class="product-filter-btn product-filter-btn-secondary">
-                            <i class="fas fa-redo"></i>
-                            Reset
-                        </a>
+                    <div class="campaigns-filter-group">
+                        <label class="campaigns-filter-label" style="opacity: 0; pointer-events: none;">Actions</label>
+                        <div class="campaigns-filter-actions">
+                            <button type="submit" class="campaigns-filter-btn campaigns-filter-btn-primary">
+                                <i class="fas fa-search"></i>
+                                Lọc
+                            </button>
+                            <a href="{{ route('publisher.campaigns.index') }}" class="campaigns-filter-btn campaigns-filter-btn-secondary">
+                                <i class="fas fa-redo"></i>
+                                Reset
+                            </a>
+                        </div>
                     </div>
                     
                 </div>
@@ -76,16 +79,16 @@
     </div>
 
     <!-- Campaign Results -->
-    <div class="product-management-card">
-        <div class="product-management-card-header">
-            <h5 class="product-management-card-title">
+    <div class="campaigns-list-card">
+        <div class="campaigns-list-header">
+            <h5 class="campaigns-list-title">
                 <i class="fas fa-bullhorn text-primary"></i>
                 Các chiến dịch đang hoạt động
             </h5>
-            <span class="product-count-badge">{{ $campaigns->total() }} chiến dịch</span>
+            <span class="campaigns-count-badge">{{ $campaigns->total() }} chiến dịch</span>
         </div>
 
-        <div class="product-management-card-body">
+        <div class="campaigns-list-body">
             @if($campaigns->count() > 0)
                 <div class="campaigns-grid">
                     @foreach($campaigns as $campaign)
@@ -166,8 +169,8 @@
         </div>
 
         @if($campaigns->hasPages())
-            <div class="product-management-card-footer">
-                <div class="product-pagination">
+            <div class="campaigns-list-footer">
+                <div class="campaigns-pagination">
                     {{ $campaigns->links('pagination::bootstrap-5') }}
                 </div>
             </div>

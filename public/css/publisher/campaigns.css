@@ -1,11 +1,209 @@
-/* Publisher Campaigns Styles */
+/* ==========================================
+   PUBLISHER CAMPAIGNS STYLES
+   ========================================== */
 
-/* Campaign Grid */
+/* ==========================================
+   1. LAYOUT & CONTAINER
+   ========================================== */
+
+.campaigns-content {
+    padding: 24px;
+}
+
+.campaigns-header {
+    margin-bottom: 24px;
+}
+
+.campaigns-title h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.campaigns-title p {
+    font-size: 0.938rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ==========================================
+   2. FILTERS SECTION
+   ========================================== */
+
+.campaigns-filters-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+.campaigns-filters-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.campaigns-filters-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.campaigns-filters-body {
+    padding: 20px;
+}
+
+.campaigns-filters-form {
+    width: 100%;
+}
+
+.campaigns-filters-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    align-items: end;
+}
+
+.campaigns-filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.campaigns-filter-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 8px;
+}
+
+.campaigns-filter-input {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.campaigns-filter-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.campaigns-filter-input::placeholder {
+    color: #94a3b8;
+}
+
+.campaigns-filter-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.campaigns-filter-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.campaigns-filter-btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.campaigns-filter-btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+    transform: translateY(-1px);
+}
+
+.campaigns-filter-btn-secondary {
+    background: white;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+}
+
+.campaigns-filter-btn-secondary:hover {
+    background: #f8fafc;
+    color: #475569;
+    border-color: #94a3b8;
+}
+
+/* ==========================================
+   3. CAMPAIGNS LIST CARD
+   ========================================== */
+
+.campaigns-list-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.campaigns-list-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.campaigns-list-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.campaigns-count-badge {
+    background: #eff6ff;
+    color: #3b82f6;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.813rem;
+    font-weight: 600;
+}
+
+.campaigns-list-body {
+    padding: 20px;
+}
+
+.campaigns-list-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.campaigns-pagination {
+    display: flex;
+    justify-content: center;
+}
+
+/* ==========================================
+   4. CAMPAIGNS GRID & CARDS
+   ========================================== */
+
 .campaigns-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
-    margin: 30px;
+    gap: 20px;
 }
 
 /* Campaign Card */
@@ -406,40 +604,90 @@
     color: white;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .campaigns-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    
-    .campaign-modal-content {
-        width: 95%;
-        margin: 10px auto;
-        max-height: 95vh;
-    }
-    
-    .campaign-modal-header {
-        padding: 20px;
-    }
-    
-    .campaign-modal-body {
-        padding: 20px;
-    }
-    
-    .campaign-modal-title {
-        font-size: 1.25rem;
-    }
+.campaign-info-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f7fafc;
+}
+/* ==========================================
+   6. EMPTY STATE
+   ========================================== */
+
+.campaigns-empty-state {
+    text-align: center;
+    padding: 60px 20px;
 }
 
-/* Loading State */
-.btn-loading {
-    position: relative;
-    pointer-events: none;
-    opacity: 0.7;
+.campaigns-empty-icon {
+    font-size: 4rem;
+    color: #cbd5e1;
+    margin-bottom: 16px;
 }
 
-.btn-loading i.fa-spinner {
+.campaigns-empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+}
+
+.campaigns-empty-state p {
+    font-size: 0.938rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ==========================================
+   7. ALERTS
+   ========================================== */
+
+.campaign-alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.campaign-alert-success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.campaign-alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.campaign-alert-warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+.campaign-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ==========================================
+   8. LOADING STATE
+   ========================================== */
+
+.campaign-loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: #64748b;
+}
+
+.campaign-loading i {
+    font-size: 2rem;
     animation: spin 1s linear infinite;
 }
 
@@ -448,10 +696,106 @@
     to { transform: rotate(360deg); }
 }
 
-.campaign-info-row{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+/* ==========================================
+   9. RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 1200px) {
+    .campaigns-filters-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .campaigns-filter-group:nth-child(4) {
+        grid-column: 1 / -1;
+    }
+    
+    .campaigns-filter-actions {
+        justify-content: flex-end;
+    }
+    
+    .campaigns-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .campaigns-content {
+        padding: 16px;
+    }
+    
+    .campaigns-title h2 {
+        font-size: 1.5rem;
+    }
+    
+    .campaigns-filters-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .campaigns-filter-group:nth-child(4) {
+        grid-column: 1;
+    }
+    
+    .campaigns-filter-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .campaigns-filter-btn {
+        width: 100%;
+    }
+    
+    .campaigns-list-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .campaigns-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .campaign-info-row {
+        flex-direction: column;
+    }
+    
+    .campaign-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .campaign-actions {
+        flex-direction: column;
+    }
+    
+    .campaign-btn {
+        width: 100%;
+    }
+    
+    .campaign-modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .campaigns-title h2 {
+        font-size: 1.25rem;
+    }
+    
+    .campaigns-title p {
+        font-size: 0.875rem;
+    }
+    
+    .campaigns-filters-header,
+    .campaigns-filters-body,
+    .campaigns-list-header,
+    .campaigns-list-body {
+        padding: 12px 16px;
+    }
+    
+    .campaign-name {
+        font-size: 1rem;
+    }
+    
+    .campaign-stats {
+        grid-template-columns: 1fr;
+    }
 }
