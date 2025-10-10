@@ -737,50 +737,6 @@ graph LR
 5. System xử lý thanh toán
 6. Cập nhật wallet và gửi notification
 
----
-
-## 📚 API Documentation
-
-### Authentication
-
-#### POST `/api/login`
-```json
-{
-  "email": "user@example.com",
-  "password": "password"
-}
-```
-
-#### POST `/api/register`
-```json
-{
-  "name": "John Doe",
-  "email": "user@example.com",
-  "password": "password",
-  "role": "publisher"
-}
-```
-
-### Affiliate Links
-
-#### GET `/api/affiliate-links`
-Lấy danh sách affiliate links của publisher
-
-#### POST `/api/affiliate-links`
-```json
-{
-  "product_id": 1,
-  "custom_code": "SUMMER2024"
-}
-```
-
-### Tracking
-
-#### GET `/track/{shortcode}`
-Track click từ affiliate link
-
----
-
 ## 🧪 Testing
 
 ### Chạy tests
@@ -901,60 +857,6 @@ Chúng tôi rất hoan nghênh mọi đóng góp! Hãy làm theo các bước sa
 ./vendor/bin/pint
 ```
 
----
-
-## 📝 Changelog
-
-### Version 1.0.0 (2024-01-01)
-
-#### Added
-- ✨ Hệ thống admin dashboard hoàn chỉnh
-- ✨ Publisher và Shop dashboards
-- ✨ Affiliate tracking system
-- ✨ Commission calculation (CPC + CPA)
-- ✨ Wallet và withdrawal management
-- ✨ Google OAuth integration
-- ✨ Two-factor authentication
-- ✨ VietQR payment integration
-- ✨ AI Chatbot với Gemini
-- ✨ Real-time notifications
-- ✨ Publisher ranking system
-- ✨ Excel import/export
-- ✨ Voucher system
-- ✨ Platform fee management
-- ✨ Live chat support
-
-#### Fixed
-- 🐛 Sửa lỗi calculation commission
-- 🐛 Fix responsive issues
-- 🐛 Optimize database queries
-
----
-
-## 🔮 Roadmap
-
-### Phiên bản 1.1.0 (Q1 2025)
-- [ ] Mobile app (React Native)
-- [ ] Multi-language support
-- [ ] Advanced analytics dashboard
-- [ ] Social media integration
-- [ ] Automated marketing tools
-
-### Phiên bản 1.2.0 (Q2 2025)
-- [ ] Marketplace for publishers
-- [ ] AI-powered product recommendations
-- [ ] Video marketing tools
-- [ ] Influencer collaboration tools
-- [ ] Advanced fraud detection
-
-### Phiên bản 2.0.0 (Q3 2025)
-- [ ] Blockchain integration
-- [ ] Cryptocurrency payments
-- [ ] Decentralized affiliate network
-- [ ] NFT rewards system
-
----
-
 ## 📞 Liên hệ
 
 ### Tác giả
@@ -1019,7 +921,7 @@ Nếu bạn thấy dự án này hữu ích, hãy:
 
 **Built with ❤️ using Laravel 12**
 
-**© 2024 Ttung. All rights reserved.**
+**© 2025 Ttung. All rights reserved.**
 
 [⬆ Back to top](#-affiliate-marketing-platform)
 
