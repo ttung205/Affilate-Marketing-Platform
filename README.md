@@ -17,7 +17,6 @@
 - [Cài đặt](#-cài-đặt)
 - [Cấu trúc dự án](#️-cấu-trúc-dự-án)
 - [Workflow](#-workflow)
-- [Screenshots](#-screenshots)
 - [API Documentation](#-api-documentation)
 - [Đóng góp](#-đóng-góp)
 - [License](#-license)
@@ -737,25 +736,6 @@ graph LR
 4. Admin nhập OTP để approve
 5. System xử lý thanh toán
 6. Cập nhật wallet và gửi notification
-
----
-
-## 📸 Screenshots
-
-### Admin Dashboard
-![Admin Dashboard](docs/images/admin-dashboard.png)
-
-### Publisher Dashboard
-![Publisher Dashboard](docs/images/publisher-dashboard.png)
-
-### Shop Dashboard
-![Shop Dashboard](docs/images/shop-dashboard.png)
-
-### Affiliate Links Management
-![Affiliate Links](docs/images/affiliate-links.png)
-
-### Wallet & Withdrawals
-![Wallet](docs/images/wallet.png)
 
 ---
 
