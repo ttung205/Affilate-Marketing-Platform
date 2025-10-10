@@ -52,7 +52,7 @@
                 </div>
                 <div class="chatbot-message-content">
                     <div class="chatbot-message-bubble">
-                        <p>Xin chào! Tôi là trợ lý ảo của hệ thống affiliate marketing. Tôi có thể giúp gì cho bạn?</p>
+                        <p>Xin chào! 👋 Tôi có thể giúp gì cho bạn?</p>
                         <div class="chatbot-message-time" id="welcome-time"></div>
                     </div>
                 </div>

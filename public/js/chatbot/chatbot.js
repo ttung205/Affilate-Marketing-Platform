@@ -72,10 +72,15 @@ class AffiliateChatbot {
         // Initialize quick actions based on role
         this.initializeQuickActions();
         
-        // Show welcome message based on role
-        setTimeout(() => {
-            this.showWelcomeMessage();
-        }, 1000);
+        // Show welcome message only if no conversation exists
+        if (this.conversationHistory.length === 0) {
+            setTimeout(() => {
+                this.showWelcomeMessage();
+            }, 1000);
+        } else {
+            // If we have conversation history, don't show welcome message
+            console.log('Conversation history found, skipping welcome message');
+        }
     }
 
     initializeQuickActions() {
@@ -134,10 +139,10 @@ class AffiliateChatbot {
 
     showWelcomeMessage() {
         const welcomeMessages = {
-            'admin': `Chào mừng ${this.userName}! Tôi có thể giúp bạn quản lý hệ thống affiliate marketing. Bạn cần hỗ trợ gì?`,
-            'publisher': `Xin chào ${this.userName}! Tôi sẽ hỗ trợ bạn tối ưu hóa thu nhập từ affiliate marketing. Hãy cho tôi biết bạn cần giúp gì!`,
-            'shop': `Chào ${this.userName}! Tôi sẽ giúp bạn quản lý cửa hàng và tạo chiến dịch marketing hiệu quả. Bạn muốn làm gì?`,
-            'guest': `Xin chào! Tôi là trợ lý ảo của hệ thống affiliate marketing. Bạn có thể đăng ký tài khoản để sử dụng đầy đủ các tính năng.`
+            'admin': `Chào ${this.userName}! 👋 Tôi có thể giúp gì cho bạn?`,
+            'publisher': `Xin chào ${this.userName}! 💰 Cần hỗ trợ gì về affiliate marketing?`,
+            'shop': `Chào ${this.userName}! 🛍️ Tôi có thể giúp gì cho cửa hàng của bạn?`,
+            'guest': `Xin chào! 👋 Tôi có thể giúp bạn tìm hiểu về affiliate marketing.`
         };
         
         this.addBotMessage(welcomeMessages[this.userRole] || welcomeMessages['guest']);
@@ -520,6 +525,12 @@ class AffiliateChatbot {
         const random = Math.random().toString(36).substring(2, 15);
         return `chat_${timestamp}_${random}`;
     }
+
+
+    loadExistingConversation() {
+        // This method is kept for future use
+    }
+
 }
 
 // Initialize chatbot when DOM is loaded
