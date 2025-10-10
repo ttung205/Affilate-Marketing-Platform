@@ -943,7 +943,7 @@ class PublisherService
     public function getSupportedBanks(): array
     {
         return [
-            ['code' => 'AGRIBANK', 'name' => 'Agribank'],
+            ['code' => 'AGR', 'name' => 'Agribank'],
             ['code' => 'VCB', 'name' => 'Vietcombank'],
             ['code' => 'BIDV', 'name' => 'BIDV'],
             ['code' => 'VTB', 'name' => 'VietinBank'],
