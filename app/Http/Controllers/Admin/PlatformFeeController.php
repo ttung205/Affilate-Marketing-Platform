@@ -38,7 +38,7 @@ class PlatformFeeController extends Controller
 
         PlatformFeeSetting::create($validated);
 
-        return redirect()->route('admin.platform-fee.index')
+        return redirect()->route('admin.platform-fees.index')
             ->with('success', 'Đã thêm cài đặt phí sàn mới thành công!');
     }
 
@@ -63,7 +63,7 @@ class PlatformFeeController extends Controller
 
         $platformFee->update($validated);
 
-        return redirect()->route('admin.platform-fee.index')
+        return redirect()->route('admin.platform-feess.index')
             ->with('success', 'Đã cập nhật cài đặt phí sàn thành công!');
     }
 
@@ -74,7 +74,7 @@ class PlatformFeeController extends Controller
     {
         $platformFee->delete();
 
-        return redirect()->route('admin.platform-fee.index')
+        return redirect()->route('admin.platform-fees.index')
             ->with('success', 'Đã xóa cài đặt phí sàn thành công!');
     }
 }

@@ -421,12 +421,10 @@
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-weight: 600;
-    transition: all 0.3s ease;
 }
 
 .header-actions .btn:hover {
     background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    transform: translateY(-2px);
 }
 
 /* Stats Cards */
@@ -446,13 +444,8 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    transition: all 0.3s ease;
 }
 
-.stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
 
 .stat-icon {
     width: 50px;

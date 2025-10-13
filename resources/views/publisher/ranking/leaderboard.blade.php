@@ -31,7 +31,33 @@
             <h1> Bảng Xếp Hạng Publisher</h1>
             <p>Xem thứ hạng của các publisher trong hệ thống</p>
         </div>
-
+        <!-- Statistics -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">📈 Thống kê tổng quan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach($leaderboard as $tier)
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="stat-card">
+                                        <div class="stat-icon" style="color: {{ $tier['ranking']->color }}">
+                                            {{ $tier['ranking']->icon }}
+                                        </div>
+                                        <div class="stat-content">
+                                            <div class="stat-number">{{ $tier['publishers']->count() }}</div>
+                                            <div class="stat-label">Hạng {{ $tier['ranking']->name }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @foreach($leaderboard as $tier)
             <div class="row mb-4">
                 <div class="col-12">
@@ -151,34 +177,6 @@
                 </div>
             </div>
         @endforeach
-
-        <!-- Statistics -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">📈 Thống kê tổng quan</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            @foreach($leaderboard as $tier)
-                                <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="stat-card">
-                                        <div class="stat-icon" style="color: {{ $tier['ranking']->color }}">
-                                            {{ $tier['ranking']->icon }}
-                                        </div>
-                                        <div class="stat-content">
-                                            <div class="stat-number">{{ $tier['publishers']->count() }}</div>
-                                            <div class="stat-label">Hạng {{ $tier['ranking']->name }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 

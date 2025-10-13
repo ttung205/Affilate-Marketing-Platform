@@ -66,7 +66,6 @@ input[name="expires_at"] {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
@@ -90,11 +89,9 @@ input[name="expires_at"] {
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -162,7 +159,6 @@ input[name="expires_at"] {
 }
 
 .card:hover {
-    transform: translateY(-4px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12) !important;
 }
 
@@ -296,7 +292,6 @@ input[name="expires_at"] {
 .btn-outline-primary:hover {
     background: #3b82f6;
     color: white;
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
@@ -307,7 +302,6 @@ input[name="expires_at"] {
 
 .btn-danger:hover {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
@@ -336,7 +330,6 @@ input[name="expires_at"] {
     background: #3b82f6;
     color: white;
     border-color: #3b82f6;
-    transform: translateY(-2px);
 }
 
 .pagination .page-item.active .page-link {
@@ -409,7 +402,6 @@ input[name="expires_at"] {
 
 .modal-footer .btn-secondary:hover {
     background: #475569;
-    transform: translateY(-2px);
 }
 
 .modal-footer .btn-danger {
@@ -419,7 +411,6 @@ input[name="expires_at"] {
 
 .modal-footer .btn-danger:hover {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
@@ -487,11 +478,9 @@ button, a, .card {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
@@ -692,7 +681,6 @@ small.text-muted {
 
 .btn-success:hover {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
     color: white;
 }
@@ -714,7 +702,6 @@ small.text-muted {
 
 .btn-secondary:hover {
     background: #475569;
-    transform: translateY(-2px);
     color: white;
 }
 
