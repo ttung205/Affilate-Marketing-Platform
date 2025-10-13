@@ -66,6 +66,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('notifications/templates', [NotificationManagementController::class, 'templates'])->name('notifications.templates');
     Route::post('notifications/send', [NotificationManagementController::class, 'send'])->name('notifications.send');
     
+    // Notification sending routes
+    Route::post('notifications/send-all', [NotificationManagementController::class, 'sendToAll'])->name('notifications.send-all');
+    Route::post('notifications/send-role', [NotificationManagementController::class, 'sendToRole'])->name('notifications.send-role');
+    Route::post('notifications/send-user', [NotificationManagementController::class, 'sendToUser'])->name('notifications.send-user');
+    Route::get('notifications/users', [NotificationManagementController::class, 'getUsersByRole'])->name('notifications.users');
+    Route::get('notifications/stats', [NotificationManagementController::class, 'getStats'])->name('notifications.stats');
+    
     // Platform Fee Settings
     Route::get('platform-fees', [PlatformFeeController::class, 'index'])->name('platform-fees.index');
     Route::post('platform-fees', [PlatformFeeController::class, 'store'])->name('platform-fees.store');
