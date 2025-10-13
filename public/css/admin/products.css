@@ -496,29 +496,16 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
 
 .product-btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-}
-
-.product-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
 }
 
 .product-btn-secondary {
     background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
     color: white;
-    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
-}
-
-.product-btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
 }
 
 /* Pagination */
@@ -613,22 +600,18 @@
 .product-image-upload-btn {
     display: inline-block;
     padding: 12px 20px;
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    transition: all 0.3s ease;
     text-align: center;
     text-decoration: none;
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .product-image-upload-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
 }
 

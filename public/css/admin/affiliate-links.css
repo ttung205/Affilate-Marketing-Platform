@@ -61,31 +61,18 @@ body {
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s ease;
     text-align: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .affiliate-btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
     color: white;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-}
-
-.affiliate-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.4);
 }
 
 .affiliate-btn-secondary {
     background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
     color: white;
-    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
-}
-
-.affiliate-btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
 }
 
 /* Statistics Grid */
@@ -102,12 +89,6 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.affiliate-stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .affiliate-stat-icon {
@@ -1037,18 +1018,6 @@ body {
 /* Utility Classes */
 .text-muted {
     color: #718096 !important;
-}
-
-/* Animation Effects */
-.affiliate-stat-card,
-.affiliate-filters-card,
-.affiliate-table-card,
-.affiliate-form-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.affiliate-btn:hover {
-    transform: translateY(-2px);
 }
 
 /* Custom Scrollbar */

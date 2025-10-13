@@ -31,7 +31,6 @@
     cursor: pointer;
     font-size: 12px;
     font-weight: 500;
-    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -145,7 +144,6 @@
 .payment-btn-approve:hover {
     background: #10b981;
     color: white;
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
