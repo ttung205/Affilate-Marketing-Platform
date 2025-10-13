@@ -76,12 +76,12 @@
                                 <td>
                                     <div class="category-action-buttons">
                                         <a href="{{ route('admin.categories.edit', $category) }}" 
-                                           class="category-btn category-btn-sm category-btn-outline-primary" 
+                                           class="category-btn-edit" 
                                            title="Chỉnh sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button type="button" 
-                                                class="category-btn category-btn-sm category-btn-outline-danger" 
+                                                class="category-btn-delete" 
                                                 title="Xóa"
                                                 onclick="showDeleteCategoryConfirm('{{ $category->id }}', '{{ $category->name }}')">
                                             <i class="fas fa-trash"></i>

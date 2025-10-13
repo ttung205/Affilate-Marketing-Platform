@@ -10,12 +10,9 @@
     <div class="product-management-content">
         <div class="product-management-header">
             <div class="product-management-title">
-                <h2>Quản lý sản phẩm</h2>
-                <p>Quản lý tất cả sản phẩm trong hệ thống</p>
+                <h2>Danh sách sản phẩm</h2>
+                <p>Xem tất cả sản phẩm trong hệ thống</p>
             </div>
-            <a href="{{ route('admin.products.create') }}" class="product-add-btn">
-                <i class="fas fa-plus"></i> Thêm sản phẩm
-            </a>
         </div>
 
         <!-- Filters Section -->
@@ -141,21 +138,10 @@
                                     </td>
                                     <td>
                                         <div class="product-action-buttons">
-                                            <a href="{{ route('admin.products.edit', $product) }}" class="product-btn-edit"
-                                                title="Chỉnh sửa">
-                                                <i class="fas fa-edit"></i>
+                                            <a href="{{ route('admin.products.show', $product) }}" class="product-btn-view"
+                                                title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
                                             </a>
-
-                                            <button type="button" class="product-btn-toggle"
-                                                title="{{ $product->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}"
-                                                onclick="showToggleProductStatusConfirm('{{ $product->id }}', '{{ $product->name }}', {{ $product->is_active ? 'true' : 'false' }})">
-                                                <i class="fas fa-{{ $product->is_active ? 'ban' : 'eye' }}"></i>
-                                            </button>
-
-                                            <button type="button" class="product-btn-delete" title="Xóa"
-                                                onclick="showDeleteProductConfirm('{{ $product->id }}', '{{ $product->name }}')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -179,11 +165,7 @@
                                 <i class="fas fa-box"></i>
                             </div>
                             <h3>Chưa có sản phẩm nào</h3>
-                            <p>Bắt đầu tạo sản phẩm đầu tiên để quản lý cửa hàng.</p>
-                            <a href="{{ route('admin.products.create') }}" class="product-btn product-btn-primary">
-                                <i class="fas fa-plus"></i>
-                                <span>Tạo sản phẩm</span>
-                            </a>
+                            <p>Hiện tại chưa có sản phẩm nào trong hệ thống.</p>
                         </div>
                     @endif
                 @endif
@@ -251,50 +233,4 @@
             @endif
         </div>
     </div>
-
-<!-- Hidden Forms for Actions -->
-<form id="toggle-product-status-form" method="POST" style="display: none;">
-    @csrf
-    @method('PATCH')
-</form>
-
-<form id="delete-product-form" method="POST" style="display: none;">
-    @csrf
-    @method('DELETE')
-</form>
-
-<script>
-function showToggleProductStatusConfirm(productId, productName, isActive) {
-    const action = isActive ? 'vô hiệu hóa' : 'kích hoạt';
-    const actionText = isActive ? 'Vô hiệu hóa' : 'Kích hoạt';
-    
-    showConfirmPopup({
-        title: `${actionText} sản phẩm`,
-        message: `Bạn có chắc chắn muốn ${action} sản phẩm này?`,
-        details: `Sản phẩm: ${productName}`,
-        type: 'warning',
-        confirmText: actionText,
-        onConfirm: () => {
-            const form = document.getElementById('toggle-product-status-form');
-            form.action = `{{ route('admin.products.index') }}/${productId}/toggle-status`;
-            form.submit();
-        }
-    });
-}
-
-function showDeleteProductConfirm(productId, productName) {
-    showConfirmPopup({
-        title: 'Xóa sản phẩm',
-        message: 'Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.',
-        details: `Sản phẩm: ${productName}`,
-        type: 'danger',
-        confirmText: 'Xóa',
-        onConfirm: () => {
-            const form = document.getElementById('delete-product-form');
-            form.action = `{{ route('admin.products.index') }}/${productId}`;
-            form.submit();
-        }
-    });
-}
-</script>
 @endsection

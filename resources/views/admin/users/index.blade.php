@@ -194,24 +194,24 @@
                                 <td>
                                     <div class="user-action-buttons">
                                         <a href="{{ route('admin.users.show', $user) }}" 
-                                           class="user-btn user-btn-sm user-btn-outline-info" 
+                                           class="user-btn-view" 
                                            title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         <a href="{{ route('admin.users.edit', $user) }}" 
-                                           class="user-btn user-btn-sm user-btn-outline-primary" 
+                                           class="user-btn-edit" 
                                            title="Chỉnh sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         @if($user->id !== auth()->id())
                                             <button type="button" 
-                                                    class="user-btn user-btn-sm user-btn-outline-warning" 
+                                                    class="user-btn-{{ $user->is_active ? 'toggle' : 'activate' }}" 
                                                     title="{{ $user->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}"
                                                     onclick="showToggleStatusConfirm('{{ $user->id }}', '{{ $user->name }}', {{ $user->is_active ? 'true' : 'false' }})">
                                                 <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }}"></i>
                                             </button>
                                             <button type="button" 
-                                                    class="user-btn user-btn-sm user-btn-outline-danger" 
+                                                    class="user-btn-delete" 
                                                     title="Xóa"
                                                     onclick="showDeleteConfirm('{{ $user->id }}', '{{ $user->name }}')">
                                                 <i class="fas fa-trash"></i>

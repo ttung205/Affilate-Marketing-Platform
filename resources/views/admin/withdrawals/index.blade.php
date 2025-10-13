@@ -219,24 +219,24 @@
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="btn btn-sm btn-outline-primary" 
+                                    <button class="withdrawal-btn-view" 
                                             onclick="viewWithdrawal({{ $withdrawal->id }})"
                                             title="Xem chi tiết">
                                         <i class="fas fa-eye"></i>
                                     </button>
                                     @if($withdrawal->status === 'pending')
-                                        <button class="btn btn-sm btn-success" 
+                                        <button class="withdrawal-btn-approve" 
                                                 onclick="approveWithdrawal({{ $withdrawal->id }})"
                                                 title="Duyệt">
                                             <i class="fas fa-check"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-danger" 
+                                        <button class="withdrawal-btn-reject" 
                                                 onclick="rejectWithdrawal({{ $withdrawal->id }})"
                                                 title="Từ chối">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     @elseif($withdrawal->status === 'approved')
-                                        <button class="btn btn-sm btn-primary" 
+                                        <button class="withdrawal-btn-complete" 
                                                 onclick="completeWithdrawal({{ $withdrawal->id }})"
                                                 title="Hoàn thành">
                                             <i class="fas fa-check-double"></i>
@@ -456,7 +456,7 @@ function getStatusLabel(status) {
 
 function generateActionButtons(withdrawal) {
     let buttons = `
-        <button class="btn btn-sm btn-outline-primary" 
+        <button class="withdrawal-btn-view" 
                 onclick="adminWithdrawalsManager.viewWithdrawal(${withdrawal.id})"
                 title="Xem chi tiết">
             <i class="fas fa-eye"></i>
@@ -465,12 +465,12 @@ function generateActionButtons(withdrawal) {
     
     if (withdrawal.status === 'pending') {
         buttons += `
-            <button class="btn btn-sm btn-success" 
+            <button class="withdrawal-btn-approve" 
                     onclick="adminWithdrawalsManager.approveWithdrawal(${withdrawal.id})"
                     title="Duyệt">
                 <i class="fas fa-check"></i>
             </button>
-            <button class="btn btn-sm btn-danger" 
+            <button class="withdrawal-btn-reject" 
                     onclick="adminWithdrawalsManager.rejectWithdrawal(${withdrawal.id})"
                     title="Từ chối">
                 <i class="fas fa-times"></i>
@@ -478,7 +478,7 @@ function generateActionButtons(withdrawal) {
         `;
     } else if (withdrawal.status === 'approved') {
         buttons += `
-            <button class="btn btn-sm btn-primary" 
+            <button class="withdrawal-btn-complete" 
                     onclick="adminWithdrawalsManager.completeWithdrawal(${withdrawal.id})"
                     title="Hoàn thành">
                 <i class="fas fa-check-double"></i>

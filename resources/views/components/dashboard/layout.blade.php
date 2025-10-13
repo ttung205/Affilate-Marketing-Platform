@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{{ asset('css/breadcrumb-override.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/alerts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/components/confirm-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/admin-action-buttons.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/categories.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/products.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin/users.css') }}">

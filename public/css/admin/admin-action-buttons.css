@@ -1,0 +1,194 @@
+/* Admin Action Buttons - Unified Style */
+
+/* Base Button Style */
+.user-btn-view,
+.user-btn-edit,
+.user-btn-delete,
+.user-btn-toggle,
+.user-btn-activate,
+.category-btn-edit,
+.category-btn-delete,
+.campaign-btn-view,
+.campaign-btn-edit,
+.campaign-btn-pause,
+.campaign-btn-play,
+.campaign-btn-delete,
+.withdrawal-btn-view,
+.withdrawal-btn-approve,
+.withdrawal-btn-reject,
+.withdrawal-btn-complete,
+.affiliate-btn-edit,
+.affiliate-btn-disable,
+.affiliate-btn-enable,
+.affiliate-btn-delete,
+.platform-fee-btn-edit,
+.platform-fee-btn-delete,
+.payment-btn-approve,
+.payment-btn-reject {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+    min-width: 36px;
+    height: 36px;
+}
+
+/* View Button - Blue */
+.user-btn-view,
+.campaign-btn-view,
+.withdrawal-btn-view {
+    background: transparent;
+    color: #3182ce;
+    border: 2px solid #3182ce;
+}
+
+.user-btn-view:hover,
+.campaign-btn-view:hover,
+.withdrawal-btn-view:hover {
+    background: #3182ce;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+}
+
+/* Edit Button - Blue */
+.user-btn-edit,
+.category-btn-edit,
+.campaign-btn-edit,
+.affiliate-btn-edit,
+.platform-fee-btn-edit {
+    background: transparent;
+    color: #3182ce;
+    border: 2px solid #3182ce;
+}
+
+.user-btn-edit:hover,
+.category-btn-edit:hover,
+.campaign-btn-edit:hover,
+.affiliate-btn-edit:hover,
+.platform-fee-btn-edit:hover {
+    background: #3182ce;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+}
+
+/* Delete Button - Red */
+.user-btn-delete,
+.category-btn-delete,
+.campaign-btn-delete,
+.affiliate-btn-delete,
+.platform-fee-btn-delete {
+    background: transparent;
+    color: #e53e3e;
+    border: 2px solid #e53e3e;
+}
+
+.user-btn-delete:hover,
+.category-btn-delete:hover,
+.campaign-btn-delete:hover,
+.affiliate-btn-delete:hover,
+.platform-fee-btn-delete:hover {
+    background: #e53e3e;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Toggle/Disable Button - Orange/Warning */
+.user-btn-toggle,
+.affiliate-btn-disable,
+.campaign-btn-pause,
+.withdrawal-btn-reject,
+.payment-btn-reject {
+    background: transparent;
+    color: #f59e0b;
+    border: 2px solid #f59e0b;
+}
+
+.user-btn-toggle:hover,
+.affiliate-btn-disable:hover,
+.campaign-btn-pause:hover,
+.withdrawal-btn-reject:hover,
+.payment-btn-reject:hover {
+    background: #f59e0b;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+/* Activate/Enable Button - Green */
+.user-btn-activate,
+.affiliate-btn-enable,
+.campaign-btn-play,
+.withdrawal-btn-approve,
+.withdrawal-btn-complete,
+.payment-btn-approve {
+    background: transparent;
+    color: #10b981;
+    border: 2px solid #10b981;
+}
+
+.user-btn-activate:hover,
+.affiliate-btn-enable:hover,
+.campaign-btn-play:hover,
+.withdrawal-btn-approve:hover,
+.withdrawal-btn-complete:hover,
+.payment-btn-approve:hover {
+    background: #10b981;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* Action Buttons Container */
+.user-action-buttons,
+.category-action-buttons,
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-btn-view,
+    .user-btn-edit,
+    .user-btn-delete,
+    .user-btn-toggle,
+    .user-btn-activate,
+    .category-btn-edit,
+    .category-btn-delete,
+    .campaign-btn-view,
+    .campaign-btn-edit,
+    .campaign-btn-pause,
+    .campaign-btn-play,
+    .campaign-btn-delete,
+    .withdrawal-btn-view,
+    .withdrawal-btn-approve,
+    .withdrawal-btn-reject,
+    .withdrawal-btn-complete,
+    .affiliate-btn-edit,
+    .affiliate-btn-disable,
+    .affiliate-btn-enable,
+    .affiliate-btn-delete,
+    .platform-fee-btn-edit,
+    .platform-fee-btn-delete,
+    .payment-btn-approve,
+    .payment-btn-reject {
+        padding: 5px 10px;
+        font-size: 11px;
+        min-width: 32px;
+        height: 32px;
+    }
+}
+

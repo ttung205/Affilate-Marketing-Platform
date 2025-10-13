@@ -319,11 +319,11 @@
                                     </td>
                                     <td class="table-actions">
                                         <div class="action-buttons">
-                                            <a href="{{ route('admin.affiliate-links.edit', $link) }}" class="action-btn action-edit" title="Chỉnh sửa">
+                                            <a href="{{ route('admin.affiliate-links.edit', $link) }}" class="affiliate-btn-edit" title="Chỉnh sửa">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if(($link->status ?? '') === 'active')
-                                                <button type="button" class="action-btn action-disable toggle-status-btn" 
+                                                <button type="button" class="affiliate-btn-disable toggle-status-btn" 
                                                         data-id="{{ $link->id }}" 
                                                         data-status="inactive" 
                                                         data-action="Vô hiệu hóa"
@@ -331,7 +331,7 @@
                                                     <i class="fas fa-ban"></i>
                                                 </button>
                                             @else
-                                                <button type="button" class="action-btn action-enable toggle-status-btn" 
+                                                <button type="button" class="affiliate-btn-enable toggle-status-btn" 
                                                         data-id="{{ $link->id }}" 
                                                         data-status="active" 
                                                         data-action="Kích hoạt"
@@ -339,7 +339,7 @@
                                                     <i class="fas fa-check"></i>
                                                 </button>
                                             @endif
-                                            <button type="button" class="action-btn action-delete delete-btn" 
+                                            <button type="button" class="affiliate-btn-delete delete-btn" 
                                                     data-id="{{ $link->id }}"
                                                     title="Xóa">
                                                 <i class="fas fa-trash"></i>

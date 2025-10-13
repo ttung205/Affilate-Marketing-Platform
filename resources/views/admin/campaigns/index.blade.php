@@ -239,14 +239,14 @@
                                     <td class="table-date">{{ ($campaign->created_at ?? now())->format('d/m/Y H:i') }}</td>
                                     <td class="table-actions">
                                         <div class="action-buttons">
-                                            <a href="{{ route('admin.campaigns.show', $campaign) }}" class="action-btn action-view" title="Xem chi tiết">
+                                            <a href="{{ route('admin.campaigns.show', $campaign) }}" class="campaign-btn-view" title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="action-btn action-edit" title="Chỉnh sửa">
+                                            <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="campaign-btn-edit" title="Chỉnh sửa">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             @if(($campaign->status ?? '') === 'active')
-                                                <button type="button" class="action-btn action-pause toggle-status-btn" 
+                                                <button type="button" class="campaign-btn-pause toggle-status-btn" 
                                                         data-id="{{ $campaign->id }}" 
                                                         data-status="paused" 
                                                         data-action="Tạm dừng"
@@ -254,7 +254,7 @@
                                                     <i class="fas fa-pause"></i>
                                                 </button>
                                             @elseif(($campaign->status ?? '') === 'paused')
-                                                <button type="button" class="action-btn action-play toggle-status-btn" 
+                                                <button type="button" class="campaign-btn-play toggle-status-btn" 
                                                         data-id="{{ $campaign->id }}" 
                                                         data-status="active" 
                                                         data-action="Kích hoạt"
@@ -262,7 +262,7 @@
                                                     <i class="fas fa-play"></i>
                                                 </button>
                                             @endif
-                                            <button type="button" class="action-btn action-delete delete-btn" 
+                                            <button type="button" class="campaign-btn-delete delete-btn" 
                                                     data-id="{{ $campaign->id }}"
                                                     title="Xóa">
                                                 <i class="fas fa-trash"></i>

@@ -92,11 +92,11 @@
                 </div>
                 @if($payment->status === 'pending')
                 <div class="payment-actions-header">
-                    <button type="button" class="btn-action btn-approve" onclick="approvePayment({{ $payment->id }})">
+                    <button type="button" class="payment-btn-approve" onclick="approvePayment({{ $payment->id }})">
                         <i class="fas fa-check"></i>
                         Duyệt
                     </button>
-                    <button type="button" class="btn-action btn-reject" onclick="rejectPayment({{ $payment->id }})">
+                    <button type="button" class="payment-btn-reject" onclick="rejectPayment({{ $payment->id }})">
                         <i class="fas fa-times"></i>
                         Từ chối
                     </button>
