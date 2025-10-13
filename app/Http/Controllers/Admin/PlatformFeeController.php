@@ -38,7 +38,7 @@ class PlatformFeeController extends Controller
 
         PlatformFeeSetting::create($validated);
 
-        return redirect()->route('admin.platform-fee.index')
+        return redirect()->route('admin.platform-fees.index')
             ->with('success', 'Đã thêm cài đặt phí sàn mới thành công!');
     }
 

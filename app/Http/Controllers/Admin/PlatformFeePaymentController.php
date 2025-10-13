@@ -85,6 +85,24 @@ class PlatformFeePaymentController extends Controller
     }
 
     /**
+     * Xác minh thanh toán (alias của approve)
+     */
+    public function verify(Request $request, $id)
+    {
+        return $this->approve($request, $id);
+    }
+
+    /**
+     * Hiển thị chi tiết thanh toán
+     */
+    public function show($id)
+    {
+        $payment = PlatformFeePayment::with('shop')->findOrFail($id);
+        
+        return view('admin.platform-fee-payments.show', compact('payment'));
+    }
+
+    /**
      * Từ chối thanh toán
      */
     public function reject(Request $request, $id)
