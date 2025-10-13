@@ -11,11 +11,13 @@ use App\Models\Conversion;
 use App\Models\AffiliateLink;
 use App\Models\Campaign;
 use App\Services\PublisherService;
+use App\Services\PublisherRankingService;
 
 class PublisherController extends Controller
 {
     public function __construct(
-        private PublisherService $publisherService
+        private PublisherService $publisherService,
+        private PublisherRankingService $rankingService
     ) {}
 
     public function dashboard()
@@ -59,6 +61,9 @@ class PublisherController extends Controller
         // Wallet data
         $walletData = $this->publisherService->getWalletData($publisher);
 
+        // Ranking progress data
+        $progress = $this->rankingService->getRankingProgress($publisher);
+
         return view('publisher.dashboard', compact(
             'stats', 
             'timeStats', 
@@ -66,7 +71,8 @@ class PublisherController extends Controller
             'recentConversions', 
             'recentLinks',
             'chartData',
-            'walletData'
+            'walletData',
+            'progress'
         ));
     }
 

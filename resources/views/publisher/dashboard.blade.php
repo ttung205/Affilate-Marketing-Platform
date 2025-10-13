@@ -137,9 +137,6 @@
                         <a href="{{ route('publisher.ranking.index') }}" class="view-all-btn">Xem chi tiết</a>
                     </div>
                     <div class="card-content">
-                        @php
-                            $progress = Auth::user()->getRankingProgressAttribute();
-                        @endphp
                         @if(!$progress['is_max_level'])
                             <div class="ranking-progress">
                                 <div class="progress-info">
@@ -151,12 +148,12 @@
                                         <div class="stat">
                                             <span class="label">Links:</span>
                                             <span
-                                                class="value">{{ $progress['stats']['total_links'] }}/{{ $progress['next_ranking']->min_links }}</span>
+                                                class="value">{{ $progress['stats']['total_links'] ?? 0 }}/{{ $progress['next_ranking']->min_links ?? 0 }}</span>
                                         </div>
                                         <div class="stat">
                                             <span class="label">Hoa hồng:</span>
                                             <span
-                                                class="value">{{ number_format($progress['stats']['total_commission'], 0, ',', '.') }}/{{ number_format($progress['next_ranking']->min_commission, 0, ',', '.') }}
+                                                class="value">{{ number_format($progress['stats']['total_commission'] ?? 0, 0, ',', '.') }}/{{ number_format($progress['next_ranking']->min_commission ?? 0, 0, ',', '.') }}
                                                 VNĐ</span>
                                         </div>
                                     </div>
@@ -165,21 +162,21 @@
                                     <div class="progress-item">
                                         <div class="progress-label">
                                             <span>📎 Số Link</span>
-                                            <span>{{ $progress['progress']['links_progress'] }}%</span>
+                                            <span>{{ $progress['progress']['links_progress'] ?? 0 }}%</span>
                                         </div>
                                         <div class="progress">
-                                            <div class="progress-bar" style="width: {{ $progress['progress']['links_progress'] }}%">
+                                            <div class="progress-bar" style="width: {{ $progress['progress']['links_progress'] ?? 0 }}%">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="progress-item">
                                         <div class="progress-label">
                                             <span>💰 Hoa Hồng</span>
-                                            <span>{{ $progress['progress']['commission_progress'] }}%</span>
+                                            <span>{{ $progress['progress']['commission_progress'] ?? 0 }}%</span>
                                         </div>
                                         <div class="progress">
                                             <div class="progress-bar bg-success"
-                                                style="width: {{ $progress['progress']['commission_progress'] }}%"></div>
+                                                style="width: {{ $progress['progress']['commission_progress'] ?? 0 }}%"></div>
                                         </div>
                                     </div>
                                 </div>
