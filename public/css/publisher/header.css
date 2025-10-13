@@ -95,11 +95,6 @@
     font-weight: 500;
 }
 
-.breadcrumb-item a:hover {
-    color: #0056b3;
-    text-decoration: none;
-    background: none;
-}
 
 /* Header Right */
 .header-right {
@@ -197,10 +192,6 @@
     transition: color 0.3s ease;
 }
 
-.mark-all-read:hover {
-    color: #2563eb;
-}
-
 .notification-list {
     max-height: 300px;
     overflow-y: auto;
@@ -212,10 +203,6 @@
     display: flex;
     gap: 12px;
     transition: background-color 0.3s ease;
-}
-
-.notification-item:hover {
-    background-color: #f8fafc;
 }
 
 .notification-item:last-child {
@@ -270,11 +257,6 @@
     min-width: 140px;
 }
 
-.user-btn:hover {
-    background: rgba(0, 123, 255, 0.1);
-    color: #007bff;
-    transform: scale(1.02);
-}
 
 .user-avatar {
     width: 32px;
@@ -407,20 +389,12 @@
     cursor: pointer;
 }
 
-.user-menu-item:hover {
-    background-color: #f8fafc;
-    color: #3b82f6;
-}
-
 .user-menu-item i {
     width: 16px;
     text-align: center;
     color: #64748b;
 }
 
-.user-menu-item:hover i {
-    color: #3b82f6;
-}
 
 .user-menu-divider {
     height: 1px;
@@ -432,17 +406,10 @@
     color: #ef4444 !important;
 }
 
-.logout-btn:hover {
-    background-color: #fef2f2 !important;
-    color: #dc2626 !important;
-}
 
 .logout-btn i {
     color: #ef4444 !important;
 }
 
-.logout-btn:hover i {
-    color: #dc2626 !important;
-}
 
 

@@ -113,22 +113,22 @@
     color: white;
 }
 
-.publisher-profile-avatar-btn-primary:hover {
+/* .publisher-profile-avatar-btn-primary:hover {
     background: #0056b3;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .publisher-profile-avatar-btn-danger {
     background: #dc3545;
     color: white;
 }
 
-.publisher-profile-avatar-btn-danger:hover {
+/* .publisher-profile-avatar-btn-danger:hover {
     background: #c82333;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
+} */
 
 .publisher-profile-avatar-form {
     display: inline;
@@ -278,22 +278,22 @@
     color: white;
 }
 
-.publisher-profile-btn-primary:hover {
+/* .publisher-profile-btn-primary:hover {
     background: #0056b3;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .publisher-profile-btn-secondary {
     background: #6c757d;
     color: white;
 }
 
-.publisher-profile-btn-secondary:hover {
+/* .publisher-profile-btn-secondary:hover {
     background: #5a6268;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
+} */
 
 /* Alerts */
 .publisher-profile-alert {
@@ -334,7 +334,7 @@
     transition: opacity 0.3s ease;
 }
 
-.publisher-profile-alert-close:hover {
+/* .publisher-profile-alert-close:hover {
     opacity: 1;
-}
+} */
 

@@ -83,10 +83,10 @@
     transition: all 0.3s ease;
 }
 
-.header-actions .btn:hover {
+/* .header-actions .btn:hover {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     transform: translateY(-2px);
-}
+} */
 
 /* Stats Cards */
 .withdrawal-stats {
@@ -106,6 +106,12 @@
     align-items: center;
     gap: 1rem;
 }
+
+
+/* .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+} */
 
 
 .stat-icon {
@@ -242,9 +248,9 @@
     vertical-align: middle;
 }
 
-.withdrawals-table tbody tr:hover {
+/* .withdrawals-table tbody tr:hover {
     background: #f9fafb;
-}
+} */
 
 .withdrawal-id {
     font-family: "Courier New", monospace;
