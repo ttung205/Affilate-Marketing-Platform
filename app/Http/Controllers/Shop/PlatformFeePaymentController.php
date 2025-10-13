@@ -179,7 +179,7 @@ class PlatformFeePaymentController extends Controller
                 'message' => 'Shop ' . Auth::user()->name . ' đã xác nhận thanh toán phí sàn ' . number_format($pendingPayment['fee_amount'], 0, ',', '.') . ' VNĐ. Vui lòng kiểm tra và duyệt.',
                 'icon' => 'fas fa-money-bill-wave',
                 'color' => 'blue',
-                'action_url' => route('admin.platform-fee.payments', ['status' => 'pending']),
+                'action_url' => route('admin.platform-fee-payments.index', ['status' => 'pending']),
                 'action_text' => 'Xem và duyệt',
             ]);
         }

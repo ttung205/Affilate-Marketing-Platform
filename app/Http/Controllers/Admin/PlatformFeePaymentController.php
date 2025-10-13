@@ -39,7 +39,7 @@ class PlatformFeePaymentController extends Controller
 
         $payments = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('admin.platform-fee.payments', compact(
+        return view('admin.platform-fee-payments.index', compact(
             'payments',
             'status',
             'pendingCount',
@@ -72,7 +72,7 @@ class PlatformFeePaymentController extends Controller
         if ($shop) {
             $this->notificationService->sendCustomNotification($shop, [
                 'title' => 'Thanh toán phí sàn được duyệt',
-                'message' => 'Thanh toán phí sàn ' . number_format($payment->fee_amount, 0, ',', '.') . ' VNĐ của bạn đã được admin xác nhận.',
+                'message' => 'Thanh toán phí sàn ' . number_format((float)$payment->fee_amount, 0, ',', '.') . ' VNĐ của bạn đã được admin xác nhận.',
                 'icon' => 'fas fa-check-circle',
                 'color' => 'green',
                 'action_url' => route('shop.platform-fee.index'),
@@ -80,7 +80,7 @@ class PlatformFeePaymentController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.platform-fee.payments', ['status' => 'paid'])
+        return redirect()->route('admin.platform-fee-payments.index', ['status' => 'paid'])
             ->with('success', 'Đã duyệt thanh toán và gửi thông báo cho shop!');
     }
 
@@ -123,7 +123,7 @@ class PlatformFeePaymentController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.platform-fee.payments', ['status' => 'rejected'])
+        return redirect()->route('admin.platform-fee-payments.index', ['status' => 'rejected'])
             ->with('success', 'Đã từ chối thanh toán và gửi thông báo cho shop!');
     }
 }

@@ -174,7 +174,6 @@
 <!-- Approve Form (Hidden) -->
 <form id="approveForm" method="POST" style="display: none;">
     @csrf
-    @method('PATCH')
 </form>
 
 <!-- Reject Modal -->
@@ -188,7 +187,6 @@
         </div>
         <form id="rejectForm" method="POST">
             @csrf
-            @method('PATCH')
             <div class="modal-body">
                 <div class="form-group">
                     <label for="admin_note">Lý do từ chối <span class="required">*</span></label>
@@ -236,7 +234,7 @@ function approvePayment(paymentId) {
         cancelText: 'Hủy',
         onConfirm: function() {
             const form = document.getElementById('approveForm');
-            form.action = `/admin/platform-fee/payments/${paymentId}/approve`;
+            form.action = `/admin/platform-fee-payments/${paymentId}/verify`;
             form.submit();
         }
     });
@@ -244,7 +242,7 @@ function approvePayment(paymentId) {
 
 function rejectPayment(paymentId) {
     const form = document.getElementById('rejectForm');
-    form.action = `/admin/platform-fee/payments/${paymentId}/reject`;
+    form.action = `/admin/platform-fee-payments/${paymentId}/reject`;
     document.getElementById('rejectModal').classList.add('show');
 }
 

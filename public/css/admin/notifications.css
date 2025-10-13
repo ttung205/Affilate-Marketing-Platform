@@ -51,12 +51,10 @@
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .notifications-btn:hover {
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -94,14 +92,8 @@
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
     border: 1px solid rgba(0, 123, 255, 0.05);
-    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-}
-
-.notifications-stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 123, 255, 0.15);
 }
 
 .notifications-stat-card::before {
@@ -190,12 +182,6 @@
     box-shadow: 0 10px 30px rgba(0, 123, 255, 0.1);
     border: 1px solid rgba(0, 123, 255, 0.05);
     overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.notifications-form-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(0, 123, 255, 0.15);
 }
 
 .notifications-form-full {
@@ -285,7 +271,6 @@
     border: 2px solid #e2e8f0;
     border-radius: 10px;
     font-size: 14px;
-    transition: all 0.3s ease;
     background: white;
 }
 
@@ -294,7 +279,6 @@
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    transform: translateY(-1px);
 }
 
 .form-control::placeholder {
@@ -464,13 +448,11 @@
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
     animation: buttonFadeIn 0.6s ease-out 0.8s both;
 }
 
 .popup-button:hover {
-    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
 }
 
