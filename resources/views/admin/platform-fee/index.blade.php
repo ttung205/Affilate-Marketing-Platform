@@ -132,13 +132,6 @@
                                 <td>{{ $setting->created_at->format('d/m/Y H:i') }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button type="button" 
-                                                class="platform-fee-btn-edit"
-                                                onclick="editFee({{ $setting->id }}, {{ $setting->fee_percentage }}, '{{ $setting->description }}', '{{ $setting->effective_from }}', {{ $setting->is_active ? 'true' : 'false' }})"
-                                                title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        
                                         <form action="{{ route('admin.platform-fees.destroy', $setting) }}" 
                                               method="POST" 
                                               style="display: inline;"
