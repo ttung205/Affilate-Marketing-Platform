@@ -47,10 +47,10 @@
     transition: all 0.3s ease;
 }
 
-.header-actions .btn:hover {
+/* .header-actions .btn:hover {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     transform: translateY(-2px);
-}
+} */
 
 /* Stats Cards */
 .wallet-stats {
@@ -72,10 +72,10 @@
     transition: all 0.3s ease;
 }
 
-.stat-card:hover {
+/* .stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .stat-icon {
     width: 60px;
@@ -163,12 +163,12 @@
     transition: all 0.3s ease;
 }
 
-.action-btn:hover {
+/* .action-btn:hover {
     background: #f9fafb;
     border-color: #d1d5db;
     transform: translateY(-1px);
     color: #1f2937;
-}
+} */
 
 .action-btn i {
     font-size: 1.25rem;
@@ -199,10 +199,10 @@
     font-size: 0.9rem;
 }
 
-.view-all-link:hover {
+/* .view-all-link:hover {
     color: #2563eb;
     text-decoration: underline;
-}
+} */
 
 .transactions-list {
     display: flex;
@@ -220,10 +220,10 @@
     transition: all 0.3s ease;
 }
 
-.transaction-item:hover {
+/* .transaction-item:hover {
     background: #f9fafb;
     border-color: #e5e7eb;
-}
+} */
 
 .transaction-icon {
     width: 40px;
@@ -459,10 +459,10 @@
     transition: all 0.3s ease;
 }
 
-.breakdown-card:hover {
+/* .breakdown-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
+} */
 
 .breakdown-icon {
     width: 60px;

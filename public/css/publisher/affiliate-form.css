@@ -148,11 +148,11 @@
     color: white;
 }
 
-.btn-primary:hover {
+/* .btn-primary:hover {
     background: #2563eb;
     color: white;
     text-decoration: none;
-}
+} */
 
 .btn-secondary {
     background: #6b7280;
@@ -160,11 +160,11 @@
     width: 80px;
 }
 
-.btn-secondary:hover {
+/* .btn-secondary:hover {
     background: #4b5563;
     color: white;
     text-decoration: none;
-}
+} */
 
 /* Responsive */
 @media (max-width: 768px) {

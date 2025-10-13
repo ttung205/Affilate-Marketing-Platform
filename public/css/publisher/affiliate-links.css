@@ -46,10 +46,10 @@
     transition: all 0.2s ease;
 }
 
-.stat-card:hover {
+/* .stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .stat-icon {
     width: 48px;
@@ -152,9 +152,9 @@
     vertical-align: top;
 }
 
-.affiliate-links-table tbody tr:hover {
+/* .affiliate-links-table tbody tr:hover {
     background-color: #f8fafc;
-}
+} */
 
 /* Product Cell */
 .product-info {
@@ -243,20 +243,20 @@
     gap: 4px;
 }
 
-.copy-btn:hover {
+/* .copy-btn:hover {
     background: linear-gradient(135deg, #0087a8 0%, #0099cc 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(11, 197, 234, 0.3);
-}
+} */
 
 .copy-btn.copy-success {
     background: linear-gradient(135deg, #38a169 0%, #68d391 100%);
     color: white;
 }
-
+/* 
 .copy-btn.copy-success:hover {
     background: linear-gradient(135deg, #2f855a 0%, #4fd1c7 100%);
-}
+} */
 
 /* Base button styles */
 .btn {
@@ -281,9 +281,9 @@
     background: transparent;
 }
 
-.btn:hover {
+/* .btn:hover {
     text-decoration: none;
-}
+} */
 
 .btn:focus {
     outline: none;
@@ -310,20 +310,20 @@
     border: 2px solid transparent;
 }
 
-.btn-primary:hover {
+/* .btn-primary:hover {
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
     color: white;
-}
+} */
 .btn-primary1 {
     background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     color: white;
     border: 2px solid transparent;
     padding: 4px 8px;
 }
-.btn-primary1:hover {
+/* .btn-primary1:hover {
     background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
     color: white;
-}
+} */
 /* Secondary button */
 .btn-secondary {
     background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
@@ -331,10 +331,10 @@
     border: 2px solid transparent;
 }
 
-.btn-secondary:hover {
+/* .btn-secondary:hover {
     background: linear-gradient(135deg, #495057 0%, #343a40 100%);
     color: white;
-}
+} */
 
 /* Light button */
 .btn-light {
@@ -343,11 +343,11 @@
     border: 2px solid #dee2e6;
 }
 
-.btn-light:hover {
+/* .btn-light:hover {
     background: #e2e6ea;
     color: #212529;
     border-color: #dae0e5;
-}
+} */
 
 /* Button Outline Styles - Unified for table actions */
 .btn-outline-primary {
@@ -368,11 +368,11 @@
     justify-content: center;
 }
 
-.btn-outline-primary:hover {
+/* .btn-outline-primary:hover {
     background: #007bff;
     color: white;
     border-color: #007bff;
-}
+} */
 
 .btn-outline-secondary {
     background: transparent;
@@ -392,11 +392,11 @@
     justify-content: center;
 }
 
-.btn-outline-secondary:hover {
+/* .btn-outline-secondary:hover {
     background: #6c757d;
     color: white;
     border-color: #6c757d;
-}
+} */
 
 .btn-outline-success {
     background: transparent;
@@ -417,11 +417,11 @@
     justify-content: center;
 }
 
-.btn-outline-success:hover {
+/* .btn-outline-success:hover {
     background: #28a745;
     color: white;
     border-color: #28a745;
-}
+} */
 
 .btn-outline-info {
     background: transparent;
@@ -442,11 +442,11 @@
     justify-content: center;
 }
 
-.btn-outline-info:hover {
+/* .btn-outline-info:hover {
     background: #17a2b8;
     color: white;
     border-color: #17a2b8;
-}
+} */
 
 .btn-outline-danger {
     background: transparent;
@@ -467,11 +467,11 @@
     justify-content: center;
 }
 
-.btn-outline-danger:hover {
+/* .btn-outline-danger:hover {
     background: #dc3545;
     color: white;
     border-color: #dc3545;
-}
+} */
 
 /* Button sizes */
 .btn-sm {
@@ -565,10 +565,10 @@
     transition: all 0.3s ease;
 }
 
-.modal-btn-cancel:hover {
+/* .modal-btn-cancel:hover {
     background: #6c757d;
     color: white;
-}
+} */
 
 .modal-btn-confirm {
     background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
@@ -582,9 +582,9 @@
     transition: all 0.3s ease;
 }
 
-.modal-btn-confirm:hover {
+/* .modal-btn-confirm:hover {
     background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
-}
+} */
 
 @keyframes fadeIn {
     from {
