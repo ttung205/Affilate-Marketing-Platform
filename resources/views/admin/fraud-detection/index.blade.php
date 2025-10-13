@@ -6,6 +6,67 @@
 <link rel="stylesheet" href="{{ asset('css/admin/fraud-detection.css') }}">
 @endpush
 
+@php
+// Helper function to translate fraud reasons
+function translateFraudReason($reason) {
+    $translations = [
+        // Bot detection
+        'Bot detected: Bot pattern matched: bot' => 'Phát hiện bot: Mẫu bot khớp: bot',
+        'Bot detected: Bot pattern matched: curl' => 'Phát hiện bot: Mẫu bot khớp: curl',
+        'Bot detected: Bot pattern matched: wget' => 'Phát hiện bot: Mẫu bot khớp: wget',
+        'Bot detected: Bot pattern matched: spider' => 'Phát hiện bot: Mẫu bot khớp: spider',
+        'Bot detected: Bot pattern matched: crawler' => 'Phát hiện bot: Mẫu bot khớp: crawler',
+        'Bot detected: Bot pattern matched: scraper' => 'Phát hiện bot: Mẫu bot khớp: scraper',
+        'Bot detected: Suspicious user agent characters' => 'Phát hiện bot: Ký tự user agent đáng ngờ',
+        
+        // Click patterns
+        'Too many clicks from this IP' => 'Quá nhiều click từ IP này',
+        'Rapid clicking detected' => 'Phát hiện click nhanh',
+        'Unusual click pattern' => 'Mẫu click bất thường',
+        
+        // Publisher violations
+        'Publisher clicking own link (IP match)' => 'Publisher click link của chính mình (IP trùng khớp)',
+        'Publisher \\w+ click link của chính mình \\(IP khớp\\)' => 'Publisher click link của chính mình (IP khớp)',
+        
+        // Time patterns
+        'Suspicious time pattern' => 'Mẫu thời gian đáng ngờ',
+        'Click outside normal hours' => 'Click ngoài giờ bình thường',
+        
+        // Geographic
+        'Suspicious geographic location' => 'Vị trí địa lý đáng ngờ',
+        
+        // Other
+        'Empty user agent' => 'User agent trống',
+        'Invalid referer' => 'Referer không hợp lệ',
+        'Suspicious referer pattern' => 'Mẫu referer đáng ngờ',
+    ];
+    
+    // Try exact match first
+    if (isset($translations[$reason])) {
+        return $translations[$reason];
+    }
+    
+    // Try pattern matching for dynamic content
+    foreach ($translations as $pattern => $translation) {
+        if (preg_match('/' . preg_quote($pattern, '/') . '/', $reason)) {
+            return $translation;
+        }
+    }
+    
+    // If contains "Bot detected:", translate the prefix
+    if (strpos($reason, 'Bot detected:') === 0) {
+        return str_replace('Bot detected:', 'Phát hiện bot:', $reason);
+    }
+    
+    // If contains "Publisher", try to translate
+    if (preg_match('/Publisher .+ click link (của chính mình|củ?a chính mình|own link).*IP (match|khớp)/i', $reason)) {
+        return preg_replace('/Publisher (.+) click link.*/i', 'Publisher $1 click link của chính mình (IP khớp)', $reason);
+    }
+    
+    return $reason;
+}
+@endphp
+
 @section('content')
 <div class="fraud-detection-container">
     <!-- Page Header -->
@@ -13,16 +74,6 @@
         <div class="fraud-header-left">
             <h1>🛡️ Bảng điều khiển phát hiện gian lận</h1>
             <p>Giám sát và phát hiện gian lận trong hệ thống affiliate</p>
-        </div>
-        <div class="fraud-header-right">
-            <a href="{{ route('admin.fraud-detection.export', ['days' => $days]) }}" class="fraud-btn fraud-btn-success">
-                <i class="fas fa-download"></i>
-                <span>Xuất CSV</span>
-            </a>
-            <button type="button" class="fraud-btn fraud-btn-warning" data-bs-toggle="modal" data-bs-target="#clearCacheModal">
-                <i class="fas fa-sync"></i>
-                <span>Xóa Cache</span>
-            </button>
         </div>
     </div>
 
@@ -84,12 +135,6 @@
                 <p>IP bị chặn</p>
             </div>
         </div>
-    </div>
-
-    <!-- Fraud Trend Chart -->
-    <div class="fraud-chart-card">
-        <h5>📊 Xu hướng gian lận</h5>
-        <canvas id="fraudTrendChart" height="80"></canvas>
     </div>
 
     <!-- Top Fraud IPs & Publishers -->
@@ -203,7 +248,16 @@
                             <span class="badge bg-{{ $scoreClass }}">{{ $attempt->risk_score }}</span>
                         </td>
                         <td>
-                            <small>{{ Str::limit(is_string($attempt->reasons) ? $attempt->reasons : json_encode($attempt->reasons), 50) }}</small>
+                            @php
+                                $reasons = is_string($attempt->reasons) ? json_decode($attempt->reasons, true) : $attempt->reasons;
+                                if (is_array($reasons)) {
+                                    $translatedReasons = array_map('translateFraudReason', $reasons);
+                                    $reasonText = implode('; ', $translatedReasons);
+                                } else {
+                                    $reasonText = translateFraudReason($attempt->reasons);
+                                }
+                            @endphp
+                            <small>{{ Str::limit($reasonText, 60) }}</small>
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-primary" onclick="showFraudDetail({{ $attempt->id }})">
@@ -309,155 +363,63 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Fraud Trend Chart
-const fraudTrendData = @json($fraudTrend);
-const ctx = document.getElementById('fraudTrendChart').getContext('2d');
 
-new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: fraudTrendData.map(item => item.date),
-        datasets: [
-            {
-                label: 'Lần gian lận',
-                data: fraudTrendData.map(item => item.count),
-                borderColor: 'rgb(239, 68, 68)',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                borderWidth: 2,
-                pointRadius: 4,
-                pointBackgroundColor: 'rgb(239, 68, 68)',
-                tension: 0.3,
-                fill: true
-            },
-            {
-                label: 'Điểm rủi ro TB',
-                data: fraudTrendData.map(item => item.avg_risk_score),
-                borderColor: 'rgb(245, 158, 11)',
-                backgroundColor: 'rgba(245, 158, 11, 0.1)',
-                borderWidth: 2,
-                pointRadius: 4,
-                pointBackgroundColor: 'rgb(245, 158, 11)',
-                tension: 0.3,
-                fill: true,
-                yAxisID: 'y1'
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        animation: {
-            duration: 0
-        },
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        plugins: {
-            legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    usePointStyle: true,
-                    padding: 15,
-                    font: {
-                        size: 12,
-                        weight: '500'
-                    }
-                }
-            },
-            tooltip: {
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                padding: 12,
-                borderColor: 'rgba(255, 255, 255, 0.1)',
-                borderWidth: 1,
-                titleFont: {
-                    size: 13,
-                    weight: '600'
-                },
-                bodyFont: {
-                    size: 12
-                },
-                displayColors: true,
-                callbacks: {
-                    label: function(context) {
-                        let label = context.dataset.label || '';
-                        if (label) {
-                            label += ': ';
-                        }
-                        label += context.parsed.y.toFixed(1);
-                        return label;
-                    }
-                }
-            }
-        },
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                },
-                ticks: {
-                    font: {
-                        size: 11
-                    },
-                    color: '#6b7280'
-                }
-            },
-            y: {
-                type: 'linear',
-                display: true,
-                position: 'left',
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Lần gian lận',
-                    font: {
-                        size: 12,
-                        weight: '600'
-                    },
-                    color: '#374151'
-                },
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.05)'
-                },
-                ticks: {
-                    font: {
-                        size: 11
-                    },
-                    color: '#6b7280'
-                }
-            },
-            y1: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: 'Điểm rủi ro',
-                    font: {
-                        size: 12,
-                        weight: '600'
-                    },
-                    color: '#374151'
-                },
-                grid: {
-                    drawOnChartArea: false,
-                },
-                ticks: {
-                    font: {
-                        size: 11
-                    },
-                    color: '#6b7280'
-                }
-            }
-        }
-    }
-});
+const ctx = document.getElementById('fraudTrendChart').getContext('2d');
 
 function blockIp(ipAddress) {
     document.getElementById('ip_address').value = ipAddress;
     new bootstrap.Modal(document.getElementById('blockIpModal')).show();
+}
+
+// Translate fraud reasons to Vietnamese
+function translateFraudReason(reason) {
+    const translations = {
+        // Bot detection
+        'Bot detected: Bot pattern matched: bot': 'Phát hiện bot: Mẫu bot khớp: bot',
+        'Bot detected: Bot pattern matched: curl': 'Phát hiện bot: Mẫu bot khớp: curl',
+        'Bot detected: Bot pattern matched: wget': 'Phát hiện bot: Mẫu bot khớp: wget',
+        'Bot detected: Bot pattern matched: spider': 'Phát hiện bot: Mẫu bot khớp: spider',
+        'Bot detected: Bot pattern matched: crawler': 'Phát hiện bot: Mẫu bot khớp: crawler',
+        'Bot detected: Bot pattern matched: scraper': 'Phát hiện bot: Mẫu bot khớp: scraper',
+        'Bot detected: Suspicious user agent characters': 'Phát hiện bot: Ký tự user agent đáng ngờ',
+        
+        // Click patterns
+        'Too many clicks from this IP': 'Quá nhiều click từ IP này',
+        'Rapid clicking detected': 'Phát hiện click nhanh',
+        'Unusual click pattern': 'Mẫu click bất thường',
+        
+        // Publisher violations
+        'Publisher clicking own link (IP match)': 'Publisher click link của chính mình (IP trùng khớp)',
+        
+        // Time patterns
+        'Suspicious time pattern': 'Mẫu thời gian đáng ngờ',
+        'Click outside normal hours': 'Click ngoài giờ bình thường',
+        
+        // Geographic
+        'Suspicious geographic location': 'Vị trí địa lý đáng ngờ',
+        
+        // Other
+        'Empty user agent': 'User agent trống',
+        'Invalid referer': 'Referer không hợp lệ',
+        'Suspicious referer pattern': 'Mẫu referer đáng ngờ',
+    };
+    
+    // Try exact match first
+    if (translations[reason]) {
+        return translations[reason];
+    }
+    
+    // If contains "Bot detected:", translate the prefix
+    if (reason.startsWith('Bot detected:')) {
+        return reason.replace('Bot detected:', 'Phát hiện bot:');
+    }
+    
+    // If contains "Publisher ... click link ... IP", translate
+    if (reason.match(/Publisher .+ click link.*(own link|của chính mình).*(IP match|IP khớp)/i)) {
+        return reason.replace(/Publisher (.+?) click link.*/, 'Publisher $1 click link của chính mình (IP khớp)');
+    }
+    
+    return reason;
 }
 
 // Show Fraud Detail in Modal
@@ -494,7 +456,7 @@ function showFraudDetail(fraudId) {
                 reasonsHtml = reasons.map(reason => `
                     <li class="mb-3 fs-5">
                         <i class="fas fa-exclamation-circle text-danger me-2"></i>
-                        <strong>${reason}</strong>
+                        <strong>${translateFraudReason(reason)}</strong>
                     </li>
                 `).join('');
             } else {

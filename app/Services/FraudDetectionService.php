@@ -45,46 +45,46 @@ class FraudDetectionService
         // 1. Bot Detection
         $botCheck = $this->isBotUserAgent($userAgent);
         if ($botCheck['is_bot']) {
-            $checks[] = 'Bot detected: ' . $botCheck['reason'];
+            $checks[] = 'Phát hiện bot: ' . $botCheck['reason'];
             $riskScore += 100; // Instant fraud
         }
 
         // 2. Rate Limiting - Clicks per IP per Hour
         $clicksPerHour = $this->getClicksPerIpPerHour($ipAddress);
         if ($clicksPerHour >= self::MAX_CLICKS_PER_IP_PER_HOUR) {
-            $checks[] = "Too many clicks per hour from IP: {$clicksPerHour}";
+            $checks[] = "Quá nhiều clicks từ IP trong 1 giờ: {$clicksPerHour} clicks";
             $riskScore += 50;
         }
 
         // 3. Rate Limiting - Clicks per IP per Day
         $clicksPerDay = $this->getClicksPerIpPerDay($ipAddress);
         if ($clicksPerDay >= self::MAX_CLICKS_PER_IP_PER_DAY) {
-            $checks[] = "Too many clicks per day from IP: {$clicksPerDay}";
+            $checks[] = "Quá nhiều clicks từ IP trong 1 ngày: {$clicksPerDay} clicks";
             $riskScore += 70;
         }
 
         // 4. Duplicate Click - Same IP clicking same link multiple times
         $clicksPerLinkPerDay = $this->getClicksPerLinkPerIpPerDay($affiliateLink->id, $ipAddress);
         if ($clicksPerLinkPerDay >= self::MAX_CLICKS_PER_LINK_PER_IP_PER_DAY) {
-            $checks[] = "Duplicate clicks on same link: {$clicksPerLinkPerDay}";
+            $checks[] = "Click trùng lặp trên cùng link: {$clicksPerLinkPerDay} lần";
             $riskScore += 30;
         }
 
         // 5. Empty or Suspicious User Agent
         if (empty($userAgent) || strlen($userAgent) < 10) {
-            $checks[] = 'Empty or too short user agent';
+            $checks[] = 'User agent trống hoặc quá ngắn';
             $riskScore += 40;
         }
 
         // 6. Publisher Self-Clicking (IP match)
         if ($this->isPublisherSelfClicking($affiliateLink, $ipAddress)) {
-            $checks[] = 'Publisher clicking own link (IP match)';
+            $checks[] = 'Publisher tự click link của mình (IP trùng khớp)';
             $riskScore += 80;
         }
 
         // 7. Rapid Sequential Clicks (< 2 seconds apart)
         if ($this->hasRapidSequentialClicks($ipAddress)) {
-            $checks[] = 'Rapid sequential clicks detected';
+            $checks[] = 'Phát hiện clicks liên tiếp quá nhanh';
             $riskScore += 60;
         }
 
@@ -116,7 +116,7 @@ class FraudDetectionService
             if (strpos($userAgentLower, $legitBot) !== false) {
                 return [
                     'is_bot' => false, // Don't flag as fraud
-                    'reason' => "Legitimate bot: {$legitBot}"
+                    'reason' => "Bot hợp pháp: {$legitBot}"
                 ];
             }
         }
@@ -126,7 +126,7 @@ class FraudDetectionService
             if (strpos($userAgentLower, $pattern) !== false) {
                 return [
                     'is_bot' => true,
-                    'reason' => "Bot pattern matched: {$pattern}"
+                    'reason' => "Khớp mẫu bot: {$pattern}"
                 ];
             }
         }
@@ -135,7 +135,7 @@ class FraudDetectionService
         if ($this->hasSuspiciousUserAgentCharacteristics($userAgent)) {
             return [
                 'is_bot' => true,
-                'reason' => 'Suspicious user agent characteristics'
+                'reason' => 'User agent có đặc điểm đáng ngờ'
             ];
         }
 
