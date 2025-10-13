@@ -88,12 +88,11 @@
             </a>
         </li>
 
-        <!-- Fraud Detection -->
+        <!-- Phát hiện gian lận -->
         <li class="{{ request()->routeIs('admin.fraud-detection.*') ? 'active' : '' }}">
             <a href="{{ route('admin.fraud-detection.index') }}">
                 <i class="fas fa-shield-alt"></i>
-                <span>Fraud Detection</span>
-                <span class="badge bg-danger ms-2">New</span>
+                <span>Phát hiện gian lận</span>
             </a>
         </li>
     </ul>

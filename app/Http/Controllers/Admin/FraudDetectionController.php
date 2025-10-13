@@ -68,7 +68,7 @@ class FraudDetectionController extends Controller
     /**
      * Get details of a specific fraud attempt
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $fraudLog = DB::table('click_fraud_logs')
             ->join('users', 'click_fraud_logs.publisher_id', '=', 'users.id')
@@ -87,7 +87,21 @@ class FraudDetectionController extends Controller
             ->first();
 
         if (!$fraudLog) {
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Fraud log not found'
+                ], 404);
+            }
             abort(404, 'Fraud log not found');
+        }
+
+        // If AJAX request, return JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'fraud' => $fraudLog
+            ]);
         }
 
         // Get other attempts from same IP

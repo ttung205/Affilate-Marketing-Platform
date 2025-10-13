@@ -206,9 +206,9 @@
                             <small>{{ Str::limit(is_string($attempt->reasons) ? $attempt->reasons : json_encode($attempt->reasons), 50) }}</small>
                         </td>
                         <td>
-                            <a href="{{ route('admin.fraud-detection.show', $attempt->id) }}" class="btn btn-sm btn-primary">
+                            <button type="button" class="btn btn-sm btn-primary" onclick="showFraudDetail({{ $attempt->id }})">
                                 <i class="fas fa-info-circle"></i> Chi tiết
-                            </a>
+                            </button>
                         </td>
                     </tr>
                     @empty
@@ -276,6 +276,30 @@
                     <button type="submit" class="btn btn-warning">Xóa Cache</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Fraud Detail Modal -->
+<div class="modal fade" id="fraudDetailModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h4 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Chi tiết gian lận</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="fraudDetailContent" style="font-size: 1.05rem;">
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Đóng
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -434,6 +458,160 @@ new Chart(ctx, {
 function blockIp(ipAddress) {
     document.getElementById('ip_address').value = ipAddress;
     new bootstrap.Modal(document.getElementById('blockIpModal')).show();
+}
+
+// Show Fraud Detail in Modal
+function showFraudDetail(fraudId) {
+    const modal = new bootstrap.Modal(document.getElementById('fraudDetailModal'));
+    const contentDiv = document.getElementById('fraudDetailContent');
+    
+    // Show loading spinner
+    contentDiv.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Đang tải...</span>
+            </div>
+        </div>
+    `;
+    
+    modal.show();
+    
+    // Fetch fraud detail via AJAX
+    fetch(`/admin/fraud-detection/${fraudId}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const fraud = data.fraud;
+            const reasons = Array.isArray(fraud.reasons) ? fraud.reasons : JSON.parse(fraud.reasons || '[]');
+            
+            let reasonsHtml = '';
+            if (Array.isArray(reasons) && reasons.length > 0) {
+                reasonsHtml = reasons.map(reason => `
+                    <li class="mb-3 fs-5">
+                        <i class="fas fa-exclamation-circle text-danger me-2"></i>
+                        <strong>${reason}</strong>
+                    </li>
+                `).join('');
+            } else {
+                reasonsHtml = '<li class="text-muted fs-5">Không có lý do cụ thể</li>';
+            }
+            
+            // Get risk score class
+            let scoreClass = 'info';
+            if (fraud.risk_score >= 100) scoreClass = 'danger';
+            else if (fraud.risk_score >= 50) scoreClass = 'warning';
+            
+            contentDiv.innerHTML = `
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="border-start border-primary border-4 ps-3">
+                            <h5 class="mb-2"><i class="fas fa-user text-primary"></i> Publisher</h5>
+                            <p class="mb-1 fs-5"><strong>${fraud.publisher_name || 'N/A'}</strong></p>
+                            <p class="text-muted mb-0">${fraud.publisher_email || 'N/A'}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border-start border-info border-4 ps-3">
+                            <h5 class="mb-2"><i class="fas fa-clock text-info"></i> Thời gian phát hiện</h5>
+                            <p class="mb-0 fs-5">${new Date(fraud.detected_at).toLocaleString('vi-VN')}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="border-start border-warning border-4 ps-3">
+                            <h5 class="mb-2"><i class="fas fa-network-wired text-warning"></i> Địa chỉ IP</h5>
+                            <p class="mb-0"><code class="fs-5 bg-light px-3 py-2 rounded">${fraud.ip_address}</code></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="border-start border-danger border-4 ps-3">
+                            <h5 class="mb-2"><i class="fas fa-chart-line text-danger"></i> Điểm rủi ro</h5>
+                            <p class="mb-0">
+                                <span class="badge bg-${scoreClass}" style="font-size: 1.5rem; padding: 0.5rem 1rem;">${fraud.risk_score}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-laptop text-secondary"></i> User Agent</h5>
+                    <p class="mb-0 bg-light p-3 rounded">${fraud.user_agent || 'N/A'}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-link text-secondary"></i> URL</h5>
+                    <p class="mb-0 text-break bg-light p-3 rounded">${fraud.url || 'N/A'}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-globe text-secondary"></i> Referer</h5>
+                    <p class="mb-0 text-break bg-light p-3 rounded">${fraud.referer || 'N/A'}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-list text-danger"></i> Lý do phát hiện gian lận</h5>
+                    <div class="bg-danger bg-opacity-10 p-3 rounded">
+                        <ul class="list-unstyled mb-0">
+                            ${reasonsHtml}
+                        </ul>
+                    </div>
+                </div>
+                
+                ${fraud.metadata ? `
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-info-circle text-info"></i> Metadata</h5>
+                    <pre class="bg-light p-3 rounded mb-0"><code>${JSON.stringify(JSON.parse(fraud.metadata), null, 2)}</code></pre>
+                </div>
+                ` : ''}
+                
+                <hr class="my-4">
+                
+                <div class="d-flex gap-3 justify-content-center">
+                    <button class="btn btn-danger btn-lg px-4" onclick="blockIpFromDetail('${fraud.ip_address}')">
+                        <i class="fas fa-ban me-2"></i>Chặn IP này
+                    </button>
+                    <a href="/admin/users/${fraud.publisher_id}" class="btn btn-info btn-lg px-4" target="_blank">
+                        <i class="fas fa-user me-2"></i>Xem Publisher
+                    </a>
+                </div>
+            `;
+        } else {
+            contentDiv.innerHTML = `
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> ${data.message || 'Không thể tải chi tiết'}
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        contentDiv.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i> Đã xảy ra lỗi khi tải dữ liệu
+            </div>
+        `;
+    });
+}
+
+function blockIpFromDetail(ipAddress) {
+    // Close fraud detail modal
+    bootstrap.Modal.getInstance(document.getElementById('fraudDetailModal')).hide();
+    
+    // Show block IP modal
+    setTimeout(() => {
+        blockIp(ipAddress);
+    }, 300);
 }
 </script>
 @endpush
