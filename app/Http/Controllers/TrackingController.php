@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AffiliateLink;
 use App\Models\Click;
 use App\Services\PublisherService;
+use App\Services\PublisherRankingService;
 use App\Services\FraudDetectionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class TrackingController extends Controller
             // Redirect to original product URL with tracking parameters
             $redirectUrl = $affiliateLink->original_url;
             $separator = str_contains($redirectUrl, '?') ? '&' : '?';
-            
+
             $trackingParams = [
                 'ref' => $affiliateLink->publisher_id,
                 'utm_source' => 'publisher',
@@ -65,7 +66,7 @@ class TrackingController extends Controller
         try {
             $ipAddress = request()->ip();
             $userAgent = request()->userAgent() ?? '';
-            
+
             // Initialize Fraud Detection Service
             $fraudDetection = new FraudDetectionService();
 
@@ -75,7 +76,7 @@ class TrackingController extends Controller
                     'ip_address' => $ipAddress,
                     'affiliate_link_id' => $affiliateLink->id,
                 ]);
-                
+
                 // Still redirect but don't count click/commission
                 return;
             }
@@ -117,14 +118,15 @@ class TrackingController extends Controller
             ];
 
             Log::info('Creating click record', $clickData);
-            
+
             $click = Click::create($clickData);
 
             // Increment click counter for rate limiting
             $fraudDetection->incrementClickCounter($ipAddress);
 
             // Xử lý hoa hồng từ click (chỉ khi không phải fraud)
-            $publisherService = new PublisherService();
+            $publisherRankingService = new PublisherRankingService();
+            $publisherService = new PublisherService($publisherRankingService);
             $publisherService->processClickCommission($click);
 
             DB::commit();

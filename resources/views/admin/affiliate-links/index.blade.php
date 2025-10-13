@@ -352,10 +352,67 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
-                <div class="pagination-wrapper">
-                    {{ $affiliateLinks->appends(request()->query())->links() }}
+                <!-- Custom Pagination -->
+            @if($affiliateLinks->count() > 0)
+                <div class="custom-pagination-container">
+                    @if($affiliateLinks->hasPages())
+                        <nav class="custom-pagination-nav" aria-label="Product navigation">
+                            <ul class="custom-pagination-list">
+                                {{-- Previous Page Link --}}
+                                @if($affiliateLinks->onFirstPage())
+                                    <li class="custom-pagination-item custom-pagination-disabled">
+                                        <span class="custom-pagination-link custom-pagination-arrow">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </span>
+                                    </li>
+                                @else
+                                    <li class="custom-pagination-item">
+                                        <a href="{{ $affiliateLinks->appends(request()->query())->previousPageUrl() }}" class="custom-pagination-link custom-pagination-arrow" rel="prev">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                @endif
+
+                                {{-- Pagination Elements --}}
+                                @foreach($affiliateLinks->getUrlRange(1, $affiliateLinks->lastPage()) as $page => $url)
+                                    @if($page == $affiliateLinks->currentPage())
+                                        <li class="custom-pagination-item custom-pagination-active">
+                                            <span class="custom-pagination-link">{{ $page }}</span>
+                                        </li>
+                                    @else
+                                        <li class="custom-pagination-item">
+                                            <a href="{{ $affiliateLinks->appends(request()->query())->url($page) }}" class="custom-pagination-link">{{ $page }}</a>
+                                        </li>
+                                    @endif
+                                @endforeach
+
+                                {{-- Next Page Link --}}
+                                @if($affiliateLinks->hasMorePages())
+                                    <li class="custom-pagination-item">
+                                        <a href="{{ $affiliateLinks->appends(request()->query())->nextPageUrl() }}" class="custom-pagination-link custom-pagination-arrow" rel="next">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="custom-pagination-item custom-pagination-disabled">
+                                        <span class="custom-pagination-link custom-pagination-arrow">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    </li>
+                                @endif
+                            </ul>
+                            
+                            <div class="custom-pagination-info">
+                                <span class="custom-pagination-text">
+                                    Hiển thị {{ $affiliateLinks->firstItem() ?? 0 }} - {{ $affiliateLinks->lastItem() ?? 0 }} 
+                                    trong tổng số {{ $affiliateLinks->total() }} affiliate links
+                                </span>
+                            </div>
+                        </nav>
+                    @endif
                 </div>
+            @endif
+        </div>
             @else
                 @if(request()->hasAny(['search', 'status', 'publisher', 'product', 'campaign']))
                     <!-- No search results -->
