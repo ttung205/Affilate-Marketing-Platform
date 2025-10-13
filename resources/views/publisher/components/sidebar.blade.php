@@ -16,25 +16,10 @@
 
         <!-- Quản lý Affiliate Links -->
         <li class="sidebar-menu-item {{ request()->routeIs('publisher.affiliate-links.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+            <a href="{{ route('publisher.affiliate-links.index') }}">
                 <i class="fas fa-link"></i>
                 <span>Affiliate Links</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('publisher.affiliate-links.index') ? 'active' : '' }}">
-                    <a href="{{ route('publisher.affiliate-links.index') }}">
-                        <i class="fas fa-list"></i>
-                        Tất cả links
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('publisher.affiliate-links.create') ? 'active' : '' }}">
-                    <a href="{{ route('publisher.affiliate-links.create') }}">
-                        <i class="fas fa-plus"></i>
-                        Tạo link mới
-                    </a>
-                </li>
-            </ul>
         </li>
 
         <!-- Quản lý Sản phẩm -->

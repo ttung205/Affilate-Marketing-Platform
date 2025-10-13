@@ -34,22 +34,22 @@
     <!-- Filter Tabs -->
     <div class="filter-tabs">
         <button class="filter-tab {{ $status === 'pending' ? 'active' : '' }}" 
-                onclick="window.location.href='{{ route('admin.platform-fee.payments', ['status' => 'pending']) }}'">
+                onclick="window.location.href='{{ route('admin.platform-fee-payments.index', ['status' => 'pending']) }}'">
             <i class="fas fa-clock"></i>
             Chờ duyệt ({{ $pendingCount }})
         </button>
         <button class="filter-tab {{ $status === 'paid' ? 'active' : '' }}" 
-                onclick="window.location.href='{{ route('admin.platform-fee.payments', ['status' => 'paid']) }}'">
+                onclick="window.location.href='{{ route('admin.platform-fee-payments.index', ['status' => 'paid']) }}'">
             <i class="fas fa-check-circle"></i>
             Đã duyệt ({{ $paidCount }})
         </button>
         <button class="filter-tab {{ $status === 'rejected' ? 'active' : '' }}" 
-                onclick="window.location.href='{{ route('admin.platform-fee.payments', ['status' => 'rejected']) }}'">
+                onclick="window.location.href='{{ route('admin.platform-fee-payments.index', ['status' => 'rejected']) }}'">
             <i class="fas fa-times-circle"></i>
             Từ chối ({{ $rejectedCount }})
         </button>
         <button class="filter-tab {{ $status === 'all' ? 'active' : '' }}" 
-                onclick="window.location.href='{{ route('admin.platform-fee.payments') }}'">
+                onclick="window.location.href='{{ route('admin.platform-fee-payments.index') }}'">
             <i class="fas fa-list"></i>
             Tất cả
         </button>

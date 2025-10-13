@@ -263,7 +263,6 @@
 <!-- Hidden Forms -->
 <form id="toggleStatusForm" method="POST" style="display: none;">
     @csrf
-    @method('PATCH')
 </form>
 
 <form id="deleteForm" method="POST" style="display: none;">

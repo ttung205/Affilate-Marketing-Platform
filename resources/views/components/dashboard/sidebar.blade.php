@@ -58,21 +58,21 @@
         </li>
         
         <!-- Quản lý Phí sàn với submenu -->
-        <li class="sidebar-menu-item {{ request()->routeIs('admin.platform-fee.*') ? 'active' : '' }}">
+        <li class="sidebar-menu-item {{ request()->routeIs('admin.platform-fees.*') || request()->routeIs('admin.platform-fee-payments.*') ? 'active' : '' }}">
             <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
                 <i class="fas fa-percentage"></i>
                 <span>Quản lý Phí sàn</span>
                 <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
             <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('admin.platform-fee.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.platform-fee.index') }}">
+                <li class="{{ request()->routeIs('admin.platform-fees.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.platform-fees.index') }}">
                         <i class="fas fa-cog"></i>
                         Cài đặt phí sàn
                     </a>
                 </li>
-                <li class="{{ request()->routeIs('admin.platform-fee.payments') ? 'active' : '' }}">
-                    <a href="{{ route('admin.platform-fee.payments', ['status' => 'pending']) }}">
+                <li class="{{ request()->routeIs('admin.platform-fee-payments.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.platform-fee-payments.index', ['status' => 'pending']) }}">
                         <i class="fas fa-check-circle"></i>
                         Duyệt thanh toán
                     </a>
@@ -82,9 +82,18 @@
         
         <!-- Quản lý Thông báo -->
         <li class="{{ request()->routeIs('admin.notifications.*') ? 'active' : '' }}">
-            <a href="{{ route('admin.notifications.index') }}">
+            <a href="{{ route('admin.notifications.manage') }}">
                 <i class="fas fa-bell"></i>
                 <span>Quản lý Thông báo</span>
+            </a>
+        </li>
+
+        <!-- Fraud Detection -->
+        <li class="{{ request()->routeIs('admin.fraud-detection.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.fraud-detection.index') }}">
+                <i class="fas fa-shield-alt"></i>
+                <span>Fraud Detection</span>
+                <span class="badge bg-danger ms-2">New</span>
             </a>
         </li>
     </ul>

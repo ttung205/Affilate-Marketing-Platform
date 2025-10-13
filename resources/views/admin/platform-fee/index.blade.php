@@ -44,7 +44,7 @@
             <h3><i class="fas fa-plus-circle"></i> Thêm cài đặt phí sàn mới</h3>
         </div>
         <div class="platform-fee-card-body">
-            <form action="{{ route('admin.platform-fee.store') }}" method="POST" class="platform-fee-form">
+            <form action="{{ route('admin.platform-fees.store') }}" method="POST" class="platform-fee-form">
                 @csrf
                 <div class="form-row">
                     <div class="form-group">
@@ -139,7 +139,7 @@
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         
-                                        <form action="{{ route('admin.platform-fee.destroy', $setting) }}" 
+                                        <form action="{{ route('admin.platform-fees.destroy', $setting) }}" 
                                               method="POST" 
                                               style="display: inline;"
                                               onsubmit="return confirm('Bạn có chắc muốn xóa cài đặt này?')">
