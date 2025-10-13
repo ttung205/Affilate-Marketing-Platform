@@ -56,7 +56,6 @@
 }
 
 .product-back-btn:hover {
-    transform: translateY(-2px);
     box-shadow: 0 10px 25px rgba(108, 117, 125, 0.4);
     color: white;
     text-decoration: none;
@@ -103,7 +102,6 @@
 
 .add-product-btn:hover {
     background-color: #1d4ed8;
-    transform: translateY(-1px);
 }
 
 /* Clear filter button */
@@ -122,7 +120,6 @@
 
 .clear-filter-btn:hover {
     background-color: #4b5563;
-    transform: translateY(-1px);
 }
 
 /* Search and Filter Section */
@@ -331,7 +328,6 @@
 }
 
 .action-btn:hover {
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -748,7 +744,6 @@
     border-color: #007bff;
     color: #007bff;
     background: rgba(0, 123, 255, 0.05);
-    transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
 }
 
@@ -762,7 +757,6 @@
 .custom-pagination-item.custom-pagination-active .custom-pagination-link:hover {
     background: #0056b3;
     border-color: #0056b3;
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
 }
 

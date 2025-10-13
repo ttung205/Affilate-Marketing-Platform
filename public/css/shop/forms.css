@@ -116,7 +116,6 @@
 }
 
 .form-submit-btn:hover {
-    transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
 }
 
@@ -127,7 +126,6 @@
 
 .form-cancel-btn:hover {
     background: #5a6268;
-    transform: translateY(-1px);
 }
 
 .form-error {
@@ -230,7 +228,6 @@
 
 .product-image-upload-btn:hover {
     background: #0056b3;
-    transform: translateY(-1px);
 }
 
 .product-image-remove-btn {
@@ -250,7 +247,6 @@
 
 .product-image-remove-btn:hover {
     background: #c82333;
-    transform: translateY(-1px);
 }
 
 .product-image-help {
