@@ -22,6 +22,7 @@ class PublisherRankingService
             DB::beginTransaction();
 
             $totalLinks = $publisher->affiliateLinks()->count();
+            // Tính tổng hoa hồng bao gồm click commission và conversion commission
             $totalCommission = $publisher->getCombinedCommissionAttribute();
 
             // Tìm hạng phù hợp dựa trên tiêu chí

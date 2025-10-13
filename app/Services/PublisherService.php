@@ -20,6 +20,12 @@ use Carbon\Carbon;
 
 class PublisherService
 {
+    protected $rankingService;
+
+    public function __construct(PublisherRankingService $rankingService)
+    {
+        $this->rankingService = $rankingService;
+    }
     /**
      * ========================================
      * COMMISSION MANAGEMENT
@@ -49,6 +55,9 @@ class PublisherService
                     'cpc' => $affiliateLink->getCostPerClickAttribute(),
                     'description' => "Hoa hồng từ click - Link: {$affiliateLink->tracking_code}"
                 ]);
+
+                // Tự động cập nhật xếp hạng sau khi xử lý hoa hồng
+                $this->rankingService->updatePublisherRanking($publisher);
             }
 
             DB::commit();
@@ -97,6 +106,9 @@ class PublisherService
                     'is_commission_processed' => true,
                     'commission_processed_at' => now(),
                 ]);
+
+                // Tự động cập nhật xếp hạng sau khi xử lý hoa hồng
+                $this->rankingService->updatePublisherRanking($publisher);
             }
 
             DB::commit();

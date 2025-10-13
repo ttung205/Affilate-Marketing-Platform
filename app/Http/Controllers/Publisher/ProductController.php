@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Publisher;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\PublisherRankingService;
 use App\Traits\AffiliateLinkTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -12,6 +13,13 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
     use AffiliateLinkTrait;
+
+    protected $rankingService;
+
+    public function __construct(PublisherRankingService $rankingService)
+    {
+        $this->rankingService = $rankingService;
+    }
     public function index(Request $request)
     {
         // Get categories for filter dropdown
@@ -145,6 +153,9 @@ class ProductController extends Controller
             ]);
             
             \Log::info('Affiliate link created', ['affiliate_link_id' => $affiliateLink->id]);
+            
+            // Tự động cập nhật xếp hạng sau khi tạo link mới
+            $this->rankingService->updatePublisherRanking(auth()->user());
             
             // Log success
             \Log::info('Affiliate link created successfully', [

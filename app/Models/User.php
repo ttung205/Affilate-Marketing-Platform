@@ -34,6 +34,9 @@ class User extends Authenticatable
         'google2fa_secret',
         'google2fa_enabled',
         'google2fa_enabled_at',
+        'publisher_ranking_id',
+        'ranking_achieved_at',
+        'last_ranking_check_at',
     ];
 
     /**

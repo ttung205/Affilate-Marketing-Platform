@@ -16,25 +16,10 @@
         
         <!-- Quản lý sản phẩm với submenu -->
         <li class="sidebar-menu-item {{ request()->routeIs('shop.products.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+            <a href="{{ route('shop.products.index') }}">
                 <i class="fas fa-box"></i>
                 <span>Quản lý Sản phẩm</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('shop.products.index') ? 'active' : '' }}">
-                    <a href="{{ route('shop.products.index') }}">
-                        <i class="fas fa-list"></i>
-                        Tất cả sản phẩm
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('shop.products.create') ? 'active' : '' }}">
-                    <a href="{{ route('shop.products.create') }}">
-                        <i class="fas fa-plus"></i>
-                        Thêm sản phẩm
-                    </a>
-                </li>
-            </ul>
         </li>
         
         <!-- Quản lý đơn Publisher -->

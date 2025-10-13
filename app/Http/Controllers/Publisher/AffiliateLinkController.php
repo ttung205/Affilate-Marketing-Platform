@@ -7,6 +7,7 @@ use App\Models\AffiliateLink;
 use App\Models\Product;
 use App\Models\Campaign;
 use App\Traits\AffiliateLinkTrait;
+use App\Services\PublisherRankingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -14,6 +15,13 @@ use Exception;
 class AffiliateLinkController extends Controller
 {
     use AffiliateLinkTrait;
+
+    protected $rankingService;
+
+    public function __construct(PublisherRankingService $rankingService)
+    {
+        $this->rankingService = $rankingService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -109,6 +117,9 @@ class AffiliateLinkController extends Controller
                 'campaign_id' => $request->campaign_id,
                 'commission_rate' => $campaign->commission_rate,
             ]);
+
+            // Tự động cập nhật xếp hạng sau khi tạo link mới
+            $this->rankingService->updatePublisherRanking(auth()->user());
 
             return redirect()->route('publisher.affiliate-links.show', $affiliateLink)
                 ->with('success', 'Link tiếp thị đã được tạo thành công. Bạn có thể copy link để sử dụng.');
