@@ -15,78 +15,40 @@
         </li>
         <!-- Quản lý sản phẩm với submenu -->
         <li class="sidebar-menu-item {{ request()->routeIs('admin.products.*') || request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+            <a href="{{ route('admin.products.index') }}">
                 <i class="fas fa-box"></i>
-                <span>Quản lý Sản phẩm</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
+                Quản lý Sản phẩm
             </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('admin.products.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.products.index') }}">
-                        <i class="fas fa-list"></i>
-                        Tất cả sản phẩm
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.products.create') ? 'active' : '' }}">
-                    <a href="{{ route('admin.products.create') }}">
-                        <i class="fas fa-plus"></i>
-                        Thêm sản phẩm
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.categories.index') }}">
-                        <i class="fas fa-tags"></i>
-                        Danh mục
-                    </a>
-                </li>
-            </ul>
+        </li>
+        <!-- Quản lý danh mục với submenu -->
+        <li class="{{ request()->routeIs('admin.categories.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.categories.index') }}">
+                <i class="fas fa-tags"></i>
+                Quản lý Danh mục
+            </a>
         </li>
         <!-- Quản lý người dùng với submenu -->
         <li class="sidebar-menu-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+            <a href="{{ route('admin.users.index') }}">
                 <i class="fas fa-users"></i>
                 <span>Quản lý Người dùng</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
             </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.index') }}">
-                        <i class="fas fa-list"></i>
-                        Tất cả người dùng
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
-                    <a href="{{ route('admin.users.create') }}">
-                        <i class="fas fa-plus"></i>
-                        Thêm người dùng
-                    </a>
-                </li>
-            </ul>
         </li>
         
         <!-- Quản lý Affiliate với submenu -->
         <li class="sidebar-menu-item {{ request()->routeIs('admin.affiliate-links.*') || request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
-            <a href="#" class="sidebar-menu-link has-submenu" onclick="toggleSubmenu(this)">
+            <a href="{{ route('admin.affiliate-links.index') }}">
                 <i class="fas fa-link"></i>
-                <span>Quản lý Affiliate</span>
-                <i class="fas fa-chevron-down submenu-arrow"></i>
+                <span>Quản lý Affiliate Links</span>
             </a>
-            <ul class="sidebar-submenu">
-                <li class="{{ request()->routeIs('admin.affiliate-links.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.affiliate-links.index') }}">
-                        <i class="fas fa-link"></i>
-                        Affiliate Links
-                    </a>
-                </li>
-                <li class="{{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.campaigns.index') }}">
-                        <i class="fas fa-bullhorn"></i>
-                        Campaigns
-                    </a>
-                </li>
-            </ul>
         </li>
-        
+        <!-- Quản lý Chiến dịch -->
+        <li class="sidebar-menu-item {{ request()->routeIs('admin.campaigns.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.campaigns.index') }}">
+                <i class="fas fa-bullhorn"></i>
+                <span>Quản lý Chiến dịch</span>
+            </a>
+        </li>
         <!-- Quản lý Rút tiền -->
         <li class="{{ request()->routeIs('admin.withdrawals.*') ? 'active' : '' }}">
             <a href="{{ route('admin.withdrawals.index') }}">
