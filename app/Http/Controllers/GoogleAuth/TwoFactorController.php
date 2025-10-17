@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\GoogleAuth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
 use Illuminate\Support\Facades\Auth;

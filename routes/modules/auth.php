@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\GoogleRegistrationController;
+use App\Http\Controllers\GoogleAuth\GoogleController;
+use App\Http\Controllers\GoogleAuth\GoogleRegistrationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\TwoFactorController;
+use App\Http\Controllers\GoogleAuth\TwoFactorController;
 
 // Basic authentication routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

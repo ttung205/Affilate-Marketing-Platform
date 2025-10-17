@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Publisher\ConversionController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Notification\NotificationController;
 
 // Conversion webhook routes
 Route::post('/api/publisher/conversion/create', [ConversionController::class, 'create'])->name('conversion.create');
