@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\GoogleRegistrationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
