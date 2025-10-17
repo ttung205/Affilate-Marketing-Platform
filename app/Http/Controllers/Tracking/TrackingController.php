@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Publisher;
+namespace App\Http\Controllers\Tracking;
 
 use App\Http\Controllers\Controller;
 
