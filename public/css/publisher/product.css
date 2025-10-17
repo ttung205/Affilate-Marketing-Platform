@@ -121,10 +121,6 @@
     color: white;
 }
 
-.product-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-}
 
 .product-btn-secondary {
     background: #f3f4f6;
@@ -132,10 +128,6 @@
     border: 1px solid #d1d5db;
 }
 
-.product-btn-secondary:hover {
-    background: #e5e7eb;
-    transform: translateY(-1px);
-}
 
 /* ===== PRODUCT MANAGEMENT CARD ===== */
 .product-management-card {
@@ -200,13 +192,6 @@
     transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-image {
-    transform: scale(1.05);
-}
-
-.product-image-link:hover .product-image {
-    transform: scale(1.05);
-}
 
 .product-status-badge {
     position: absolute;
@@ -303,10 +288,6 @@
     gap: 8px;
 }
 
-.share-link-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-}
 
 .share-link-btn i {
     font-size: 14px;
@@ -374,10 +355,6 @@
     transition: all 0.3s ease;
 }
 
-.close-popup-btn:hover {
-    background: #f1f5f9;
-    color: #1e293b;
-}
 
 .share-popup-content {
     padding: 24px;
@@ -493,11 +470,6 @@
     flex-shrink: 0;
 }
 
-.copy-link-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-}
-
 .copy-link-btn:disabled {
     background: #9ca3af;
     cursor: not-allowed;
@@ -523,11 +495,6 @@
     min-width: 120px;
 }
 
-.share-popup-close-btn:hover {
-    background: #4b5563;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
-}
 
 /* ===== PRODUCT DETAIL PAGE ===== */
 .product-detail-container {
@@ -928,9 +895,6 @@
     gap: 6px;
 }
 
-.link-value:hover {
-    text-decoration: underline;
-}
 
 /* ===== AFFILIATE LINK SECTION ===== */
 .affiliate-link-section {
@@ -1402,13 +1366,6 @@
     background: white;
 }
 
-.custom-pagination-link:hover {
-    border-color: #007bff;
-    color: #007bff;
-    background: rgba(0, 123, 255, 0.05);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
-}
 
 .custom-pagination-item.custom-pagination-active .custom-pagination-link {
     background: #007bff;
@@ -1417,12 +1374,6 @@
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
-.custom-pagination-item.custom-pagination-active .custom-pagination-link:hover {
-    background: #0056b3;
-    border-color: #0056b3;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
-}
 
 .custom-pagination-item.custom-pagination-disabled .custom-pagination-link {
     background: #f8fafc;
@@ -1430,11 +1381,6 @@
     color: #cbd5e1;
     cursor: not-allowed;
     pointer-events: none;
-}
-
-.custom-pagination-item.custom-pagination-disabled .custom-pagination-link:hover {
-    transform: none;
-    box-shadow: none;
 }
 
 .custom-pagination-arrow {

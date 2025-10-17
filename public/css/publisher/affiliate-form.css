@@ -148,22 +148,12 @@
     color: white;
 }
 
-/* .btn-primary:hover {
-    background: #2563eb;
-    color: white;
-    text-decoration: none;
-} */
 
 .btn-secondary {
     background: #6b7280;
     color: white;
 }
 
-/* .btn-secondary:hover {
-    background: #4b5563;
-    color: white;
-    text-decoration: none;
-} */
 
 /* Responsive */
 @media (max-width: 768px) {

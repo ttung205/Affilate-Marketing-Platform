@@ -9,7 +9,7 @@
                             <span>Publisher</span>
                         </a>
                     </li>
-                    
+
                     @if(request()->routeIs('publisher.dashboard'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
@@ -31,20 +31,7 @@
                             <li class="breadcrumb-item active">
                                 <span>Tất cả sản phẩm</span>
                             </li>
-                        @elseif(request()->routeIs('publisher.products.create'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Thêm sản phẩm</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.products.edit'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Sửa sản phẩm</span>
-                            </li>
+
                         @elseif(request()->routeIs('publisher.products.show'))
                             <li class="breadcrumb-item">
                                 <i class="fas fa-chevron-right breadcrumb-arrow"></i>
@@ -103,55 +90,13 @@
                             <li class="breadcrumb-item active">
                                 <span>Tất cả Campaigns</span>
                             </li>
-                        @elseif(request()->routeIs('publisher.campaigns.create'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Tạo Campaign</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.campaigns.edit'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Sửa Campaign</span>
-                            </li>
+
                         @elseif(request()->routeIs('publisher.campaigns.show'))
                             <li class="breadcrumb-item">
                                 <i class="fas fa-chevron-right breadcrumb-arrow"></i>
                             </li>
                             <li class="breadcrumb-item active">
                                 <span>Chi tiết Campaign</span>
-                            </li>
-                        @endif
-                    @elseif(request()->routeIs('publisher.reports.*'))
-                        <li class="breadcrumb-item">
-                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <span>Báo cáo</span>
-                        </li>
-                        @if(request()->routeIs('publisher.reports.performance'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Hiệu suất</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.reports.commissions'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Hoa hồng</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.reports.clicks'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Lượt click</span>
                             </li>
                         @endif
                     @elseif(request()->routeIs('publisher.payments.*'))
@@ -183,35 +128,6 @@
                                 <span>Chi tiết thanh toán</span>
                             </li>
                         @endif
-                    @elseif(request()->routeIs('publisher.settings.*'))
-                        <li class="breadcrumb-item">
-                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <span>Cài đặt</span>
-                        </li>
-                        @if(request()->routeIs('publisher.settings.index'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Cài đặt chung</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.settings.create'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Tạo cài đặt</span>
-                            </li>
-                        @elseif(request()->routeIs('publisher.settings.edit'))
-                            <li class="breadcrumb-item">
-                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span>Sửa cài đặt</span>
-                            </li>
-                        @endif
                     @elseif(request()->routeIs('publisher.profile.*'))
                         <li class="breadcrumb-item">
                             <i class="fas fa-chevron-right breadcrumb-arrow"></i>
@@ -225,6 +141,72 @@
                             </li>
                             <li class="breadcrumb-item active">
                                 <span>Chỉnh sửa hồ sơ</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('2fa.setup'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span>Xác thực 2 bước</span>
+                        </li>
+                    @elseif(request()->routeIs('publisher.ranking.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Hệ thống hạng</span>
+                        </li>
+                        @if(request()->routeIs('publisher.ranking.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Hạng của tôi</span>
+                            </li>
+                        @elseif(request()->routeIs('publisher.ranking.leaderboard'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Bảng xếp hạng</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('publisher.wallet.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Ví & Thanh toán</span>
+                        </li>
+                        @if(request()->routeIs('publisher.wallet.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Ví của tôi</span>
+                            </li>
+                        @endif
+                    @elseif(request()->routeIs('publisher.withdrawal.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Rút tiền</span>
+                        </li>
+                    @elseif(request()->routeIs('publisher.payment-methods.*'))
+                        <li class="breadcrumb-item">
+                            <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span>Tài khoản thanh toán</span>
+                        </li>
+                        @if(request()->routeIs('publisher.payment-methods.index'))
+                            <li class="breadcrumb-item">
+                                <i class="fas fa-chevron-right breadcrumb-arrow"></i>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span>Danh sách tài khoản</span>
                             </li>
                         @endif
                     @endif
@@ -245,7 +227,8 @@
                     <h6>Thông báo</h6>
                     <div class="notification-header-actions">
                         <button onclick="markAllAsRead()" class="mark-all-read">Đánh dấu tất cả</button>
-                        <button onclick="realtimeNotifications.showAllNotifications()" class="view-all-btn" title="Xem tất cả">
+                        <button onclick="realtimeNotifications.showAllNotifications()" class="view-all-btn"
+                            title="Xem tất cả">
                             <i class="fas fa-list"></i>
                         </button>
                     </div>
