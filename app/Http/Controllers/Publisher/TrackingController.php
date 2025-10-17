@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Publisher;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\AffiliateLink;
 use App\Models\Click;
