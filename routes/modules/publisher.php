@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\Publisher\DashboardController;
 use App\Http\Controllers\Publisher\AffiliateLinkController;
 use App\Http\Controllers\Publisher\ProductController;
 use App\Http\Controllers\Publisher\CampaignController;
@@ -13,7 +13,7 @@ use App\Http\Controllers\Publisher\RankingController;
 
 // Publisher routes
 Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publisher.')->group(function () {
-    Route::get('/', [PublisherController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // Affiliate Links management routes
     Route::resource('affiliate-links', AffiliateLinkController::class);

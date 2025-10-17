@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ConversionController;
+use App\Http\Controllers\Publisher\ConversionController;
 use App\Http\Controllers\NotificationController;
 
 // Conversion webhook routes
-Route::post('/api/conversion/create', [ConversionController::class, 'create'])->name('conversion.create');
+Route::post('/api/publisher/conversion/create', [ConversionController::class, 'create'])->name('conversion.create');
 Route::middleware(['auth', 'role:publisher'])->group(function () {
     Route::get('/api/conversions', [ConversionController::class, 'getPublisherConversions'])->name('conversions.list');
     Route::get('/api/conversions/stats', [ConversionController::class, 'getPublisherStats'])->name('conversions.stats');
