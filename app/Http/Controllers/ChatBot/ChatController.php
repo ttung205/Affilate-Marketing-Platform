@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ChatBot;
 
+use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 use App\Services\GeminiService;
 use Illuminate\Http\Request;
