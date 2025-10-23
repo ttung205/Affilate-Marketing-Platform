@@ -40,19 +40,19 @@ class ProfileController extends Controller
             'bio' => $request->bio,
         ];
 
-        // Handle avatar upload
+        // Xử lý upload ảnh đại diện
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
+            // Xóa ảnh đại diện cũ nếu tồn tại
             if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
                 Storage::disk('public')->delete($user->avatar);
             }
             
-            // Store new avatar
+            // Lưu ảnh đại diện mới
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $data['avatar'] = $avatarPath;
         }
 
-        // Handle password change
+        // Xử lý thay đổi mật khẩu
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng.']);
@@ -75,12 +75,12 @@ class ProfileController extends Controller
 
         $user = Auth::user();
         
-        // Delete old avatar if exists
+        // Xóa ảnh đại diện cũ nếu tồn tại
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
         
-        // Store new avatar
+        // Lưu ảnh đại diện mới
         $avatarPath = $request->file('avatar')->store('avatars', 'public');
         $user->update(['avatar' => $avatarPath]);
 

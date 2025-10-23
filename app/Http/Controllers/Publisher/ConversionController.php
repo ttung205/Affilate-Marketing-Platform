@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 class ConversionController extends Controller
 {
     /**
-     * Tạo conversion từ webhook/callback
+     * Tạo chuyển đổi từ webhook/callback
      */
     public function create(Request $request)
     {
