@@ -23,52 +23,52 @@ class AffiliateLinkController extends Controller
         $this->rankingService = $rankingService;
     }
     /**
-     * Display a listing of the resource.
+     * Hiển thị danh sách tài nguyên.
      */
     public function index(Request $request)
     {
         $query = auth()->user()->affiliateLinks()
             ->with(['product', 'campaign', 'clicks', 'conversions']);
 
-        // Filter by product
+        // Lọc theo sản phẩm
         if ($request->filled('product_id')) {
             $query->where('product_id', $request->product_id);
         }
 
-        // Filter by campaign
+        // Lọc theo campaign
         if ($request->filled('campaign_id')) {
             $query->where('campaign_id', $request->campaign_id);
         }
 
-        // Filter by status
+        // Lọc theo trạng thái
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Search by tracking code
+        // Tìm kiếm theo tracking code
         if ($request->filled('search')) {
             $query->where('tracking_code', 'like', "%{$request->search}%");
         }
 
         $affiliateLinks = $query->orderBy('created_at', 'desc')->paginate(15);
 
-        // Get statistics
+        // Lấy thống kê
         $stats = $this->getAffiliateLinkStats(auth()->id());
 
-        // Get form data for filters
+        // Lấy dữ liệu cho các bộ lọc
         $formData = $this->getFormData();
 
         return view('publisher.affiliate-links.index', array_merge(compact('affiliateLinks', 'stats'), $formData));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Hiển thị form tạo tài nguyên.
      */
     public function create(Request $request)
     {
         $formData = $this->getFormData();
         
-        // Pre-fill data from query parameters
+        // Điền dữ liệu từ các tham số truyền vào
         $prefillData = [];
         if ($request->has('campaign_id')) {
             $prefillData['selected_campaign_id'] = $request->get('campaign_id');
@@ -78,7 +78,7 @@ class AffiliateLinkController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Lưu tài nguyên mới.
      */
     public function store(Request $request)
     {
@@ -87,17 +87,17 @@ class AffiliateLinkController extends Controller
             'campaign_id' => 'required|exists:campaigns,id',
         ]);
 
-        // Get campaign to retrieve commission rate
+        // Lấy campaign để lấy tỷ lệ hoa hồng
         $campaign = Campaign::findOrFail($request->campaign_id);
 
-        // Generate unique tracking code for this user and campaign
+        // Tạo tracking code duy nhất cho người dùng và campaign
         $trackingCode = $this->generateTrackingCode(auth()->user(), $campaign);
 
-        // Generate unique short code
+        // Tạo short code duy nhất
         $shortCode = $this->generateShortCode();
 
         try {
-            // Create affiliate link
+            // Tạo tài nguyên affiliate
             $affiliateLink = auth()->user()->affiliateLinks()->create([
                 'publisher_id' => auth()->id(),
                 'product_id' => null, // No specific product required
@@ -105,8 +105,8 @@ class AffiliateLinkController extends Controller
                 'original_url' => $request->original_url,
                 'tracking_code' => $trackingCode,
                 'short_code' => $shortCode,
-                'commission_rate' => $campaign->commission_rate ?? 15.00, // Get from campaign or default
-                'status' => 'active', // Publisher links are active by default
+                'commission_rate' => $campaign->commission_rate ?? 15.00, // Lấy từ campaign hoặc mặc định
+                'status' => 'active', // Liên kết của publisher được kích hoạt theo mặc định
             ]);
 
             Log::info('Publisher affiliate link created successfully', [
@@ -118,7 +118,7 @@ class AffiliateLinkController extends Controller
                 'commission_rate' => $campaign->commission_rate,
             ]);
 
-            // Tự động cập nhật xếp hạng sau khi tạo link mới
+            // Tự động cập nhật xếp hạng sau khi tạo tài nguyên mới
             $this->rankingService->updatePublisherRanking(auth()->user());
 
             return redirect()->route('publisher.affiliate-links.show', $affiliateLink)
@@ -137,18 +137,18 @@ class AffiliateLinkController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Hiển thị tài nguyên cụ thể.
      */
     public function show(AffiliateLink $affiliateLink)
     {
-        // Ensure user can only view their own affiliate links
+        // Đảm bảo người dùng chỉ có thể xem liên kết liên kết của riêng họ
         if ($affiliateLink->publisher_id !== auth()->id()) {
             abort(403, 'Bạn không có quyền xem link này.');
         }
 
         $affiliateLink->load(['publisher', 'product', 'campaign', 'clicks', 'conversions']);
         
-        // Get performance statistics
+        // Lấy thống kê hiệu suất
         $stats = [
             'total_clicks' => $affiliateLink->clicks()->count(),
             'unique_clicks' => $affiliateLink->clicks()->distinct('ip_address')->count(),
@@ -164,11 +164,11 @@ class AffiliateLinkController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Hiển thị form chỉnh sửa tài nguyên.
      */
     public function edit(AffiliateLink $affiliateLink)
     {
-        // Ensure user can only edit their own affiliate links
+        // Đảm bảo người dùng chỉ có thể chỉnh sửa liên kết liên kết của riêng họ
         if ($affiliateLink->publisher_id !== auth()->id()) {
             abort(403, 'Bạn không có quyền chỉnh sửa link này.');
         }
@@ -178,11 +178,11 @@ class AffiliateLinkController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Cập nhật tài nguyên cụ thể.
      */
     public function update(Request $request, AffiliateLink $affiliateLink)
     {
-        // Ensure user can only update their own affiliate links
+        // Kiểm tra quyền sở hữu
         if ($affiliateLink->publisher_id !== auth()->id()) {
             abort(403, 'Bạn không có quyền cập nhật link này.');
         }
@@ -192,7 +192,7 @@ class AffiliateLinkController extends Controller
             'original_url' => 'required|url',
         ]);
 
-        // Get campaign to retrieve commission rate
+        // Lấy campaign để lấy tỷ lệ hoa hồng
         $campaign = Campaign::findOrFail($request->campaign_id);
 
         try {
@@ -223,16 +223,16 @@ class AffiliateLinkController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Xóa tài nguyên cụ thể.
      */
     public function destroy(AffiliateLink $affiliateLink)
     {
-        // Ensure user can only delete their own affiliate links
+        // Kiểm tra quyền sở hữu
         if ($affiliateLink->publisher_id !== auth()->id()) {
             abort(403, 'Bạn không có quyền xóa link này.');
         }
 
-        // Check if affiliate link has clicks or conversions
+        // Kiểm tra xem tài nguyên có clicks hoặc conversions không
         if ($affiliateLink->clicks()->exists() || $affiliateLink->conversions()->exists()) {
             return redirect()->route('publisher.affiliate-links.index')
                 ->with('error', 'Không thể xóa link tiếp thị đã có clicks hoặc conversions.');
@@ -247,7 +247,7 @@ class AffiliateLinkController extends Controller
 
 
     /**
-     * Get form data for create and edit forms
+     * Lấy dữ liệu cho form tạo và chỉnh sửa
      */
     private function getFormData(): array
     {
