@@ -131,13 +131,6 @@ class ImageService
         }
     }
 
-    /**
-     * Check if image is default image
-     */
-    public function isDefaultImage(string $imagePath, string $type = 'avatar'): bool
-    {
-        return $imagePath === $this->getDefaultImagePath($type);
-    }
 
     /**
      * Generate optimized filename
@@ -238,39 +231,4 @@ class ImageService
         }
     }
 
-    /**
-     * Get image URL with fallback
-     */
-    public function getImageUrl(?string $imagePath, string $fallback = null): string
-    {
-        if (!$imagePath) {
-            return $fallback ?: asset('images/placeholder.svg');
-        }
-
-        if (Storage::disk('public')->exists($imagePath)) {
-            return asset('storage/' . $imagePath);
-        }
-
-        return $fallback ?: asset('images/placeholder.svg');
-    }
-
-    /**
-     * Get thumbnail URL
-     */
-    public function getThumbnailUrl(?string $imagePath, int $size = 150, string $fallback = null): string
-    {
-        if (!$imagePath) {
-            return $fallback ?: asset('images/placeholder.svg');
-        }
-
-        $pathInfo = pathinfo($imagePath);
-        $thumbnailPath = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . "_{$size}x{$size}." . $pathInfo['extension'];
-
-        if (Storage::disk('public')->exists($thumbnailPath)) {
-            return asset('storage/' . $imagePath);
-        }
-
-        // Fallback to original image if thumbnail doesn't exist
-        return $this->getImageUrl($imagePath, $fallback);
-    }
 }
