@@ -22,16 +22,16 @@ class CampaignController extends Controller
     }
 
     /**
-     * Display a listing of active campaigns
+     * Hiển thị danh sách campaign hoạt động
      */
     public function index(Request $request)
     {
-        // Build campaign query with filters
+        // Xây dựng query campaign với các bộ lọc
         $query = Campaign::where('status', 'active')
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now());
         
-        // Apply search filter
+        // Áp dụng bộ lọc tìm kiếm
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -40,24 +40,24 @@ class CampaignController extends Controller
             });
         }
         
-        // Apply commission filter
+        // Áp dụng bộ lọc tỷ lệ hoa hồng
         if ($request->filled('min_commission')) {
             $query->where('commission_rate', '>=', $request->min_commission);
         }
         
-        // Apply budget filter
+        // Áp dụng bộ lọc ngân sách
         if ($request->filled('min_budget')) {
             $query->where('budget', '>=', $request->min_budget);
         }
         
-        // Get paginated campaigns
+        // Lấy danh sách campaign đã phân trang
         $campaigns = $query->orderBy('created_at', 'desc')->paginate(24);
         
         return view('publisher.campaigns.index', compact('campaigns'));
     }
 
     /**
-     * Display the specified campaign
+     * Hiển thị chiến dịch được chỉ định
      */
     public function show($id)
     {
@@ -66,13 +66,13 @@ class CampaignController extends Controller
             ->where('end_date', '>=', now())
             ->findOrFail($id);
         
-        // Check if user already has an affiliate link for this campaign
+        // Kiểm tra xem người dùng đã có liên kết affiliate cho campaign này chưa
         $existingLink = auth()->user()->affiliateLinks()
             ->where('campaign_id', $id)
             ->with(['clicks', 'conversions'])
             ->first();
         
-        // Get campaign statistics
+        // Lấy thống kê campaign
         $stats = [
             'total_clicks' => $campaign->total_clicks ?? 0,
             'total_conversions' => $campaign->total_conversions ?? 0,
@@ -84,12 +84,12 @@ class CampaignController extends Controller
     }
 
     /**
-     * Create affiliate link for a campaign
+     * Tạo liên kết affiliate cho một campaign
      */
     public function createAffiliateLink(Request $request, $id)
     {
         try {
-            // Validate request
+            // Kiểm tra request
             $validated = $request->validate([
                 'destination_url' => 'required|url',
             ], [
@@ -103,7 +103,7 @@ class CampaignController extends Controller
                 'destination_url' => $validated['destination_url']
             ]);
             
-            // Get campaign
+            // Lấy campaign
             $campaign = Campaign::where('status', 'active')
                 ->where('start_date', '<=', now())
                 ->where('end_date', '>=', now())
@@ -111,16 +111,16 @@ class CampaignController extends Controller
             
             \Log::info('Campaign found', ['campaign' => $campaign->name]);
             
-            // Generate unique codes
+            // Tạo tracking code duy nhất
             $trackingCode = $this->generateCampaignTrackingCode(auth()->user(), $campaign);
             $shortCode = $this->generateShortCode();
             
             \Log::info('Generated codes', ['tracking_code' => $trackingCode, 'short_code' => $shortCode]);
             
-            // Prepare link name (auto-generated)
+            // Chuẩn bị tên liên kết (tự động)
             $linkName = "{$campaign->name} - " . now()->format('d/m/Y H:i');
             
-            // Create affiliate link
+            // Tạo liên kết affiliate
             $affiliateLink = auth()->user()->affiliateLinks()->create([
                 'publisher_id' => auth()->id(),
                 'campaign_id' => $id,
@@ -135,7 +135,7 @@ class CampaignController extends Controller
             
             \Log::info('Affiliate link created', ['affiliate_link_id' => $affiliateLink->id]);
             
-            // Tự động cập nhật xếp hạng sau khi tạo link mới
+            // Tự động cập nhật xếp hạng sau khi tạo liên kết mới
             $this->rankingService->updatePublisherRanking(auth()->user());
             
             return response()->json([
@@ -181,7 +181,7 @@ class CampaignController extends Controller
     }
     
     /**
-     * Generate tracking code for campaign
+     * Tạo tracking code cho campaign
      */
     private function generateCampaignTrackingCode($publisher, $campaign): string
     {
@@ -192,7 +192,7 @@ class CampaignController extends Controller
         
         $trackingCode = "{$publisherCode}_{$campaignCode}_{$timestamp}_{$random}";
         
-        // Ensure uniqueness
+        // Đảm bảo tính duy nhất
         while (AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
             $random = strtoupper(Str::random(4));
             $trackingCode = "{$publisherCode}_{$campaignCode}_{$timestamp}_{$random}";

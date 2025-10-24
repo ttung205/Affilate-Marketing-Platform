@@ -72,9 +72,9 @@ class WithdrawalController extends Controller
             }
         }
 
-        // Different validation rules for OTP verification vs initial request
+        // Khác nhau validation rules cho OTP verification vs initial request
         if ($request->has('otp') && $request->has('withdrawal_session_key')) {
-            // OTP verification - only validate OTP and session key
+            // OTP verification - chỉ validate OTP và session key
             $request->validate([
                 'otp' => 'required|string|size:6',
                 'withdrawal_session_key' => 'required|string',
@@ -99,29 +99,29 @@ class WithdrawalController extends Controller
         try {
             $publisher = Auth::user();
             
-            // Check if this is OTP verification or initial request
+            // Kiểm tra xem đây là OTP verification hay initial request
             if ($request->has('otp') && $request->has('withdrawal_session_key')) {
-                // OTP Verification Flow
+                // OTP Verification Flow - luồng OTP verification
                 $sessionKey = $request->withdrawal_session_key;
                 $withdrawalData = session($sessionKey);
                 
-                // Check if session data exists and belongs to current user
+                // Kiểm tra xem session data có tồn tại và thuộc về người dùng hiện tại không
                 if (!$withdrawalData || $withdrawalData['publisher_id'] !== $publisher->id) {
                     throw new \Exception('Phiên rút tiền không hợp lệ hoặc đã hết hạn');
                 }
                 
-                // Verify OTP
+                // Xác thực OTP
                 if (!$this->twoFactorService->verifyWithdrawalOTPForSession($publisher, $sessionKey, $request->otp)) {
                     throw new \Exception('Mã OTP không đúng hoặc đã hết hạn');
                 }
                 
-                // OTP correct - now create the actual withdrawal in DB
+                // OTP đúng - bây giờ tạo withdrawal thực tế trong DB
                 $withdrawal = $this->publisherService->createWithdrawal($publisher, $withdrawalData);
                 
-                // Increment successful withdrawal counter
+                // Tăng counter thành công rút tiền
                 \Illuminate\Support\Facades\Cache::put($rateLimitKey, $attempts + 1, now()->addMinutes(10));
                 
-                // Clear session data
+                // Xóa session data
                 session()->forget($sessionKey);
 
 
@@ -138,7 +138,7 @@ class WithdrawalController extends Controller
             }
             
             // Initial Withdrawal Request Flow
-            // Kiểm tra quyền sở hữu payment method
+            // Kiểm tra quyền sở hữu phương thức thanh toán
             $paymentMethod = \App\Models\PaymentMethod::find($request->payment_method_id);
             if (!$paymentMethod || $paymentMethod->publisher_id !== $publisher->id) {
                 Log::error('Payment method ownership check failed', [
@@ -150,7 +150,7 @@ class WithdrawalController extends Controller
             }
 
 
-            // Store withdrawal data in session (don't create in DB yet)
+            // Lưu dữ liệu withdrawal vào session (không tạo trong DB ngay)
             $withdrawalData = [
                 'amount' => $request->amount,
                 'payment_method_id' => $request->payment_method_id,
@@ -158,11 +158,11 @@ class WithdrawalController extends Controller
                 'created_at' => now()->toISOString()
             ];
             
-            // Generate unique session key for this withdrawal request
+            // Tạo session key duy nhất cho yêu cầu rút tiền này
             $sessionKey = 'withdrawal_pending_' . $publisher->id . '_' . time();
             session([$sessionKey => $withdrawalData]);
             
-            // Generate OTP for this session-based withdrawal
+            // Tạo OTP cho yêu cầu rút tiền dựa trên session
             $this->twoFactorService->generateWithdrawalOTPForSession($publisher, $sessionKey);
             
             $response = [
@@ -396,7 +396,7 @@ class WithdrawalController extends Controller
     }
 
     /**
-     * Get 2FA info for withdrawal (always mandatory)
+     * Lấy thông tin 2FA cho yêu cầu rút tiền (luôn bắt buộc)
      */
     public function get2FAInfo()
     {
@@ -410,7 +410,7 @@ class WithdrawalController extends Controller
     }
 
     /**
-     * Resend OTP for withdrawal (session-based)
+     * Gửi lại OTP cho yêu cầu rút tiền (dựa trên session)
      */
     public function resendOTP(Request $request)
     {
@@ -422,7 +422,7 @@ class WithdrawalController extends Controller
         $sessionKey = $request->withdrawal_session_key;
         $withdrawalData = session($sessionKey);
 
-        // Check if session data exists and belongs to current user
+        // Kiểm tra xem session data có tồn tại và thuộc về người dùng hiện tại không
         if (!$withdrawalData || $withdrawalData['publisher_id'] !== $publisher->id) {
             return response()->json([
                 'success' => false,

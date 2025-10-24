@@ -22,14 +22,14 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
-        // Get categories for filter dropdown
+        // Lấy danh sách categories cho bộ lọc
         $categories = Category::where('is_active', true)->orderBy('name')->get();
         
-        // Build product query with filters
+        // Xây dựng query sản phẩm với các bộ lọc
         $query = Product::with(['category', 'shopOwner'])
             ->where('is_active', true);
         
-        // Apply search filter
+        // Áp dụng bộ lọc tìm kiếm
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -38,12 +38,12 @@ class ProductController extends Controller
             });
         }
         
-        // Apply category filter
+        // Áp dụng bộ lọc danh mục
         if ($request->filled('category')) {
             $query->where('category_id', $request->category);
         }
         
-        // Apply price filters
+        // Áp dụng bộ lọc giá
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
@@ -52,12 +52,12 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
         
-        // Apply commission filter
+        // Áp dụng bộ lọc tỷ lệ hoa hồng
         if ($request->filled('min_commission')) {
             $query->where('commission_rate', '>=', $request->min_commission);
         }
         
-        // Get paginated products
+        // Lấy danh sách sản phẩm đã phân trang
         $products = $query->orderBy('created_at', 'desc')->paginate(24);
         
         return view('publisher.products.index', compact('categories', 'products'));
@@ -70,18 +70,18 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: Implement product creation
+        // TODO: Thực hiện tạo sản phẩm
         return redirect()->route('publisher.products.index');
     }
 
     public function show($id)
     {
-        // Get product with relationships
+        // Lấy sản phẩm với các quan hệ
         $product = Product::with(['category', 'shopOwner'])
             ->where('is_active', true)
             ->findOrFail($id);
         
-        // Check if user already has an affiliate link for this product
+        // Kiểm tra xem người dùng đã có liên kết affiliate cho sản phẩm này chưa
         $existingLink = auth()->user()->affiliateLinks()
             ->where('product_id', $id)
             ->with(['clicks', 'conversions', 'campaign'])
@@ -97,18 +97,18 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-        // TODO: Implement product update
+        // TODO: Thực hiện cập nhật sản phẩm
         return redirect()->route('publisher.products.index');
     }
 
     public function destroy($id)
     {
-        // TODO: Implement product deletion
+        // TODO: Thực hiện xóa sản phẩm
         return redirect()->route('publisher.products.index');
     }
 
     /**
-     * Create affiliate link for a product
+     * Tạo liên kết affiliate cho một sản phẩm
      */
     public function createAffiliateLink(Request $request, $id)
     {
@@ -120,14 +120,14 @@ class ProductController extends Controller
             //     'id' => 'required|exists:products,id'
             // ]);
 
-            // Get product with relationships
+            // Lấy sản phẩm với các quan hệ
             $product = Product::with(['category', 'shopOwner'])
                 ->where('is_active', true)
                 ->findOrFail($id);
             
             \Log::info('Product found', ['product' => $product->name]);
             
-            // Check if user already has an affiliate link for this product
+            // Kiểm tra xem người dùng đã có liên kết affiliate cho sản phẩm này chưa
             if ($this->checkExistingLink(auth()->id(), $id)) {
                 return response()->json([
                     'success' => false,
@@ -135,13 +135,13 @@ class ProductController extends Controller
                 ], 400);
             }
             
-            // Generate unique codes
+            // Tạo tracking code duy nhất
             $trackingCode = $this->generateSimpleTrackingCode(auth()->user(), $product);
             $shortCode = $this->generateShortCode();
             
             \Log::info('Generated codes', ['tracking_code' => $trackingCode, 'short_code' => $shortCode]);
             
-            // Create affiliate link
+            // Tạo liên kết affiliate
             $affiliateLink = auth()->user()->affiliateLinks()->create([
                 'publisher_id' => auth()->id(),
                 'product_id' => $id,
@@ -157,7 +157,7 @@ class ProductController extends Controller
             // Tự động cập nhật xếp hạng sau khi tạo link mới
             $this->rankingService->updatePublisherRanking(auth()->user());
             
-            // Log success
+            // Log thành công
             \Log::info('Affiliate link created successfully', [
                 'id' => $affiliateLink->id,
                 'publisher_id' => auth()->id(),
@@ -201,7 +201,7 @@ class ProductController extends Controller
     }
     
     /**
-     * Generate simple tracking code for product
+     * Tạo tracking code đơn giản cho sản phẩm
      */
     private function generateSimpleTrackingCode($publisher, $product): string
     {
@@ -212,7 +212,7 @@ class ProductController extends Controller
         
         $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
         
-        // Ensure uniqueness
+        // Đảm bảo tính duy nhất
         while (\App\Models\AffiliateLink::where('tracking_code', $trackingCode)->exists()) {
             $random = strtoupper(Str::random(4));
             $trackingCode = "{$publisherCode}_{$productCode}_{$timestamp}_{$random}";
