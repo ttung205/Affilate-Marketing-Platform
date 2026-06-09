@@ -1,0 +1,485 @@
+<?php
+
+namespace Tests\Feature\P4_Integration;
+
+use Tests\TestCase;
+use App\Models\User;
+use App\Models\Product;
+use App\Models\AffiliateLink;
+use App\Models\Conversion;
+use App\Models\PaymentMethod;
+use App\Models\Withdrawal;
+use App\Models\PublisherWallet;
+use App\Models\Transaction;
+use App\Mail\WithdrawalOTPMail;
+use App\Notifications\WithdrawalRequestNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Notification;
+
+class WithdrawalProcessTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private User $shopUser;
+    private User $publisherUser;
+    private User $adminUser;
+    private Product $product;
+    private AffiliateLink $affiliateLink;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // 1. Tạo các vai trò người dùng
+        $this->shopUser = User::create([
+            'name' => 'Shop A',
+            'email' => 'shop_a@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'shop',
+        ]);
+
+        $this->publisherUser = User::create([
+            'name' => 'Publisher A',
+            'email' => 'publisher_a@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+
+        $this->adminUser = User::create([
+            'name' => 'Admin A',
+            'email' => 'admin_a@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'admin',
+        ]);
+
+        // 2. Tạo sản phẩm của shop
+        $this->product = Product::create([
+            'user_id' => $this->shopUser->id,
+            'name' => 'Laptop Dell XPS',
+            'description' => 'Laptop cao cấp',
+            'price' => 20000000,
+            'sku' => 'DELL-XPS-13',
+            'status' => 'approved',
+        ]);
+
+        // 3. Tạo link affiliate cho publisher
+        $this->affiliateLink = AffiliateLink::create([
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'original_url' => 'http://example.com/product/1',
+            'tracking_code' => 'TRACK123',
+            'short_code' => 'sh123',
+            'commission_rate' => 10.00, // 10% hoa hồng
+            'status' => 'active',
+        ]);
+
+        // Đảm bảo ví publisher được khởi tạo
+        $this->publisherUser->getOrCreateWallet();
+    }
+
+    /**
+     * Test phân bổ hoa hồng (Conversion Attribution)
+     */
+    public function test_conversion_attribution()
+    {
+        // Gửi webhook tạo conversion ở trạng thái pending
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK123',
+            'order_id' => 'ORDER-999',
+            'amount' => 10000000, // Đơn hàng 10 triệu
+            'commission_rate' => 10.00,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('data.status', 'pending');
+
+        $conversion = Conversion::where('order_id', 'ORDER-999')->first();
+        $this->assertNotNull($conversion);
+        $this->assertEquals($this->publisherUser->id, $conversion->publisher_id);
+        $this->assertEquals(1000000, $conversion->commission); // 10% của 10 triệu là 1 triệu
+
+        // Số dư ví publisher vẫn chưa đổi vì mới chỉ là pending
+        $this->publisherUser->getOrCreateWallet()->refresh();
+        $this->assertEquals(0, $this->publisherUser->getOrCreateWallet()->balance);
+
+        // Shop phê duyệt conversion
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'approved',
+                'status_note' => 'Đơn hàng hợp lệ',
+            ]);
+
+        $response->assertRedirect(route('shop.conversions.index'));
+
+        // Kiểm tra xem conversion đã được cập nhật thành approved và đã xử lý hoa hồng
+        $conversion->refresh();
+        $this->assertEquals('approved', $conversion->status);
+        $this->assertTrue($conversion->is_commission_processed);
+
+        // Kiểm tra số dư ví publisher được cộng tiền
+        $this->publisherUser->getOrCreateWallet()->refresh();
+        $this->assertEquals(1000000, $this->publisherUser->getOrCreateWallet()->balance);
+
+        // Kiểm tra xem giao dịch transaction đã được ghi nhận trong DB
+        $this->assertDatabaseHas('transactions', [
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'commission_earned',
+            'amount' => 1000000,
+            'status' => 'completed',
+            'reference_type' => 'conversion_commission',
+            'reference_id' => $conversion->id,
+        ]);
+    }
+
+    /**
+     * Test luồng rút tiền đầy đủ có OTP và phê duyệt từ Admin
+     */
+    public function test_full_withdrawal_process_with_otp_and_approval()
+    {
+        Mail::fake();
+        Notification::fake();
+
+        // Cấp tiền cho ví publisher (1 triệu)
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        // Tạo phương thức thanh toán ngân hàng
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        // --- BƯỚC 1: Publisher yêu cầu rút tiền lần đầu (tạo OTP) ---
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000, // Rút 500k
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('requires_otp', true);
+        
+        $sessionKey = $response->json('withdrawal_session_key');
+        $this->assertNotEmpty($sessionKey);
+
+        // Kiểm tra email OTP được gửi
+        Mail::assertSent(WithdrawalOTPMail::class, function ($mail) {
+            return $mail->hasTo($this->publisherUser->email);
+        });
+
+        // Lấy mã OTP trong Cache
+        $otpKey = "withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}";
+        $otpData = Cache::get($otpKey);
+        $this->assertNotNull($otpData);
+        $otp = $otpData['otp'];
+
+        // --- BƯỚC 2: Xác thực OTP và tạo giao dịch rút tiền ---
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // Số dư ví bị trừ ngay lập tức (giữ tạm thời)
+        $wallet->refresh();
+        $this->assertEquals(500000, $wallet->balance);
+
+        // Kiểm tra bản ghi Withdrawal được tạo ở trạng thái pending
+        $withdrawal = Withdrawal::where('publisher_id', $this->publisherUser->id)->first();
+        $this->assertNotNull($withdrawal);
+        $this->assertEquals('pending', $withdrawal->status);
+        $this->assertEquals(500000, $withdrawal->amount);
+
+        // Kiểm tra thông báo gửi tới Admin
+        Notification::assertSentTo($this->adminUser, WithdrawalRequestNotification::class);
+
+        // --- BƯỚC 3: Admin duyệt yêu cầu rút tiền qua API ---
+        $response = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal), [
+                'notes' => 'Hồ sơ hợp lệ',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        
+        $withdrawal->refresh();
+        $this->assertEquals('approved', $withdrawal->status);
+
+        // --- BƯỚC 4: Admin xác nhận hoàn thành chuyển tiền qua API ---
+        $response = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.complete', $withdrawal), [
+                'transaction_reference' => 'FT123456789',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        
+        $withdrawal->refresh();
+        $this->assertEquals('completed', $withdrawal->status);
+        $this->assertEquals('FT123456789', $withdrawal->transaction_reference);
+    }
+
+    /**
+     * Test validate các giá trị biên đầu vào và các trường hợp lỗi rút tiền
+     */
+    public function test_invalid_withdrawal_inputs()
+    {
+        Mail::fake();
+
+        // Ví publisher có 1 triệu
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        // 1. Rút tiền nhỏ hơn mức tối thiểu 100k -> báo lỗi validate
+        $response = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 50000, // 50k
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $response->assertSessionHasErrors(['amount']);
+
+        // 2. Rút tiền lớn hơn mức tối đa 5M -> báo lỗi validate
+        $response = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 6000000, // 6 triệu
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $response->assertSessionHasErrors(['amount']);
+
+        // 3. Rút số tiền lớn hơn số dư ví (rút 2 triệu trong khi ví có 1 triệu)
+        // Đầu tiên gửi yêu cầu 2 triệu để sinh OTP (validate max là 5M nên request đầu tiên qua)
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 2000000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otpKey = "withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}";
+        $otpData = Cache::get($otpKey);
+        $otp = $otpData['otp'];
+
+        // Xác thực với OTP -> Trả về lỗi 422 hoặc quăng Exception do ví không đủ tiền
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        
+        $response->assertStatus(422);
+        $response->assertJsonPath('success', false);
+        $this->assertStringContainsString('Số dư không đủ', $response->json('message'));
+
+        // 4. Nhập sai OTP
+        // Tạo yêu cầu hợp lệ 500k
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+
+        // Xác thực với OTP sai -> Trả về lỗi 422 / Exception
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '999999', // OTP sai
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        
+        $response->assertStatus(422);
+        $this->assertFalse($response->json('success'));
+        $this->assertStringContainsString('Mã OTP không đúng hoặc đã hết hạn', $response->json('message'));
+
+        // 5. Thử lại sai OTP quá 3 lần -> Bị block OTP
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '111111',
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '222222',
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+
+        // Lần sai thứ 3 sẽ xóa cache OTP và báo lỗi
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '333333',
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        
+        $response->assertStatus(422);
+        // Cache OTP bị xóa sạch
+        $this->assertNull(Cache::get($otpKey));
+    }
+
+    /**
+     * Test Publisher tự hủy yêu cầu rút tiền đang chờ duyệt -> được hoàn tiền vào ví
+     */
+    public function test_publisher_cancel_pending_withdrawal()
+    {
+        // Cấp ví 1 triệu
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        // Tạo bản ghi rút tiền trực tiếp (giả lập đã qua bước OTP)
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 400000,
+            'fee' => 0,
+            'net_amount' => 400000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // Trừ tiền trong ví
+        $wallet->balance = 600000;
+        $wallet->save();
+
+        // Tạo Transaction cho withdrawal
+        Transaction::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'withdrawal',
+            'amount' => -400000,
+            'description' => "Rút tiền #{$withdrawal->id}",
+            'reference_id' => $withdrawal->id,
+            'reference_type' => 'withdrawal',
+        ]);
+
+        // Publisher gọi API hủy
+        $response = $this->actingAs($this->publisherUser)
+            ->postJson(route('publisher.withdrawal.cancel', $withdrawal));
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // Kiểm tra status
+        $withdrawal->refresh();
+        $this->assertEquals('cancelled', $withdrawal->status);
+
+        // Kiểm tra ví được hoàn trả 400k -> quay lại 1 triệu
+        $wallet->refresh();
+        $this->assertEquals(1000000, $wallet->balance);
+
+        // Kiểm tra transaction status đổi thành cancelled
+        $this->assertDatabaseHas('transactions', [
+            'reference_id' => $withdrawal->id,
+            'status' => 'cancelled',
+        ]);
+    }
+
+    /**
+     * Test Admin từ chối yêu cầu rút tiền đang chờ duyệt -> hoàn tiền vào ví publisher
+     */
+    public function test_admin_reject_pending_withdrawal()
+    {
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // Trừ ví
+        $wallet->balance = 700000;
+        $wallet->save();
+
+        Transaction::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'withdrawal',
+            'amount' => -300000,
+            'description' => "Rút tiền #{$withdrawal->id}",
+            'reference_id' => $withdrawal->id,
+            'reference_type' => 'withdrawal',
+        ]);
+
+        // Admin từ chối qua API
+        $response = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.reject', $withdrawal), [
+                'reason' => 'Thông tin ngân hàng không chính xác',
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // Kiểm tra status
+        $withdrawal->refresh();
+        $this->assertEquals('rejected', $withdrawal->status);
+        $this->assertEquals('Thông tin ngân hàng không chính xác', $withdrawal->rejection_reason);
+
+        // Kiểm tra ví được hoàn trả 300k -> quay lại 1 triệu
+        $wallet->refresh();
+        $this->assertEquals(1000000, $wallet->balance);
+
+        // Kiểm tra transaction status đổi thành failed
+        $this->assertDatabaseHas('transactions', [
+            'reference_id' => $withdrawal->id,
+            'status' => 'failed',
+        ]);
+    }
+}

@@ -43,8 +43,6 @@ class ConversionController extends Controller
         }
 
         try {
-            DB::beginTransaction();
-
             // Tìm affiliate link
             $affiliateLink = AffiliateLink::where('tracking_code', $request->tracking_code)
                 ->where('status', 'active')
@@ -57,6 +55,8 @@ class ConversionController extends Controller
                     'message' => 'Tracking code không tồn tại hoặc đã bị vô hiệu hóa'
                 ], 404);
             }
+
+            DB::beginTransaction();
 
             // Tính hoa hồng
             $commissionRate = $request->commission_rate ?? $affiliateLink->getEffectiveCommissionRateAttribute();

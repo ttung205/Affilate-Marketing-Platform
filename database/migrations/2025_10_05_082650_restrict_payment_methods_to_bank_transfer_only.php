@@ -24,11 +24,13 @@ return new class extends Migration
             ->whereIn('status', ['completed', 'rejected', 'cancelled'])
             ->update(['payment_method_type' => 'bank_transfer']);
 
-        // Thay đổi enum cho payment_methods table
-        DB::statement("ALTER TABLE payment_methods MODIFY COLUMN type ENUM('bank_transfer') NOT NULL");
+        if (DB::getDriverName() !== 'sqlite') {
+            // Thay đổi enum cho payment_methods table
+            DB::statement("ALTER TABLE payment_methods MODIFY COLUMN type ENUM('bank_transfer') NOT NULL");
 
-        // Thay đổi enum cho withdrawals table
-        DB::statement("ALTER TABLE withdrawals MODIFY COLUMN payment_method_type ENUM('bank_transfer') NOT NULL");
+            // Thay đổi enum cho withdrawals table
+            DB::statement("ALTER TABLE withdrawals MODIFY COLUMN payment_method_type ENUM('bank_transfer') NOT NULL");
+        }
     }
 
     /**
@@ -36,9 +38,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Khôi phục lại enum ban đầu
-        DB::statement("ALTER TABLE payment_methods MODIFY COLUMN type ENUM('bank_transfer', 'momo', 'zalopay', 'vnpay', 'phone_card') NOT NULL");
-        
-        DB::statement("ALTER TABLE withdrawals MODIFY COLUMN payment_method_type ENUM('bank_transfer', 'momo', 'zalopay', 'vnpay', 'phone_card') NOT NULL");
+        if (DB::getDriverName() !== 'sqlite') {
+            // Khôi phục lại enum ban đầu
+            DB::statement("ALTER TABLE payment_methods MODIFY COLUMN type ENUM('bank_transfer', 'momo', 'zalopay', 'vnpay', 'phone_card') NOT NULL");
+            
+            DB::statement("ALTER TABLE withdrawals MODIFY COLUMN payment_method_type ENUM('bank_transfer', 'momo', 'zalopay', 'vnpay', 'phone_card') NOT NULL");
+        }
     }
 };

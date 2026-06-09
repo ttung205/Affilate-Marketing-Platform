@@ -27,10 +27,16 @@ return new class extends Migration
         });
 
         // Populate shop_id for historical conversions based on product owner
-        DB::statement(
-            'UPDATE conversions c JOIN products p ON p.id = c.product_id ' .
-            'SET c.shop_id = p.user_id WHERE c.shop_id IS NULL'
-        );
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement(
+                'UPDATE conversions SET shop_id = (SELECT user_id FROM products WHERE products.id = conversions.product_id) WHERE shop_id IS NULL'
+            );
+        } else {
+            DB::statement(
+                'UPDATE conversions c JOIN products p ON p.id = c.product_id ' .
+                'SET c.shop_id = p.user_id WHERE c.shop_id IS NULL'
+            );
+        }
 
         // Mark existing conversions as approved and processed to prevent double payouts
         DB::statement(
