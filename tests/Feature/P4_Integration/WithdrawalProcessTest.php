@@ -1516,5 +1516,147 @@ class WithdrawalProcessTest extends TestCase
             $this->assertArrayHasKey('type', $statusNotification->toArray($this->publisherUser));
         }
     }
+
+    /**
+     * Test các nhánh điều kiện khác của WithdrawalController để nâng coverage lên 100%
+     */
+    public function test_withdrawal_controller_remaining_branches()
+    {
+        Mail::fake();
+
+        // 1. Publisher không có phương thức thanh toán -> redirect ở trang create
+        $publisherNoPm = User::create([
+            'name' => 'Pub No PM',
+            'email' => 'pub_nopm@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+        $responseCreate = $this->actingAs($publisherNoPm)
+            ->get(route('publisher.withdrawal.create'));
+        $responseCreate->assertRedirect(route('publisher.payment-methods.index'));
+        $responseCreate->assertSessionHas('warning', 'Vui lòng thêm phương thức thanh toán trước khi rút tiền');
+
+        // Setup PM và ví cho publisherUser để test tiếp
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 5000000;
+        $wallet->save();
+
+        // 2. Gọi getWithdrawals (API list) không truyền filter để test nhánh query default
+        $responseList = $this->actingAs($this->publisherUser)
+            ->getJson(route('publisher.withdrawal.api.list'));
+        $responseList->assertStatus(200);
+
+        // 3. Test non-AJAX store error (ví dụ: amount quá thấp) -> redirect back with errors
+        $responseStoreErr = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 50000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $responseStoreErr->assertSessionHasErrors(['amount']);
+
+        // 4. Test non-AJAX store exception (ví dụ: payment method thuộc user khác)
+        $anotherPublisher = User::create([
+            'name' => 'Publisher Other',
+            'email' => 'pub_other@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+        $responseStoreException = $this->actingAs($anotherPublisher)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 200000,
+                'payment_method_id' => $paymentMethod->id, // payment method của publisherUser
+            ]);
+        $responseStoreException->assertSessionHasErrors(['error']);
+
+        // 5. Test non-AJAX store initial request thành công -> redirect kèm info message
+        $responseStoreOk = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $responseStoreOk->assertRedirect(route('publisher.withdrawal.index'));
+        $responseStoreOk->assertSessionHas('info');
+
+        // Lấy session key
+        $sessionKey = session()->all();
+        $withdrawalSessionKey = null;
+        foreach ($sessionKey as $key => $value) {
+            if (str_starts_with($key, 'withdrawal_pending_')) {
+                $withdrawalSessionKey = $key;
+                break;
+            }
+        }
+        $this->assertNotNull($withdrawalSessionKey);
+        $otp = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$withdrawalSessionKey}")['otp'];
+
+        // 6. Test non-AJAX OTP verification thành công -> redirect sang index với success message
+        $responseVerifyOk = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $withdrawalSessionKey,
+            ]);
+        $responseVerifyOk->assertRedirect(route('publisher.withdrawal.index'));
+        $responseVerifyOk->assertSessionHas('success', 'Yêu cầu rút tiền đã được gửi thành công');
+    }
+
+    /**
+     * Test giới hạn giao dịch rút tiền thành công (Rate Limit) - tối đa 3 lần trong 10 phút
+     */
+    public function test_withdrawal_successful_rate_limit()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 5000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        // Tạo cache rate limit giả lập đã hoàn thành 3 lần rút tiền thành công
+        $rateLimitKey = 'successful_withdrawals:' . $this->publisherUser->id;
+        Cache::put($rateLimitKey, 3, now()->addMinutes(10));
+
+        // Gửi yêu cầu rút tiền thứ 4 (initial request để sinh OTP - vẫn được vì rate limit check nằm ở phần verify OTP)
+        $responseStore = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $responseStore->assertStatus(200);
+        $sessionKey = $responseStore->json('withdrawal_session_key');
+
+        // Tiến hành verify OTP lần thứ 4 -> Bị chặn với mã lỗi 429
+        $responseVerify = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '123456', // OTP giả, thực ra chưa verify OTP đã bị chặn bởi rate limit check đầu tiên
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+
+        $responseVerify->assertStatus(429);
+        $this->assertFalse($responseVerify->json('success'));
+        $this->assertStringContainsString('vượt quá giới hạn', $responseVerify->json('message'));
+        
+        // Reset cache rate limit
+        Cache::forget($rateLimitKey);
+    }
 }
+
 

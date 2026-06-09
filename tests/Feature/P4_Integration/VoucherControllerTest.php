@@ -469,4 +469,65 @@ class VoucherControllerTest extends TestCase
         $data2 = $notification2->toDatabase($this->publisherUser);
         $this->assertStringContainsString('áp dụng cho sản phẩm: Sản phẩm A', $data2['message']);
     }
+
+    /**
+     * Test các view giao diện Voucher của Shop và kiểm soát quyền truy cập
+     */
+    public function test_voucher_web_views_and_unauthorized_access()
+    {
+        $voucher = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'VIEWTEST',
+            'type' => 'fixed',
+            'value' => 1000,
+            'is_global' => true,
+        ]);
+
+        // 1. Index view
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.vouchers.index'));
+        $response->assertStatus(200);
+
+        // 2. Create view
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.vouchers.create'));
+        $response->assertStatus(200);
+
+        // 3. Show view
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.vouchers.show', $voucher));
+        $response->assertStatus(200);
+
+        // 4. Show view (khác shop -> 403)
+        $anotherShop = User::create([
+            'name' => 'Shop B',
+            'email' => 'shop_b_views@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'shop',
+        ]);
+        $response = $this->actingAs($anotherShop)
+            ->get(route('shop.vouchers.show', $voucher));
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Test tạo voucher non-global nhưng không truyền product_ids
+     */
+    public function test_store_non_global_voucher_without_products()
+    {
+        $response = $this->actingAs($this->shopUser)
+            ->post(route('shop.vouchers.store'), [
+                'code' => 'NOGLOBALNOPROD',
+                'type' => 'fixed',
+                'value' => 5000,
+                'is_global' => 0,
+            ]);
+
+        $response->assertRedirect(route('shop.vouchers.index'));
+        $this->assertDatabaseHas('vouchers', [
+            'code' => 'NOGLOBALNOPROD',
+            'is_global' => 0,
+        ]);
+    }
 }
+

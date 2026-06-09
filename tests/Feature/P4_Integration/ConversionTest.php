@@ -541,4 +541,133 @@ class ConversionTest extends TestCase
         $response->assertRedirect(route('shop.conversions.index'));
         $response->assertSessionHas('error', 'Không thể từ chối đơn hàng đã xử lý hoa hồng.');
     }
+
+    /**
+     * Test index với bộ lọc status không hợp lệ và trường hợp shop không có conversion
+     */
+    public function test_shop_conversions_index_invalid_filters_and_empty_summary()
+    {
+        $anotherShop = User::create([
+            'name' => 'Shop Empty',
+            'email' => 'shop_empty@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'shop',
+        ]);
+
+        // index với status không hợp lệ
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.conversions.index', [
+                'status' => 'invalid_status_value',
+            ]));
+        $response->assertStatus(200);
+
+        // index với shop không có conversion nào để test summary count = 0
+        $responseEmpty = $this->actingAs($anotherShop)
+            ->get(route('shop.conversions.index'));
+        $responseEmpty->assertStatus(200);
+    }
+
+    /**
+     * Test updateStatus cho conversion không có publisher
+     */
+    public function test_conversion_without_publisher_notification()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-NO-PUB',
+            'amount' => 1000000,
+            'commission' => 50000,
+            'status' => 'pending',
+            'converted_at' => now(),
+        ]);
+
+        // Ghi đè Route Model Binding cho `{conversion}` để trả về mối quan hệ publisher = null
+        \Illuminate\Support\Facades\Route::bind('conversion', function ($value) use ($conversion) {
+            $conversion->setRelation('publisher', null);
+            return $conversion;
+        });
+
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'rejected',
+            ]);
+
+        $response->assertRedirect(route('shop.conversions.index'));
+        $conversion->refresh();
+        $this->assertEquals('rejected', $conversion->status);
+    }
+
+
+
+
+
+
+    /**
+     * Test catch exception block khi tạo conversion
+     */
+    public function test_conversion_create_catch_exception()
+    {
+        // Tạo một affiliate link mà product_id = null (để kích hoạt lỗi NOT NULL constraint failed ở DB khi chèn vào conversions)
+        $linkWithoutProduct = AffiliateLink::create([
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => null, // Gây ra lỗi DB
+            'original_url' => 'http://example.com/product/null',
+            'tracking_code' => 'TRACK-EXC-TRIGGER',
+            'short_code' => 'sh-exc',
+            'commission_rate' => 5.00,
+            'status' => 'active',
+        ]);
+
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-EXC-TRIGGER',
+            'order_id' => 'ORDER-EXC-1',
+            'amount' => 1000000,
+        ]);
+
+        $response->assertStatus(500);
+        $this->assertFalse($response->json('success'));
+        $this->assertStringContainsString('Có lỗi xảy ra khi tạo conversion', $response->json('message'));
+    }
+
+    /**
+     * Test catch block của notifyPublisher khi gửi thông báo lỗi
+     */
+    public function test_conversion_notify_publisher_catch_exception()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-NOTIFY-EXC',
+            'amount' => 1000000,
+            'commission' => 50000,
+            'status' => 'pending',
+            'converted_at' => now(),
+        ]);
+
+        // Mock NotificationService để quăng exception khi gọi sendCustomNotification
+        $this->mock(\App\Services\NotificationService::class, function ($mock) {
+            $mock->shouldReceive('sendCustomNotification')
+                ->andThrow(new \Exception('Simulated notification sending failure'));
+        });
+
+        // Shop duyệt đơn hàng để kích hoạt notifyPublisher
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'approved',
+            ]);
+
+        $response->assertRedirect(route('shop.conversions.index'));
+        $conversion->refresh();
+        $this->assertEquals('approved', $conversion->status);
+    }
 }
+
+
+
