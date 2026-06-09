@@ -47,8 +47,8 @@ Route::middleware(['auth', 'role:publisher'])->prefix('publisher')->name('publis
     Route::resource('withdrawal', WithdrawalController::class)->except(['store']);
     Route::post('/withdrawal/{withdrawal}/cancel', [WithdrawalController::class, 'cancel'])->name('withdrawal.cancel');
     Route::get('/withdrawal/api/list', [WithdrawalController::class, 'getWithdrawals'])->name('withdrawal.api.list');
-    Route::get('/withdrawal/api/{withdrawal}', [WithdrawalController::class, 'getWithdrawal'])->name('withdrawal.api.show');
     Route::get('/withdrawal/api/stats', [WithdrawalController::class, 'getStats'])->name('withdrawal.api.stats');
+    Route::get('/withdrawal/api/{withdrawal}', [WithdrawalController::class, 'getWithdrawal'])->name('withdrawal.api.show');
     Route::post('/withdrawal/api/calculate-fee', [WithdrawalController::class, 'calculateFee'])->name('withdrawal.api.calculate-fee');
 
     // 2FA routes (mandatory for withdrawals)

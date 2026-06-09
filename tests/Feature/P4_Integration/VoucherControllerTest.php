@@ -425,4 +425,48 @@ class VoucherControllerTest extends TestCase
         $canUseOther = $canPublisherUseVoucher($privateVoucher, $anotherPublisher);
         $this->assertFalse($canUseOther);
     }
+
+    /**
+     * Test trực tiếp VoucherAssignedNotification (via, toDatabase) để tăng coverage lên 100%
+     */
+    public function test_voucher_assigned_notification_methods_directly()
+    {
+        $voucher = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'DIRECTNOTIFY',
+            'type' => 'fixed',
+            'value' => 5000,
+            'is_global' => true,
+        ]);
+
+        $notification = new VoucherAssignedNotification($voucher);
+        $via = $notification->via($this->publisherUser);
+        $this->assertEquals(['database'], $via);
+
+        $data = $notification->toDatabase($this->publisherUser);
+        $this->assertEquals('DIRECTNOTIFY', $data['voucher_id'] ? $voucher->code : '');
+        $this->assertStringContainsString('Bạn được tặng voucher DIRECTNOTIFY', $data['message']);
+
+        // Test trường hợp non-global với danh sách sản phẩm
+        $product = Product::create([
+            'user_id' => $this->shopUser->id,
+            'name' => 'Sản phẩm A',
+            'description' => 'Mô tả',
+            'price' => 100000,
+            'sku' => 'SKU-A',
+            'status' => 'approved',
+        ]);
+        $privateVoucher = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'PRIVATENOTIFY',
+            'type' => 'fixed',
+            'value' => 5000,
+            'is_global' => false,
+        ]);
+        $privateVoucher->products()->attach($product->id);
+
+        $notification2 = new VoucherAssignedNotification($privateVoucher);
+        $data2 = $notification2->toDatabase($this->publisherUser);
+        $this->assertStringContainsString('áp dụng cho sản phẩm: Sản phẩm A', $data2['message']);
+    }
 }

@@ -484,4 +484,61 @@ class ConversionTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['commission_rate']);
     }
+
+    /**
+     * Test trang index của Shop Conversion với đầy đủ các bộ lọc và tìm kiếm
+     */
+    public function test_shop_conversions_index_filters()
+    {
+        // 1. Test index không lọc
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.conversions.index'));
+        $response->assertStatus(200);
+
+        // 2. Test index lọc theo status, date_from, date_to, search
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.conversions.index', [
+                'status' => 'pending',
+                'search' => 'iPhone',
+                'date_from' => now()->subDay()->format('Y-m-d'),
+                'date_to' => now()->addDay()->format('Y-m-d')
+            ]));
+        $response->assertStatus(200);
+
+        // 3. Test index với search theo email của publisher
+        $response = $this->actingAs($this->shopUser)
+            ->get(route('shop.conversions.index', [
+                'search' => $this->publisherUser->email
+            ]));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Test từ chối một conversion pending mà giả lập đã xử lý hoa hồng (để test nhánh lỗi đặc biệt)
+     */
+    public function test_cannot_reject_commission_processed_pending_conversion()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-REJ-ERR-2',
+            'amount' => 10000000,
+            'commission' => 500000,
+            'status' => 'pending',
+            'is_commission_processed' => true,
+            'converted_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'rejected',
+                'status_note' => 'Cố gắng từ chối',
+            ]);
+
+        $response->assertRedirect(route('shop.conversions.index'));
+        $response->assertSessionHas('error', 'Không thể từ chối đơn hàng đã xử lý hoa hồng.');
+    }
 }

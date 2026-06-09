@@ -1309,5 +1309,212 @@ class WithdrawalProcessTest extends TestCase
 
         $response->assertStatus(400);
     }
+
+    /**
+     * Test các view giao diện web rút tiền
+     */
+    public function test_withdrawal_web_views()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // 1. Index view
+        $response = $this->actingAs($this->publisherUser)
+            ->get(route('publisher.withdrawal.index'));
+        $response->assertStatus(200);
+
+        // 2. Create view
+        $response = $this->actingAs($this->publisherUser)
+            ->get(route('publisher.withdrawal.create'));
+        $response->assertStatus(200);
+
+        // 3. Show view
+        $response = $this->actingAs($this->publisherUser)
+            ->get(route('publisher.withdrawal.show', $withdrawal));
+        $response->assertStatus(200);
+
+        // 4. Show view (khác publisher -> 403)
+        $anotherPublisher = User::create([
+            'name' => 'Publisher B',
+            'email' => 'pub_b_views@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+        $response = $this->actingAs($anotherPublisher)
+            ->get(route('publisher.withdrawal.show', $withdrawal));
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Test các API endpoint hỗ trợ rút tiền
+     */
+    public function test_withdrawal_api_endpoints()
+    {
+        Mail::fake();
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // 1. Lấy danh sách API
+        $response = $this->actingAs($this->publisherUser)
+            ->getJson(route('publisher.withdrawal.api.list', [
+                'status' => 'pending',
+                'date_from' => now()->subDay()->format('Y-m-d'),
+                'date_to' => now()->addDay()->format('Y-m-d')
+            ]));
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // 2. Chi tiết API
+        $response = $this->actingAs($this->publisherUser)
+            ->getJson(route('publisher.withdrawal.api.show', $withdrawal));
+        $response->assertStatus(200);
+
+        // 3. Chi tiết API (khác publisher -> 403)
+        $anotherPublisher = User::create([
+            'name' => 'Publisher C',
+            'email' => 'pub_c_api@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+        $response = $this->actingAs($anotherPublisher)
+            ->getJson(route('publisher.withdrawal.api.show', $withdrawal));
+        $response->assertStatus(403);
+
+        // 4. Lấy thống kê API
+        $response = $this->actingAs($this->publisherUser)
+            ->getJson(route('publisher.withdrawal.api.stats'));
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // 5. Tính phí rút tiền API
+        $response = $this->actingAs($this->publisherUser)
+            ->postJson(route('publisher.withdrawal.api.calculate-fee'), [
+                'amount' => 200000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // 6. Tính phí rút tiền API (khác owner -> 403)
+        $response = $this->actingAs($anotherPublisher)
+            ->postJson(route('publisher.withdrawal.api.calculate-fee'), [
+                'amount' => 200000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $response->assertStatus(403);
+
+        // 7. Lấy 2FA info API
+        $response = $this->actingAs($this->publisherUser)
+            ->getJson(route('publisher.withdrawal.2fa.info'));
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+
+        // 8. Resend OTP API (tạo request và resend)
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $responseStore = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $responseStore->json('withdrawal_session_key');
+
+        $responseResend = $this->actingAs($this->publisherUser)
+            ->postJson(route('publisher.withdrawal.otp.resend'), [
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $responseResend->assertStatus(200);
+        $responseResend->assertJsonPath('success', true);
+
+        // Resend với session key sai
+        $responseResendFail = $this->actingAs($this->publisherUser)
+            ->postJson(route('publisher.withdrawal.otp.resend'), [
+                'withdrawal_session_key' => 'invalid-session-key-1234',
+            ]);
+        $responseResendFail->assertStatus(400);
+    }
+
+    /**
+     * Test trực tiếp các Notification class (via, toMail, toBroadcast, toArray) để đạt 100% coverage
+     */
+    public function test_withdrawal_notifications_coverage()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // 1. WithdrawalRequestNotification
+        $reqNotification = new \App\Notifications\WithdrawalRequestNotification($withdrawal);
+        $this->assertEquals(['database', 'broadcast'], $reqNotification->via($this->adminUser));
+        $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $reqNotification->toMail($this->adminUser));
+        $this->assertInstanceOf(\Illuminate\Notifications\Messages\BroadcastMessage::class, $reqNotification->toBroadcast($this->adminUser));
+        $this->assertArrayHasKey('type', $reqNotification->toArray($this->adminUser));
+
+        // 2. WithdrawalStatusNotification (kiểm tra các status: approved, rejected, completed, cancelled, default)
+        $statuses = ['approved', 'rejected', 'completed', 'cancelled', 'unknown'];
+        foreach ($statuses as $status) {
+            $statusNotification = new \App\Notifications\WithdrawalStatusNotification($withdrawal, $status);
+            $this->assertEquals(['database', 'broadcast'], $statusNotification->via($this->publisherUser));
+            $this->assertInstanceOf(\Illuminate\Notifications\Messages\MailMessage::class, $statusNotification->toMail($this->publisherUser));
+            $this->assertInstanceOf(\Illuminate\Notifications\Messages\BroadcastMessage::class, $statusNotification->toBroadcast($this->publisherUser));
+            $this->assertArrayHasKey('type', $statusNotification->toArray($this->publisherUser));
+        }
+    }
 }
 
