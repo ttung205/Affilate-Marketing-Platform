@@ -20,12 +20,13 @@ class ConversionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'tracking_code' => 'required|string',
-            'order_id' => 'required|string',
+            'order_id' => 'required|string|unique:conversions,order_id',
             'amount' => 'required|numeric|min:0',
             'commission_rate' => 'nullable|numeric|min:0|max:100',
         ], [
             'tracking_code.required' => 'Tracking code là bắt buộc',
             'order_id.required' => 'Order ID là bắt buộc',
+            'order_id.unique' => 'Order ID đã tồn tại',
             'amount.required' => 'Số tiền là bắt buộc',
             'amount.numeric' => 'Số tiền phải là số',
             'amount.min' => 'Số tiền phải lớn hơn 0',

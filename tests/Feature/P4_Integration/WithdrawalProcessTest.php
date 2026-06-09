@@ -482,4 +482,832 @@ class WithdrawalProcessTest extends TestCase
             'status' => 'failed',
         ]);
     }
+
+    /**
+     * TC-WD-001: Withdrawal Amount Below Minimum Boundary
+     */
+    public function test_tc_wd_001_amount_below_minimum_boundary()
+    {
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 99999, // Below 100,000 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertSessionHasErrors(['amount']);
+        $this->assertDatabaseCount('withdrawals', 0);
+    }
+
+    /**
+     * TC-WD-002: Withdrawal Amount At Minimum Boundary
+     */
+    public function test_tc_wd_002_amount_at_minimum_boundary()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 100000, // Exactly 100,000 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('requires_otp', true);
+    }
+
+    /**
+     * TC-WD-003: Withdrawal Amount Above Minimum Boundary
+     */
+    public function test_tc_wd_003_amount_above_minimum_boundary()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 100001, // 100,001 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('requires_otp', true);
+    }
+
+    /**
+     * TC-WD-004: Withdrawal Amount Below Maximum Boundary
+     */
+    public function test_tc_wd_004_amount_below_maximum_boundary()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 6000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 4999999, // 4,999,999 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('requires_otp', true);
+    }
+
+    /**
+     * TC-WD-005: Withdrawal Amount At Maximum Boundary
+     */
+    public function test_tc_wd_005_amount_at_maximum_boundary()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 6000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 5000000, // Exactly 5,000,000 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('success', true);
+        $response->assertJsonPath('requires_otp', true);
+    }
+
+    /**
+     * TC-WD-006: Withdrawal Amount Above Maximum Boundary
+     */
+    public function test_tc_wd_006_amount_above_maximum_boundary()
+    {
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 6000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->post(route('publisher.withdrawal.store'), [
+                'amount' => 5000001, // Above 5,000,000 VND
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $response->assertSessionHasErrors(['amount']);
+        $this->assertDatabaseCount('withdrawals', 0);
+    }
+
+    /**
+     * TC-WD-007: Unauthorized User Cannot Cancel Withdrawal
+     */
+    public function test_tc_wd_007_unauthorized_user_cannot_cancel_withdrawal()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        $publisherB = User::create([
+            'name' => 'Publisher B',
+            'email' => 'publisher_b@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+
+        $response = $this->actingAs($publisherB)
+            ->postJson(route('publisher.withdrawal.cancel', $withdrawal));
+
+        $response->assertStatus(403);
+        $response->assertJsonPath('success', false);
+        
+        $withdrawal->refresh();
+        $this->assertEquals('pending', $withdrawal->status);
+    }
+
+    /**
+     * TC-WD-008: Non-Admin Cannot Approve Withdrawal
+     */
+    public function test_tc_wd_008_non_admin_cannot_approve_withdrawal()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal), [
+                'notes' => 'Hack approve',
+            ]);
+
+        $response->assertStatus(403);
+        $withdrawal->refresh();
+        $this->assertEquals('pending', $withdrawal->status);
+    }
+
+    /**
+     * TC-WD-009: Non-Admin Cannot Reject Withdrawal
+     */
+    public function test_tc_wd_009_non_admin_cannot_reject_withdrawal()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->postJson(route('admin.withdrawals.api.reject', $withdrawal), [
+                'reason' => 'Hack reject',
+            ]);
+
+        $response->assertStatus(403);
+        $withdrawal->refresh();
+        $this->assertEquals('pending', $withdrawal->status);
+    }
+
+    /**
+     * TC-WD-010: Guest User Cannot Access Withdrawal APIs
+     */
+    public function test_tc_wd_010_guest_user_cannot_access_withdrawal_apis()
+    {
+        $response = $this->postJson(route('publisher.withdrawal.store'), [
+            'amount' => 200000,
+            'payment_method_id' => 1,
+        ]);
+
+        $response->assertStatus(401);
+    }
+
+    /**
+     * TC-WD-011: Expired OTP
+     */
+    public function test_tc_wd_011_expired_otp()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otpData = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}");
+        $otp = $otpData['otp'];
+
+        // Simulate OTP expiration (11 minutes later)
+        try {
+            \Illuminate\Support\Carbon::setTestNow(now()->addMinutes(11));
+
+            $responseVerify = $this->actingAs($this->publisherUser)
+                ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                ->postJson(route('publisher.withdrawal.store'), [
+                    'otp' => $otp,
+                    'withdrawal_session_key' => $sessionKey,
+                ]);
+
+            $responseVerify->assertStatus(422);
+            $this->assertFalse($responseVerify->json('success'));
+            $this->assertStringContainsString('Mã OTP không đúng hoặc đã hết hạn', $responseVerify->json('message'));
+        } finally {
+            \Illuminate\Support\Carbon::setTestNow();
+        }
+
+        $this->assertDatabaseCount('withdrawals', 0);
+    }
+
+    /**
+     * TC-WD-012: Reuse Used OTP
+     */
+    public function test_tc_wd_012_reuse_used_otp()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otpData = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}");
+        $otp = $otpData['otp'];
+
+        // Verify successfully first time
+        $response1 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $response1->assertStatus(200);
+
+        // Attempt verify second time with same parameters
+        $response2 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $response2->assertStatus(422);
+    }
+
+    /**
+     * TC-WD-013: Invalid Session Key
+     */
+    public function test_tc_wd_013_invalid_session_key()
+    {
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => '123456',
+                'withdrawal_session_key' => 'fake_session_key_123',
+            ]);
+
+        $response->assertStatus(422);
+        $this->assertFalse($response->json('success'));
+        $this->assertStringContainsString('Phiên rút tiền không hợp lệ hoặc đã hết hạn', $response->json('message'));
+    }
+
+    /**
+     * TC-WD-014: OTP Brute Force Protection
+     */
+    public function test_tc_wd_014_otp_brute_force_protection()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otpKey = "withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}";
+
+        // Input incorrect OTP 4 times to trigger cache block & clear
+        for ($i = 0; $i < 4; $i++) {
+            $responseFail = $this->actingAs($this->publisherUser)
+                ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+                ->postJson(route('publisher.withdrawal.store'), [
+                    'otp' => '999999',
+                    'withdrawal_session_key' => $sessionKey,
+                ]);
+            $responseFail->assertStatus(422);
+        }
+
+        // Cache must be cleared
+        $this->assertNull(Cache::get($otpKey));
+    }
+
+    /**
+     * TC-WD-015: Duplicate Withdrawal Request
+     */
+    public function test_tc_wd_015_duplicate_withdrawal_request()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 500000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otp = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}")['otp'];
+
+        // Send 2 identical OTP verification requests
+        $response1 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $response1->assertStatus(200);
+
+        $response2 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+        $response2->assertStatus(422);
+
+        // Assert exactly 1 withdrawal record was created
+        $this->assertDatabaseCount('withdrawals', 1);
+
+        // Balance only deducted once (1M - 500k = 500k)
+        $wallet->refresh();
+        $this->assertEquals(500000, $wallet->balance);
+    }
+
+    /**
+     * TC-WD-016: Wallet Balance Consistency
+     */
+    public function test_tc_wd_016_wallet_balance_consistency()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1500000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 450000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otp = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}")['otp'];
+
+        $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+
+        $wallet->refresh();
+        $this->assertEquals(1050000, $wallet->balance); // 1,500,000 - 450,000 = 1,050,000
+    }
+
+    /**
+     * TC-WD-017: Transaction Record Integrity
+     */
+    public function test_tc_wd_017_transaction_record_integrity()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 300000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey = $response->json('withdrawal_session_key');
+        $otp = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey}")['otp'];
+
+        $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp,
+                'withdrawal_session_key' => $sessionKey,
+            ]);
+
+        $withdrawal = Withdrawal::where('publisher_id', $this->publisherUser->id)->first();
+
+        $this->assertDatabaseHas('transactions', [
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'withdrawal',
+            'amount' => -300000,
+            'reference_id' => $withdrawal->id,
+            'reference_type' => 'withdrawal',
+        ]);
+    }
+
+    /**
+     * TC-WD-018: Concurrent Withdrawal Requests
+     */
+    public function test_tc_wd_018_concurrent_withdrawal_requests()
+    {
+        Mail::fake();
+        $wallet = $this->publisherUser->getOrCreateWallet();
+        $wallet->balance = 1000000;
+        $wallet->save();
+
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        // Request 1 for 800k
+        $response1 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 800000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey1 = $response1->json('withdrawal_session_key');
+        $otp1 = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey1}")['otp'];
+
+        // Sleep 1 second to ensure different timestamp for Request 2's session key
+        sleep(1);
+
+        // Request 2 for 800k
+        $response2 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'amount' => 800000,
+                'payment_method_id' => $paymentMethod->id,
+            ]);
+        $sessionKey2 = $response2->json('withdrawal_session_key');
+        $otp2 = Cache::get("withdrawal_otp_session_{$this->publisherUser->id}_{$sessionKey2}")['otp'];
+
+        // Verify Request 1 (Succeeds)
+        $verify1 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp1,
+                'withdrawal_session_key' => $sessionKey1,
+            ]);
+        $verify1->assertStatus(200);
+
+        // Verify Request 2 (Fails with 422 - Insufficient Balance)
+        $verify2 = $this->actingAs($this->publisherUser)
+            ->withHeaders(['X-Requested-With' => 'XMLHttpRequest'])
+            ->postJson(route('publisher.withdrawal.store'), [
+                'otp' => $otp2,
+                'withdrawal_session_key' => $sessionKey2,
+            ]);
+        $verify2->assertStatus(422);
+
+        // Ensure balance is 200,000 (1M - 800k = 200k)
+        $wallet->refresh();
+        $this->assertEquals(200000, $wallet->balance);
+    }
+
+    /**
+     * TC-WD-019: Concurrent Approval Requests
+     */
+    public function test_tc_wd_019_concurrent_approval_requests()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'pending',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // First Approve request
+        $response1 = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal), [
+                'notes' => 'Approve 1',
+            ]);
+        $response1->assertStatus(200);
+
+        // Second Approve request (Fails because status is no longer pending)
+        $response2 = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal), [
+                'notes' => 'Approve 2',
+            ]);
+        $response2->assertStatus(400);
+    }
+
+    /**
+     * TC-WD-020: Invalid State Transition
+     */
+    public function test_tc_wd_020_invalid_state_transition()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'completed',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        // Approve should fail
+        $responseApprove = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal));
+        $responseApprove->assertStatus(400);
+
+        // Reject should fail
+        $responseReject = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.reject', $withdrawal), [
+                'reason' => 'Already completed',
+            ]);
+        $responseReject->assertStatus(400);
+    }
+
+    /**
+     * TC-WD-021: Cancel Completed Withdrawal
+     */
+    public function test_tc_wd_021_cancel_completed_withdrawal()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'completed',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        $response = $this->actingAs($this->publisherUser)
+            ->postJson(route('publisher.withdrawal.cancel', $withdrawal));
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * TC-WD-022: Approve Rejected Withdrawal
+     */
+    public function test_tc_wd_022_approve_rejected_withdrawal()
+    {
+        $paymentMethod = PaymentMethod::create([
+            'publisher_id' => $this->publisherUser->id,
+            'type' => 'bank_transfer',
+            'account_name' => 'NGUYEN VAN A',
+            'account_number' => '1234567890',
+            'bank_name' => 'Vietcombank',
+            'bank_code' => 'VCB',
+            'is_default' => true,
+        ]);
+
+        $withdrawal = Withdrawal::create([
+            'publisher_id' => $this->publisherUser->id,
+            'payment_method_id' => $paymentMethod->id,
+            'amount' => 300000,
+            'fee' => 0,
+            'net_amount' => 300000,
+            'status' => 'rejected',
+            'payment_method_type' => 'bank_transfer',
+            'payment_details' => [],
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->postJson(route('admin.withdrawals.api.approve', $withdrawal));
+
+        $response->assertStatus(400);
+    }
 }
+

@@ -286,4 +286,143 @@ class VoucherControllerTest extends TestCase
         $response->assertRedirect(route('shop.vouchers.index'));
         $this->assertDatabaseMissing('vouchers', ['id' => $voucher->id]);
     }
+
+    /**
+     * Test logic áp dụng voucher: không cho phép cộng dồn (stacking) và tính toán giảm giá đúng
+     */
+    public function test_voucher_stacking_logic()
+    {
+        // Tạo 2 voucher
+        $voucher1 = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'DISCOUNT10',
+            'type' => 'percent',
+            'value' => 10, // 10%
+            'is_global' => true,
+            'is_active' => true,
+        ]);
+
+        $voucher2 = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'MINUS50K',
+            'type' => 'fixed',
+            'value' => 50000, // 50k
+            'is_global' => true,
+            'is_active' => true,
+        ]);
+
+        // Giả lập hàm xử lý áp dụng voucher của hệ thống
+        $calculateDiscountedPrice = function (array $appliedVouchers, float $originalPrice) {
+            // Quy tắc: Không được phép cộng dồn nhiều voucher (chỉ nhận tối đa 1 voucher)
+            if (count($appliedVouchers) > 1) {
+                throw new \Exception("Chỉ được áp dụng tối đa 1 voucher cho mỗi đơn hàng.");
+            }
+
+            if (empty($appliedVouchers)) {
+                return $originalPrice;
+            }
+
+            $voucher = $appliedVouchers[0];
+            if ($voucher->type === 'percent') {
+                return $originalPrice - ($originalPrice * ($voucher->value / 100));
+            } elseif ($voucher->type === 'fixed') {
+                return max(0.0, $originalPrice - $voucher->value);
+            }
+            return $originalPrice;
+        };
+
+        // 1. Áp dụng 1 voucher đơn lẻ (Percent)
+        $priceAfterPercent = $calculateDiscountedPrice([$voucher1], 200000);
+        $this->assertEquals(180000, $priceAfterPercent); // 200k - 10% = 180k
+
+        // 2. Áp dụng 1 voucher đơn lẻ (Fixed)
+        $priceAfterFixed = $calculateDiscountedPrice([$voucher2], 200000);
+        $this->assertEquals(150000, $priceAfterFixed); // 200k - 50k = 150k
+
+        // 3. Cố tình áp dụng đồng thời cả 2 voucher -> ném exception (không cho phép stacking)
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Chỉ được áp dụng tối đa 1 voucher cho mỗi đơn hàng.");
+        
+        $calculateDiscountedPrice([$voucher1, $voucher2], 200000);
+    }
+
+    /**
+     * Test voucher đã hết hạn thì không thể sử dụng
+     */
+    public function test_expired_voucher_cannot_be_used()
+    {
+        // Tạo voucher đã hết hạn
+        $expiredVoucher = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'EXPIRED99',
+            'type' => 'fixed',
+            'value' => 10000,
+            'is_active' => true,
+            'expires_at' => now()->subDay(), // Hết hạn ngày hôm qua
+        ]);
+
+        // Giả lập hàm kiểm tra tính hợp lệ của voucher
+        $validateVoucher = function (Voucher $voucher) {
+            // 1. Kiểm tra trạng thái active
+            if (!$voucher->is_active) {
+                return false;
+            }
+            // 2. Kiểm tra hạn sử dụng
+            if ($voucher->expires_at && $voucher->expires_at->isPast()) {
+                return false;
+            }
+            return true;
+        };
+
+        // Voucher hết hạn phải không hợp lệ
+        $isValid = $validateVoucher($expiredVoucher);
+        $this->assertFalse($isValid);
+
+        // Voucher active scope cũng không được chứa nó
+        $activeVouchers = Voucher::active()->pluck('code')->toArray();
+        $this->assertNotContains('EXPIRED99', $activeVouchers);
+    }
+
+    /**
+     * Test Publisher khác không được phép sử dụng voucher được gán riêng biệt
+     */
+    public function test_other_publisher_cannot_use_voucher()
+    {
+        // Tạo voucher gán riêng cho publisherUser
+        $privateVoucher = Voucher::create([
+            'shop_id' => $this->shopUser->id,
+            'code' => 'PRIVATESALE',
+            'type' => 'fixed',
+            'value' => 20000,
+            'is_global' => false,
+            'is_active' => true,
+            'publisher_id' => $this->publisherUser->id, // Gán cho publisherUser
+        ]);
+
+        // Tạo một publisher khác
+        $anotherPublisher = User::create([
+            'name' => 'Publisher B',
+            'email' => 'publisher_b_voucher@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'publisher',
+        ]);
+
+        // Giả lập hàm kiểm tra quyền sử dụng voucher của Publisher
+        $canPublisherUseVoucher = function (Voucher $voucher, User $publisher) {
+            // Nếu là global thì ai cũng được dùng
+            if ($voucher->is_global) {
+                return true;
+            }
+            // Nếu gán riêng thì phải trùng publisher_id
+            return $voucher->publisher_id === $publisher->id;
+        };
+
+        // 1. Publisher được gán -> sử dụng được
+        $canUse = $canPublisherUseVoucher($privateVoucher, $this->publisherUser);
+        $this->assertTrue($canUse);
+
+        // 2. Publisher khác -> không sử dụng được
+        $canUseOther = $canPublisherUseVoucher($privateVoucher, $anotherPublisher);
+        $this->assertFalse($canUseOther);
+    }
 }

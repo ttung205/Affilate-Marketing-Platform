@@ -16,6 +16,12 @@ class RoleMiddleware
         $user = Auth::user();
         
         if (!in_array($user->role, $roles)) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden'
+                ], 403);
+            }
             // Instead of aborting, redirect to appropriate dashboard
             switch ($user->role) {
                 case 'admin':

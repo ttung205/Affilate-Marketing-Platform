@@ -272,4 +272,216 @@ class ConversionTest extends TestCase
         $response->assertJsonPath('data.total_amount', 15000000); // 10M + 5M
         $response->assertJsonPath('data.total_commission', 750000); // 500k + 250k
     }
+
+    /**
+     * Test không thể tạo conversion với order_id trùng lặp
+     */
+    public function test_duplicate_order_id_cannot_create_conversion()
+    {
+        // Tạo conversion lần đầu
+        $response1 = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-DUP-1',
+            'amount' => 1000000,
+        ]);
+        $response1->assertStatus(200);
+
+        // Thử tạo lại với order_id trùng lặp
+        $response2 = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-DUP-1',
+            'amount' => 2000000,
+        ]);
+        $response2->assertStatus(422);
+        $response2->assertJsonValidationErrors(['order_id']);
+    }
+
+    /**
+     * Test conversion đã duyệt thì không thể duyệt lại lần thứ hai
+     */
+    public function test_approved_conversion_cannot_be_approved_twice()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-DOUBLE-APP',
+            'amount' => 10000000,
+            'commission' => 500000,
+            'status' => 'approved', // Đã duyệt rồi
+            'converted_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'approved',
+                'status_note' => 'Cố gắng duyệt lần 2',
+            ]);
+
+        $response->assertRedirect(route('shop.conversions.index'));
+        $response->assertSessionHas('error', 'Chỉ có thể xử lý các đơn hàng đang chờ duyệt.');
+    }
+
+    /**
+     * Test Shop khác (không phải chủ sở hữu sản phẩm/conversion) không thể duyệt conversion
+     */
+    public function test_non_owner_shop_cannot_approve_conversion()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-NON-OWNER',
+            'amount' => 10000000,
+            'commission' => 500000,
+            'status' => 'pending',
+            'converted_at' => now(),
+        ]);
+
+        $otherShop = User::create([
+            'name' => 'Shop B',
+            'email' => 'shop_b@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'shop',
+        ]);
+
+        $response = $this->actingAs($otherShop)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'approved',
+            ]);
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * Test chuyển đổi trạng thái conversion không hợp lệ (không phải approved hay rejected)
+     */
+    public function test_invalid_conversion_state_transition()
+    {
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-INVALID-STATE',
+            'amount' => 10000000,
+            'commission' => 500000,
+            'status' => 'pending',
+            'converted_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'pending', // Trạng thái không hợp lệ trong input
+            ]);
+
+        $response->assertSessionHasErrors(['status']);
+    }
+
+    /**
+     * Test gửi thông báo cho publisher khi conversion được duyệt hoặc từ chối
+     */
+    public function test_conversion_notification_sent()
+    {
+        Notification::fake();
+
+        $conversion = Conversion::create([
+            'affiliate_link_id' => $this->affiliateLink->id,
+            'publisher_id' => $this->publisherUser->id,
+            'product_id' => $this->product->id,
+            'shop_id' => $this->shopUser->id,
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-NOTIFY',
+            'amount' => 10000000,
+            'commission' => 500000,
+            'status' => 'pending',
+            'converted_at' => now(),
+        ]);
+
+        $this->actingAs($this->shopUser)
+            ->patch(route('shop.conversions.update-status', $conversion), [
+                'status' => 'approved',
+                'status_note' => 'Đã duyệt',
+            ]);
+
+        Notification::assertSentTo(
+            $this->publisherUser,
+            \App\Notifications\RealTimeNotification::class,
+            function ($notification, $channels, $notifiable) {
+                $data = $notification->toDatabase($notifiable);
+                return $data['title'] === 'Đơn hàng đã được duyệt' && 
+                       str_contains($data['message'], 'ORDER-NOTIFY');
+            }
+        );
+    }
+
+    /**
+     * Test phân tích giá trị biên (BVA) cho tỷ lệ hoa hồng (commission_rate) của conversion
+     */
+    public function test_commission_rate_boundary_values()
+    {
+        // 1. Dưới biên dưới: commission_rate = -0.01 -> Không hợp lệ
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-BVA-1',
+            'amount' => 1000000,
+            'commission_rate' => -0.01,
+        ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['commission_rate']);
+
+        // 2. Biên dưới: commission_rate = 0.00 -> Hợp lệ
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-BVA-2',
+            'amount' => 1000000,
+            'commission_rate' => 0.00,
+        ]);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('conversions', [
+            'order_id' => 'ORDER-BVA-2',
+            'commission' => 0.00,
+        ]);
+
+        // 3. Trong khoảng: commission_rate = 15.50 -> Hợp lệ
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-BVA-3',
+            'amount' => 1000000,
+            'commission_rate' => 15.50,
+        ]);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('conversions', [
+            'order_id' => 'ORDER-BVA-3',
+            'commission' => 155000, // 15.5% of 1,000,000
+        ]);
+
+        // 4. Biên trên: commission_rate = 100.00 -> Hợp lệ
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-BVA-4',
+            'amount' => 1000000,
+            'commission_rate' => 100.00,
+        ]);
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('conversions', [
+            'order_id' => 'ORDER-BVA-4',
+            'commission' => 1000000, // 100% of 1,000,000
+        ]);
+
+        // 5. Vượt biên trên: commission_rate = 100.01 -> Không hợp lệ
+        $response = $this->postJson(route('conversion.create'), [
+            'tracking_code' => 'TRACK-IPHONE',
+            'order_id' => 'ORDER-BVA-5',
+            'amount' => 1000000,
+            'commission_rate' => 100.01,
+        ]);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['commission_rate']);
+    }
 }

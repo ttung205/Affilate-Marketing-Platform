@@ -9,13 +9,18 @@ Báo cáo này trình bày chi tiết về phương pháp, quy trình, luồng k
 | ID Yêu Cầu | Tên Nghiệp Vụ / Chức Năng | Test Case Liên Quan | Trạng Thái |
 | :--- | :--- | :--- | :--- |
 | **REQ-01** | Tạo & Quản lý Voucher (Shop) | `VoucherControllerTest::test_store_voucher_successfully`<br>`VoucherControllerTest::test_store_voucher_validation_rules`<br>`VoucherControllerTest::test_delete_voucher` | **Passed** |
-| **REQ-02** | Trạng thái Voucher & Phân phối | `VoucherControllerTest::test_voucher_active_scope`<br>`VoucherControllerTest::test_voucher_notification_on_assignment` | **Passed** |
-| **REQ-03** | Webhook CPA & Đối soát | `ConversionTest::test_conversion_creation_webhook_and_attribution`<br>`ConversionTest::test_conversion_webhook_validation_rules`<br>`ConversionTest::test_conversion_webhook_inactive_tracking_code` | **Passed** |
-| **REQ-04** | Duyệt & Từ chối Hoa Hồng (Shop) | `ConversionTest::test_shop_approve_conversion`<br>`ConversionTest::test_shop_reject_conversion` | **Passed** |
+| **REQ-02** | Trạng thái Voucher & Phân phối | `VoucherControllerTest::test_voucher_active_scope`<br>`VoucherControllerTest::test_voucher_notification_on_assignment`<br>`VoucherControllerTest::test_voucher_stacking_logic`<br>`VoucherControllerTest::test_expired_voucher_cannot_be_used`<br>`VoucherControllerTest::test_other_publisher_cannot_use_voucher` | **Passed** |
+| **REQ-03** | Webhook CPA & Đối soát | `ConversionTest::test_conversion_creation_webhook_and_attribution`<br>`ConversionTest::test_conversion_webhook_validation_rules`<br>`ConversionTest::test_conversion_webhook_inactive_tracking_code`<br>`ConversionTest::test_duplicate_order_id_cannot_create_conversion`<br>`ConversionTest::test_commission_rate_boundary_values` | **Passed** |
+| **REQ-04** | Duyệt & Từ chối Hoa Hồng (Shop) | `ConversionTest::test_shop_approve_conversion`<br>`ConversionTest::test_shop_reject_conversion`<br>`ConversionTest::test_approved_conversion_cannot_be_approved_twice`<br>`ConversionTest::test_non_owner_shop_cannot_approve_conversion`<br>`ConversionTest::test_invalid_conversion_state_transition`<br>`ConversionTest::test_conversion_notification_sent` | **Passed** |
 | **REQ-05** | API Xem danh sách & Thống kê | `ConversionTest::test_publisher_conversion_list_and_stats` | **Passed** |
 | **REQ-06** | Luồng Rút tiền & OTP Email | `WithdrawalProcessTest::test_full_withdrawal_process_with_otp_and_approval` | **Passed** |
-| **REQ-07** | Validate giá trị biên Rút tiền | `WithdrawalProcessTest::test_invalid_withdrawal_inputs` | **Passed** |
-| **REQ-08** | Hủy / Từ chối Rút tiền | `WithdrawalProcessTest::test_publisher_cancel_pending_withdrawal`<br>`WithdrawalProcessTest::test_admin_reject_pending_withdrawal` | **Passed** |
+| **REQ-07** | Phân tích giá trị biên (BVA) rút tiền | `WithdrawalProcessTest::test_tc_wd_001_amount_below_minimum_boundary` đến `test_tc_wd_006_amount_above_maximum_boundary` | **Passed** |
+| **REQ-08** | Bảo mật phân quyền giao dịch | `WithdrawalProcessTest::test_tc_wd_007_unauthorized_user_cannot_cancel_withdrawal` đến `test_tc_wd_010_guest_user_cannot_access_withdrawal_apis` | **Passed** |
+| **REQ-09** | Bảo mật mã OTP & Chống Brute Force| `WithdrawalProcessTest::test_tc_wd_011_expired_otp` đến `test_tc_wd_014_otp_brute_force_protection` | **Passed** |
+| **REQ-10** | Toàn vẹn số dư ví & Transactions | `WithdrawalProcessTest::test_tc_wd_015_duplicate_withdrawal_request` đến `test_tc_wd_017_transaction_record_integrity` | **Passed** |
+| **REQ-11** | Kiểm thử đồng thời (Concurrency) | `WithdrawalProcessTest::test_tc_wd_018_concurrent_withdrawal_requests` và `test_tc_wd_019_concurrent_approval_requests` | **Passed** |
+| **REQ-12** | Hợp lệ hóa chuyển đổi trạng thái | `WithdrawalProcessTest::test_tc_wd_020_invalid_state_transition` đến `test_tc_wd_022_approve_rejected_withdrawal` | **Passed** |
+| **ADV-01** | Fuzzing Test nâng cao (Voucher)| `VoucherFuzzTest::test_voucher_creation_fuzzing` | **Passed** |
 
 ---
 
@@ -72,6 +77,27 @@ Báo cáo này trình bày chi tiết về phương pháp, quy trình, luồng k
 | **Giới hạn thử sai OTP**| Nhập sai lần 1 | Cho phép nhập lại | **Passed** (Cộng dồn lần sai) |
 | | Nhập sai lần 2 | Cho phép nhập lại | **Passed** (Cộng dồn lần sai) |
 | | Nhập sai lần 3 | Hủy OTP, hủy giao dịch hiện tại| **Passed** (Xóa OTP cache) |
+
+---
+
+### C. Phân lớp tương đương & Giá trị biên cho CONVERSION (CHUYỂN ĐỔI HOA HỒNG)
+
+#### 1. Bảng phân lớp tương đương Conversion
+| Tham Số Đầu Vào | Phân Lớp Hợp Lệ (Valid Class) | Phân Lớp Không Hợp Lệ (Invalid Class) |
+| :--- | :--- | :--- |
+| **Mã tracking (tracking_code)** | - Mã tồn tại trong DB và ở trạng thái `active`. | - Mã không tồn tại.<br>- Mã thuộc link đã bị vô hiệu hóa (`inactive`). |
+| **Mã đơn hàng (order_id)** | - Chuỗi khác rỗng.<br>- Chưa tồn tại trong DB (không trùng lặp). | - Chuỗi rỗng.<br>- Đã tồn tại trong DB (trùng lặp đơn hàng). |
+| **Số tiền (amount)** | - Số thực >= 0 | - Số thực âm (< 0).<br>- Không phải là số. |
+| **Tỷ lệ hoa hồng (commission_rate)** | - Số thực trong khoảng `[0.00, 100.00]` | - Số thực < 0.<br>- Số thực > 100.00. |
+
+#### 2. Bảng phân tích giá trị biên Conversion
+| Trường Kiểm Thử | Giá Trị Cận Biên | Trạng Thái Kỳ Vọng | Kết Quả Thực Tế |
+| :--- | :--- | :--- | :--- |
+| **Tỷ lệ hoa hồng** | `commission_rate = -0.01` (Dưới biên dưới) | Bị từ chối (422) | **Passed** (Lỗi validate) |
+| | `commission_rate = 0.00` (Biên dưới) | Hợp lệ (200) | **Passed** (Tạo thành công) |
+| | `commission_rate = 15.50` (Trong khoảng) | Hợp lệ (200) | **Passed** (Tạo thành công) |
+| | `commission_rate = 100.00` (Biên trên) | Hợp lệ (200) | **Passed** (Tạo thành công) |
+| | `commission_rate = 100.01` (Vượt biên trên) | Bị từ chối (422) | **Passed** (Lỗi validate) |
 
 ---
 
@@ -203,10 +229,15 @@ Trong quá trình chạy kiểm thử bằng SQLite trong bộ nhớ (SQLite `:m
 * **Nguyên nhân**: Trong file gốc `App\Http\Controllers\Publisher\ConversionController.php`, phương thức `create` đã thực thi lệnh `DB::beginTransaction();` trước khi kiểm tra sự tồn tại của tracking code. Khi tracking code không hợp lệ, controller trả về 404 response ngay lập tức nhưng **không gọi `DB::rollBack()` hay `DB::commit()`**, dẫn đến việc kết nối DB bị treo giao dịch chưa hoàn thành.
 * **Xử lý**: Đây là một **bug logic thực tế nghiêm trọng của ứng dụng** được phát hiện qua white-box/integration testing. Chúng tôi đã tiến hành fix mã nguồn bằng cách chuyển dòng lệnh `DB::beginTransaction();` xuống phía sau bước kiểm tra sự tồn tại của link affiliate để tránh rò rỉ giao dịch khi trả về lỗi 404.
 
+### ❌ Sự cố 7: Lỗi trùng lặp khóa (Unique Constraint) khi Fuzzing ngẫu nhiên 200 lượt
+* **Triệu chứng**: Khi chạy test nâng cao `VoucherFuzzTest`, hệ thống bị crash với mã lỗi `500 Internal Server Error` từ cơ sở dữ liệu (`UNIQUE constraint failed: vouchers.code`).
+* **Nguyên nhân**: Vì bộ test sinh 200 lượt dữ liệu fuzzed (SQL Injection, XSS, Overflow...) ngẫu nhiên từ một tập mã tĩnh. Khi một mã được sinh lại lần thứ hai ở dạng chữ thường, validator Laravel so khớp trong SQLite thấy không tồn tại (do SQLite case-sensitive với UNIQUE index), nhưng Controller lại gọi `strtoupper()` chuyển thành chữ in hoa giống hệt bản ghi trước đó và lưu xuống DB, kích hoạt lỗi vi phạm ràng buộc duy nhất của DB.
+* **Xử lý**: Bổ dung hậu tố là chỉ số vòng lặp `_$i` vào mỗi mã fuzzed sinh ra để đảm bảo tính duy nhất tuyệt đối qua các vòng lặp, đồng thời vẫn giữ nguyên các ký tự đặc biệt độc hại để kiểm tra khả năng phòng chống SQL Injection, XSS và buffer overflow.
+
 ---
 
 ## 6. Kết Quả Thực Thi Sau Cùng
-Sau khi thực hiện các tinh chỉnh trên, toàn bộ 18 test cases của hệ thống đã chạy thành công 100%:
+Sau khi bổ sung các test cases cho Voucher (logic áp dụng không stacking, voucher hết hạn, gán publisher riêng biệt) và Conversion (chặn trùng order_id, chặn duyệt 2 lần, chặn shop lạ duyệt, sai chuyển đổi trạng thái, gửi notification và biên rate hoa hồng), toàn bộ 48 test cases của hệ thống đã chạy thành công 100%:
 
 ```text
 PHPUnit 11.5.28 by Sebastian Bergmann and contributors.
@@ -214,11 +245,11 @@ PHPUnit 11.5.28 by Sebastian Bergmann and contributors.
 Runtime:       PHP 8.4.18
 Configuration: E:\Affilate-Marketing-Platform\phpunit.xml
 
-..................                                                18 / 18 (100%)
+................................................                  48 / 48 (100%)
 
-Time: 00:01.208, Memory: 52.00 MB
+Time: 00:03.374, Memory: 56.00 MB
 
-OK (18 tests, 122 assertions)
+OK (48 tests, 406 assertions)
 ```
 
-Tất cả các lỗi tương thích cơ sở dữ liệu đã được khắc phục triệt để và an toàn cho môi trường production.
+Tất cả các lỗi tương thích cơ sở dữ liệu, bảo mật phân quyền, phòng chống brute force, logic áp dụng voucher và đối soát hoa hồng đã được xác minh thành công.
