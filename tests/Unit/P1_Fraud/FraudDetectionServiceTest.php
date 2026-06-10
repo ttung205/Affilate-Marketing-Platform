@@ -55,6 +55,7 @@ class FraudDetectionServiceTest extends TestCase
     {
         $ip = '192.168.1.100';
         
+        /** @var \App\Models\AffiliateLink $link */
         $link = \Mockery::mock(AffiliateLink::class)->makePartial();
         $link->id = 1;
         $link->publisher_id = 99;
@@ -82,6 +83,7 @@ class FraudDetectionServiceTest extends TestCase
     public function test_risk_score_aggregation(): void
     {
         $ip = '10.0.0.1';
+        /** @var \App\Models\AffiliateLink $link */
         $link = \Mockery::mock(AffiliateLink::class)->makePartial();
         $link->id = 1;
         $link->publisher_id = 99;
@@ -110,6 +112,7 @@ class FraudDetectionServiceTest extends TestCase
         $method = new ReflectionMethod(FraudDetectionService::class, 'isPublisherSelfClicking');
         $method->setAccessible(true);
         
+        /** @var \App\Models\AffiliateLink $link */
         $link = \Mockery::mock(AffiliateLink::class)->makePartial();
         $link->id = 1;
         $link->publisher_id = 99;

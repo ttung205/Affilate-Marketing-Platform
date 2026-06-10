@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class FraudFuzzingScript extends TestCase
 {
+    use \Illuminate\Foundation\Testing\RefreshDatabase;
+
     protected FraudDetectionService $fraudDetectionService;
 
     protected function setUp(): void
@@ -35,10 +37,13 @@ class FraudFuzzingScript extends TestCase
             
             try {
                 // Đẩy rác vào Service
-                $isFraud = $this->fraudDetectionService->calculateRiskScore([
-                    'ip' => $ip,
-                    'user_agent' => $userAgent
-                ]) >= 100;
+                /** @var \App\Models\AffiliateLink $link */
+                $link = \Mockery::mock(\App\Models\AffiliateLink::class)->makePartial();
+                $link->id = 1;
+                $link->publisher_id = 99;
+
+                $result = $this->fraudDetectionService->detectFraud($link, $ip, $userAgent);
+                $isFraud = $result['is_fraud'];
 
                 $timeMs = (microtime(true) - $startTime) * 1000;
                 fputcsv($file, [$ip, $userAgent, $isFraud ? 'Yes' : 'No', round($timeMs, 2)]);
