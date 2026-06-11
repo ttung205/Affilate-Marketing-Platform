@@ -16,7 +16,11 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_publisher','affiliate_code','commission_rate']);
+            $table->dropUnique(['affiliate_code']);
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['is_publisher', 'affiliate_code', 'commission_rate']);
         });
     }
 };
