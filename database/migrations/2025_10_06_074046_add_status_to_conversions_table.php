@@ -52,12 +52,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('conversions', function (Blueprint $table) {
+            $table->dropForeign(['status_changed_by']);
+            $table->dropForeign(['shop_id']);
+
             $table->dropIndex('conversions_status_status_changed_at_index');
             $table->dropIndex('conversions_is_commission_processed_index');
             $table->dropIndex('conversions_shop_status_index');
-
-            $table->dropForeign(['status_changed_by']);
-            $table->dropForeign(['shop_id']);
             $table->dropColumn([
                 'commission_processed_at',
                 'is_commission_processed',
