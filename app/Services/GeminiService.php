@@ -10,11 +10,11 @@ class GeminiService
 {
     protected string $baseUrl = "https://generativelanguage.googleapis.com/v1beta/models";
     protected string $model = "gemini-2.5-flash";
-    protected string $apiKey;
+    protected ?string $apiKey = null;
 
     public function __construct()
     {
-        $this->apiKey = env('GEMINI_API_KEY');
+        $this->apiKey = env('GEMINI_API_KEY') ?: '';
     }
 
     public function ask(string $message, string $userRole = 'guest', string $userName = 'Khách', $userId = null)
@@ -188,12 +188,12 @@ class GeminiService
             return "Tôi có thể giúp bạn về affiliate marketing, tạo links, hoặc hướng dẫn sử dụng. Bạn cần gì? 🤔";
         }
 
-        if (strpos($message, 'affiliate') !== false) {
-            return "Affiliate marketing giúp bạn kiếm hoa hồng từ việc giới thiệu sản phẩm. 💰";
-        }
-
         if (strpos($message, 'link') !== false) {
             return "Bạn có thể tạo affiliate links trong phần 'Affiliate Links' để kiếm hoa hồng. 🔗";
+        }
+
+        if (strpos($message, 'affiliate') !== false) {
+            return "Affiliate marketing giúp bạn kiếm hoa hồng từ việc giới thiệu sản phẩm. 💰";
         }
 
         if (strpos($message, 'thu nhập') !== false || strpos($message, 'earning') !== false) {

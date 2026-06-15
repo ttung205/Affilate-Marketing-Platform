@@ -533,16 +533,22 @@ class AffiliateChatbot {
 
 }
 
+let chatbotInstance = null;
+
 // Initialize chatbot when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new AffiliateChatbot();
+    chatbotInstance = new AffiliateChatbot();
 });
 
 // Auto-open chatbot for new users (optional)
 if (window.userRole === 'guest' && !localStorage.getItem('chatbot_shown')) {
     setTimeout(() => {
-        const chatbot = new AffiliateChatbot();
-        chatbot.openChat();
+        if (chatbotInstance) {
+            chatbotInstance.openChat();
+        } else {
+            chatbotInstance = new AffiliateChatbot();
+            chatbotInstance.openChat();
+        }
         localStorage.setItem('chatbot_shown', 'true');
     }, 3000);
 }

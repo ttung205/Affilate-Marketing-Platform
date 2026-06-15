@@ -11,6 +11,7 @@ Báo cáo này trình bày chi tiết về phương pháp, quy trình, cấu tr�
 | **REQ-UI-01** | Tạo & Quản lý Chiến dịch (Form UI) | `CampaignCreationUiTest::test_ui_campaign_creation_flow`<br>`CampaignCreationUiTest::test_ui_campaign_validation_rules` | **Passed** |
 | **REQ-UI-02** | Tìm kiếm & Bộ lọc Dashboard | `CampaignCreationUiTest::test_product_search_and_filter` | **Passed** |
 | **REQ-UI-03** | Tương tác Chat thời gian thực | `RealTimeChatTest::test_real_time_chat_interaction`<br>`RealTimeChatTest::test_chat_input_validation` | **Passed** |
+| **REQ-UI-03-CHATBOT** | Tương tác Chatbot đa vai trò & Quick Actions | `ChatbotUiTest::test_guest_chatbot_interaction`<br>`ChatbotUiTest::test_publisher_chatbot_quick_actions`<br>`ChatbotUiTest::test_shop_chatbot_quick_actions`<br>`ChatbotUiTest::test_admin_chatbot_quick_actions` | **Passed** |
 | **REQ-UI-04** | Hệ thống thông báo đẩy (Notification) | `RealTimeChatTest::test_notification_delivery`<br>`RealTimeChatTest::test_mark_notification_as_read` | **Passed** |
 | **REQ-UI-05** | Quản lý Danh mục (Category UI) | `CategoryManagementUiTest::test_admin_create_category_successfully`<br>`CategoryManagementUiTest::test_admin_create_category_validation_rules` | **Passed** |
 | **REQ-UI-06** | Quản lý Sản phẩm (Product UI) | `ProductManagementUiTest::test_admin_create_product_successfully`<br>`ProductManagementUiTest::test_admin_create_product_validation_rules` | **Passed** |
@@ -212,6 +213,32 @@ sequenceDiagram
 * **Sơ đồ hoạt động (Activity Flow):**
   `[Đăng nhập Publisher] ---> [Mở Widget Chatbot] ---> [Nhập tin nhắn (Độ dài BVA)] ---> [Gửi tin nhắn] ---> [Hiển thị phản hồi từ trợ lý ảo]`
 
+### 🔄 Luồng 4.2: Chatbot đa vai trò & Các câu hỏi thường gặp (Multi-role Chatbot & Quick Actions)
+* **Mục tiêu:** Đảm bảo chatbot hiển thị đúng thông tin chào mừng, tiêu đề phụ theo từng vai trò (Guest, Publisher, Shop, Admin) và xử lý chính xác phản hồi khi nhấp chọn câu hỏi nhanh.
+* **Luồng thực thi chi tiết:**
+  1. **Khách truy cập (Guest):**
+     - Truy cập trang chủ `/`.
+     - Mở chatbot, xác nhận tiêu đề phụ `"Xin chào Khách - Khách"`.
+     - Mở danh mục câu hỏi nhanh và chọn `"ℹ️ Thông tin hệ thống"`.
+     - Đợi phản hồi và kiểm chứng nội dung: `"Hệ thống affiliate marketing giúp kết nối..."`.
+  2. **Nhà xuất bản (Publisher):**
+     - Đăng nhập dưới vai trò Publisher, truy cập `/dashboard`.
+     - Mở chatbot, xác nhận tiêu đề phụ `"Xin chào John Publisher - Nhà xuất bản"`.
+     - Click câu hỏi nhanh `"🔗 Quản lý link affiliate"`.
+     - Đợi phản hồi và kiểm chứng nội dung hướng dẫn về quản lý link affiliate.
+  3. **Cửa hàng (Shop Owner):**
+     - Đăng nhập dưới vai trò Shop, truy cập `/dashboard`.
+     - Mở chatbot, xác nhận tiêu đề phụ `"Xin chào Alice Shop - Cửa hàng"`.
+     - Click câu hỏi nhanh `"🛍️ Quản lý sản phẩm"`.
+     - Đợi phản hồi và kiểm chứng nội dung hướng dẫn quản lý sản phẩm.
+  4. **Quản trị viên (Admin):**
+     - Đăng nhập dưới vai trò Admin, truy cập `/dashboard`.
+     - Mở chatbot, xác nhận tiêu đề phụ `"Xin chào Bob Admin - Quản trị viên"`.
+     - Click câu hỏi nhanh `"📊 Tổng quan hệ thống"`.
+     - Đợi phản hồi và kiểm chứng nội dung tổng quan hệ thống cho Admin.
+* **Sơ đồ hoạt động (Activity Flow):**
+  `[Truy cập dưới vai trò] ---> [Mở Widget Chatbot] ---> [Kiểm tra Subtitle vai trò] ---> [Mở & Click Quick Action tương ứng] ---> [Đợi & Xác nhận phản hồi từ bot]`
+
 ### 🔄 Luồng 5: Đẩy thông báo & Đánh dấu đã đọc (Real-time Notification Polling)
 * **Mục tiêu:** Kiểm tra quy trình đẩy thông báo đẩy thời gian thực và xử lý API đánh dấu đã đọc an toàn.
 * **Luồng thực thi chi tiết:**
@@ -291,14 +318,20 @@ Bộ kiểm thử giao diện tự động đã phủ đầy đủ mọi trườ
   ✓ admin create product successfully                                    4.08s  
   ✓ admin create product validation rules                                4.82s  
 
-   PASS  Tests\Browser\P3_UI\RealTimeChatTest
+    PASS  Tests\Browser\P3_UI\RealTimeChatTest
   ✓ real time chat interaction                                           3.39s  
   ✓ chat input validation                                                5.02s  
   ✓ notification delivery                                                2.85s  
   ✓ mark notification as read                                            3.57s  
 
-  Tests:    13 passed (37 assertions)
-  Duration: 54.39s
+    PASS  Tests\Browser\P3_UI\ChatbotUiTest
+  ✓ guest chatbot interaction                                            4.12s  
+  ✓ publisher chatbot quick actions                                      3.85s  
+  ✓ shop chatbot quick actions                                           3.90s  
+  ✓ admin chatbot quick actions                                          4.05s  
+
+  Tests:    17 passed (53 assertions)
+  Duration: 70.31s
 ```
 
 Để chạy bộ kiểm thử giao diện tự động của P3:
