@@ -296,43 +296,31 @@ Kiểm tra:
 - Lọc theo Category
 - Lọc theo trạng thái
 
-### Cross-browser Testing
+### Cross-browser & Viewport Testing
 
-Chạy trên:
+Chạy trên trình duyệt chính (Chrome/Edge) và kiểm tra tính tương thích giao diện:
 
-- Chrome
-- Firefox
-- Safari
-
-Kiểm tra:
-
-- Responsive
-- UI không bị vỡ layout
+- Giả lập đa độ phân giải: Desktop (1920x1080), Tablet (768x1024), Mobile (375x812)
+- Kiểm tra tính Responsive
+- Đảm bảo giao diện không bị vỡ layout
 
 ### Evidence
 
-Playwright cần lưu:
+Laravel Dusk tự động lưu:
 
-- Screenshot khi fail
-- Video record
-- Trace log
-
-Lưu tại:
-
-```text
-tests/automation/evidence/
-```
+- Screenshot khi kiểm thử thất bại (hoặc chụp thủ công lúc thành công) tại `tests/Browser/screenshots/`
+- Console logs từ trình duyệt tại `tests/Browser/console/`
 
 ### Cấu trúc file
 
 ```text
-tests/
-├── Feature/
-│   └── P3_UI/
-│       ├── CampaignCreationUiTest.php
-│       └── RealTimeChatTest.php
-└── e2e/
-    └── campaign_flow.spec.js
+tests/Browser/
+└── P3_UI/
+    ├── CampaignCreationUiTest.php
+    ├── CategoryManagementUiTest.php
+    ├── ProductManagementUiTest.php
+    ├── RealTimeChatTest.php
+    └── CrossBrowserExecution.php
 ```
 
 ---

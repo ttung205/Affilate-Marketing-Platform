@@ -13,6 +13,11 @@ Báo cáo này trình bày chi tiết về phương pháp, quy trình, và kết
 | **REQ-04** | Fraud Detection (Rate Limiting)       | `FraudDetectionServiceTest::test_ip_rate_limit_calculation`                                                       | **Passed** |
 | **REQ-04** | Fraud Detection (Risk Score)          | `FraudDetectionServiceTest::test_risk_score_aggregation`                                                          | **Passed** |
 | **REQ-04** | Fraud Detection (Self Click)          | `FraudDetectionServiceTest::test_self_click_prevention`                                                           | **Passed** |
+| **REQ-04** | Click Model & Unique Validation       | `ClickUserUnitTest::test_click_model_functionalities`                                                             | **Passed** |
+| **REQ-04** | User Model Roles & Wallet Helpers     | `ClickUserUnitTest::test_user_model_functionalities`                                                              | **Passed** |
+| **REQ-AUTH-01** | User Registration & Validation       | `AuthUnitTest::test_user_registration_successfully`<br>`test_user_registration_validation`                        | **Passed** |
+| **REQ-AUTH-02** | User Login & Logout                  | `AuthUnitTest::test_user_login_and_logout_successfully`                                                           | **Passed** |
+| **REQ-AUTH-03** | Two-Factor Authentication (2FA)      | `AuthUnitTest::test_login_with_2fa_enabled`<br>`test_enable_and_disable_2fa_setup`                                | **Passed** |
 | **ADV-02** | Fuzz Testing (Kiểm thử ngẫu nhiên)    | `FraudFuzzingScript::test_fraud_detection_fuzzing`                                                                | **Passed** |
 
 ---
@@ -125,6 +130,8 @@ Trong quá trình thực thi kịch bản kiểm thử, chúng tôi đã phát h
     ```
 - **Kết quả Textual**:
     ```text
+    PASS  Tests\Unit\P1_Fraud\AuthUnitTest
+    PASS  Tests\Unit\P1_Fraud\ClickUserUnitTest
     PASS  Tests\Unit\P1_Fraud\FraudDetectionServiceTest
     PASS  Tests\Unit\P1_Fraud\TrackingControllerTest
     PASS  Tests\Fuzzing\FraudFuzzingScript

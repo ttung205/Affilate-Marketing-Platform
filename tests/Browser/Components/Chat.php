@@ -37,6 +37,9 @@ class Chat extends BaseComponent
             '@send' => '#chatbot-send',
             '@messages' => '#chatbot-messages',
             '@close' => '#chatbot-close',
+            '@quick-actions-toggle' => '#chatbot-quick-actions-toggle',
+            '@quick-actions-content' => '#chatbot-quick-actions-content',
+            '@quick-action' => '.chatbot-quick-action',
         ];
     }
 
@@ -65,4 +68,23 @@ class Chat extends BaseComponent
     {
         $browser->waitFor('.chatbot-message-bot', 10);
     }
+
+    /**
+     * Toggle the quick actions menu.
+     */
+    public function toggleQuickActions(Browser $browser): void
+    {
+        $browser->click('@quick-actions-toggle')
+                ->pause(500);
+    }
+
+    /**
+     * Click a specific quick action by its data-action attribute.
+     */
+    public function clickQuickAction(Browser $browser, string $action): void
+    {
+        $browser->click(".chatbot-quick-action[data-action=\"{$action}\"]")
+                ->pause(1000);
+    }
 }
+
